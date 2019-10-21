@@ -10,7 +10,7 @@ import java.util.List;
 public class DatabaseService {
 
     @Autowired
-    private HelloObjectsRepository helloObjectsRepository;
+    private HelloObjectsRepository helloObjectsRepository;  //hello object repository - vic jsem to popsal
 
     public List<HelloObject> getAllHelloObjects() {
         return (ArrayList<HelloObject>) helloObjectsRepository.findAll();
