@@ -20,7 +20,7 @@ public class DatabaseService {
         return helloObjectsRepository.findById(id).orElse(null);
     }
 
-    public void addHelloObject(HelloObject obj) {
+    public void addHelloObject2(HelloObject obj) {
         helloObjectsRepository.save(obj);
     }
 
