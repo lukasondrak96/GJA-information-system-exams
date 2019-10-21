@@ -19,7 +19,7 @@ public class DatabaseService {
     public HelloObject getObjectById(int id) {
         return helloObjectsRepository.findById(id).orElse(null);
     }
-
+    
     public void addHelloObject(HelloObject obj) {
         helloObjectsRepository.save(obj);
     }
