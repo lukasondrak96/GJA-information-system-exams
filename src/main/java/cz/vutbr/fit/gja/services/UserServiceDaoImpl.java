@@ -1,4 +1,4 @@
-package cz.vutbr.fit.gja.authentication;
+package cz.vutbr.fit.gja.services;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,7 +13,7 @@ import cz.vutbr.fit.gja.repositories.RoleRepository;
 import cz.vutbr.fit.gja.repositories.UserRepository;
 
 @Service
-public class UserServiceImp implements UserService {
+public class UserServiceDaoImpl implements UserServiceDao {
 
     @Autowired
     BCryptPasswordEncoder encoder;
@@ -32,10 +32,10 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public boolean isUserAlreadyPresent(User user) {
-        //TODO
-        // Try to implement this method, as assignment.
-        return false;
+    public boolean isUserAlreadyRegistered(User user) {
+        String email = user.getEmail();
+        User userEmail = userRepository.findByEmail(email);
+        return userEmail != null;
     }
 
 }

@@ -7,6 +7,5 @@ import cz.vutbr.fit.gja.models.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Integer> {
-
-    public Role findByRole(String role);
+    Role findByRole(String role);
 }

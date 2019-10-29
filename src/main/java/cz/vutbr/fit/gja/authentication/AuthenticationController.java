@@ -2,14 +2,13 @@ package cz.vutbr.fit.gja.authentication;
 
 import javax.validation.Valid;
 
+import cz.vutbr.fit.gja.services.UserServiceDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import cz.vutbr.fit.gja.models.User;
@@ -18,7 +17,7 @@ import cz.vutbr.fit.gja.models.User;
 public class AuthenticationController {
 
     @Autowired
-    UserService userService;
+    UserServiceDao userServiceDao;
 
     @GetMapping("/")
     public ModelAndView root() {
@@ -65,12 +64,12 @@ public class AuthenticationController {
             modelAndView.addObject("successMessage", "Please correct the errors in form!");
             modelMap.addAttribute("bindingResult", bindingResult);
         }
-        else if(userService.isUserAlreadyPresent(user)){
+        else if(userServiceDao.isUserAlreadyRegistered(user)){
             modelAndView.addObject("successMessage", "user already exists!");
         }
         // we will save the user if, no binding errors
         else {
-            userService.saveUser(user);
+            userServiceDao.saveUser(user);
             modelAndView.addObject("successMessage", "User is registered successfully!");
         }
         modelAndView.addObject("user", new User());
