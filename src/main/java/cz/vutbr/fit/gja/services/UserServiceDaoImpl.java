@@ -38,4 +38,12 @@ public class UserServiceDaoImpl implements UserServiceDao {
         return userEmail != null;
     }
 
+    @Override
+    public boolean isPasswordSame(User user) {
+        String password1 = user.getPassword();
+        String password2 = user.getRepeatPassword();
+        return !password1.equals(password2);
+    }
+
+
 }

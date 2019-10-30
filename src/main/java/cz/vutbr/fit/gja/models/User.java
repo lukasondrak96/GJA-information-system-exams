@@ -34,16 +34,23 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
 
+    @Column(name = "degrees_before_name")
+    private String degreesBeforeName;
+
+    @Column(name = "degrees_behind_name")
+    private String degreesBehindName;
+
     @NotNull(message="Email je povinný")
     @Email(message = "Zadán chybný email")
     @Column(name = "email")
     private String email;
 
     @NotNull(message="Heslo je povinné")
-    @Length(min=5, message="Password should be at least 5 characters")
+    @Length(min=5, message="Heslo musí mít minimálně 5 znaků")
     @Column(name = "password")
     private String password;
-
+    
+    private String repeatPassword;
 
     @Column(name = "status")
     private String status;
@@ -108,4 +115,27 @@ public class User {
         this.roles = roles;
     }
 
+    public String getDegreesBeforeName() {
+        return degreesBeforeName;
+    }
+
+    public void setDegreesBeforeName(String degreesBeforeName) {
+        this.degreesBeforeName = degreesBeforeName;
+    }
+
+    public String getDegreesBehindName() {
+        return degreesBehindName;
+    }
+
+    public void setDegreesBehindName(String degreesBehindName) {
+        this.degreesBehindName = degreesBehindName;
+    }
+
+    public String getRepeatPassword() {
+        return repeatPassword;
+    }
+
+    public void setRepeatPassword(String repeatPassword) {
+        this.repeatPassword = repeatPassword;
+    }
 }

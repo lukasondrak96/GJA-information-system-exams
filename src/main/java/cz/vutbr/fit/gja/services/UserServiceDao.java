@@ -7,4 +7,6 @@ public interface UserServiceDao {
     void saveUser(User user);
 
     boolean isUserAlreadyRegistered(User user);
+
+    boolean isPasswordSame(User user);
 }

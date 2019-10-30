@@ -9,33 +9,48 @@
 <body>
 <div th:include="fragments/topnav :: navbar"></div>
 <div class="container center-class">
-    <div class="row col-lg-7 col-lg-offset-7 registration-form">
+    <div class="row col-lg-7 col-lg-offset-7 form-style">
         <form autocomplete="off" action="#" th:action="@{/register}" th:object="${user}" method="post"
               class="form-signin" role="form">
             <h3 class="form-signin-heading">Registrace</h3>
             <div class="form-group">
-                <div class="">
-                    <input type="text" th:field="*{name}" placeholder="Jméno" class="form-control"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="">
-                    <input type="text" th:field="*{lastName}" placeholder="Příjmení" class="form-control"/>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="">
+                <div class="update-placeholder">
                     <input type="text" th:field="*{email}" placeholder="Email" class="form-control"/>
                 </div>
             </div>
             <div class="form-group">
-                <div class="">
+                <div class="update-placeholder">
+                    <input type="text" th:field="*{name}" placeholder="Jméno" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="update-placeholder">
+                    <input type="text" th:field="*{lastName}" placeholder="Příjmení" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="update-placeholder">
+                    <input type="text" th:field="*{degreesBeforeName}" placeholder="Tituly před jménem" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="update-placeholder">
+                    <input type="text" th:field="*{degreesBehindName}" placeholder="Tituly za jménem" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="update-placeholder">
                     <input type="password" th:field="*{password}" placeholder="Heslo" class="form-control"/>
                 </div>
             </div>
             <div class="form-group">
+                <div class="update-placeholder">
+                    <input type="password" th:field="*{repeatPassword}" placeholder="Opakovat heslo" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="">
-                    <button type="submit" class="btn btn-primary btn-block">Registrovat se</button>
+                    <button type="submit" class="btn btn-primary btn-block">Dokončit registraci</button>
                 </div>
             </div>
             <span th:utext="${successMessage}"></span>

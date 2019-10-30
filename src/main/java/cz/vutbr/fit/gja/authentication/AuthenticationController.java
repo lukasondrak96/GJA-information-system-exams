@@ -61,19 +61,32 @@ public class AuthenticationController {
         ModelAndView modelAndView = new ModelAndView();
         // Check for the validations
         if(bindingResult.hasErrors()) {
-            modelAndView.addObject("successMessage", "Please correct the errors in form!");
+            modelAndView.addObject("successMessage", "Prosím opravte chyby ve formuláři!");
             modelMap.addAttribute("bindingResult", bindingResult);
+            modelAndView.addObject("user", new User());
+            modelAndView.setViewName("authentication/register"); // resources/templates/authentication/register.html
+            modelAndView.addObject(user);
         }
         else if(userServiceDao.isUserAlreadyRegistered(user)){
-            modelAndView.addObject("successMessage", "user already exists!");
+            modelAndView.addObject("successMessage", "Uživatel s touto emailovou adresou již existuje.");
+            modelAndView.addObject("user", new User());
+            modelAndView.setViewName("authentication/register"); // resources/templates/authentication/register.html
+            modelAndView.addObject(user);
+        }
+        else if(userServiceDao.isPasswordSame(user)){
+            modelAndView.addObject("successMessage", "Hesla se neshodují!");
+            modelAndView.addObject("user", new User());
+            modelAndView.setViewName("authentication/register"); // resources/templates/authentication/register.html
+            modelAndView.addObject(user);
         }
         // we will save the user if, no binding errors
         else {
             userServiceDao.saveUser(user);
-            modelAndView.addObject("successMessage", "User is registered successfully!");
+            modelAndView.addObject("successMessage", "Uživatel byl úspěšně registrován.");
+            modelAndView.addObject("user", new User());
+            modelAndView.setViewName("authentication/register"); // resources/templates/authentication/register.html
         }
-        modelAndView.addObject("user", new User());
-        modelAndView.setViewName("authentication/register"); // resources/templates/authentication/register.html
+
         return modelAndView;
     }
 }
