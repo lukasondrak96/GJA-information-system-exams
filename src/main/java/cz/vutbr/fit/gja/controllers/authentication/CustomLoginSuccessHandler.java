@@ -1,4 +1,4 @@
-package cz.vutbr.fit.gja.authentication;
+package cz.vutbr.fit.gja.controllers.authentication;
 
 import java.io.IOException;
 import java.util.ArrayList;

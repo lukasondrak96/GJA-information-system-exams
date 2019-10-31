@@ -1,7 +1,7 @@
 package cz.vutbr.fit.gja.configuration;
 import javax.sql.DataSource;
 
-import cz.vutbr.fit.gja.authentication.CustomLoginSuccessHandler;
+import cz.vutbr.fit.gja.controllers.authentication.CustomLoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -45,6 +45,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // URLs matching for access rights
                 .antMatchers("/").permitAll()
                 .antMatchers("/login").permitAll()
+                .antMatchers("/rooms").permitAll()
+                .antMatchers("/rooms/**").permitAll()
                 .antMatchers("/register").permitAll()
                 .antMatchers("/admin/**").hasAnyAuthority("LOGGED_IN_USER")
                 .anyRequest().authenticated()

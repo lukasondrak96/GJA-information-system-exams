@@ -10,6 +10,13 @@
 <div th:include="fragments/topnav :: navbar" >
 </div>
 
-Hello user
+Specific information about room for logged user
+<table>
+    <tr>
+        <td th:text="${room.id}">1</td>
+        <td th:text="${room.numberOfRow}">1</td>
+        <td th:text="${room.numberofColumn}">1</td>
+    </tr>
+</table>
 </body>
 </html>

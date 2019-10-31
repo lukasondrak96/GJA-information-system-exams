@@ -1,4 +1,4 @@
-package cz.vutbr.fit.gja.authentication;
+package cz.vutbr.fit.gja.controllers.authentication;
 
 import javax.validation.Valid;
 
@@ -22,7 +22,7 @@ public class AuthenticationController {
     @GetMapping("/")
     public ModelAndView root() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("pages/exams"); // resources/templates/authentication/login.html
+        modelAndView.setViewName("pages/exams");
         return modelAndView;
     }
 
