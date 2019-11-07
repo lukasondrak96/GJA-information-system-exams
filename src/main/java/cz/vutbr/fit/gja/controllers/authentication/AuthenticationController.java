@@ -61,20 +61,20 @@ public class AuthenticationController {
         ModelAndView modelAndView = new ModelAndView();
         // Check for the validations
         if(bindingResult.hasErrors()) {
-            modelAndView.addObject("successMessage", "Prosím opravte chyby ve formuláři!");
+            modelAndView.addObject("Message", "Prosím opravte chyby ve formuláři!");
             modelMap.addAttribute("bindingResult", bindingResult);
             modelAndView.addObject("user", new User());
             modelAndView.setViewName("authentication/register"); // resources/templates/authentication/register.html
             modelAndView.addObject(user);
         }
         else if(userServiceDao.isUserAlreadyRegistered(user)){
-            modelAndView.addObject("successMessage", "Uživatel s touto emailovou adresou již existuje.");
+            modelAndView.addObject("Message", "Uživatel s touto emailovou adresou již existuje.");
             modelAndView.addObject("user", new User());
             modelAndView.setViewName("authentication/register"); // resources/templates/authentication/register.html
             modelAndView.addObject(user);
         }
         else if(userServiceDao.isPasswordSame(user)){
-            modelAndView.addObject("successMessage", "Hesla se neshodují!");
+            modelAndView.addObject("Message", "Hesla se neshodují!");
             modelAndView.addObject("user", new User());
             modelAndView.setViewName("authentication/register"); // resources/templates/authentication/register.html
             modelAndView.addObject(user);
@@ -82,7 +82,7 @@ public class AuthenticationController {
         // we will save the user if, no binding errors
         else {
             userServiceDao.saveUser(user);
-            modelAndView.addObject("successMessage", "Uživatel byl úspěšně registrován.");
+            modelAndView.addObject("Message", "Uživatel byl úspěšně registrován.");
             modelAndView.addObject("user", new User());
             modelAndView.setViewName("authentication/register"); // resources/templates/authentication/register.html
         }

@@ -26,11 +26,11 @@ public class User {
     @Column(name = "auth_user_id")
     private int id;
 
-    @NotNull(message="Jméno je povinné")
+    @Length(min=1, message="Prosím vyplňte jméno")
     @Column(name = "first_name")
     private String name;
 
-    @NotNull(message="Příjmení je povinné")
+    @Length(min=1, message="Prosím vyplňte příjmení")
     @Column(name = "last_name")
     private String lastName;
 
@@ -40,12 +40,11 @@ public class User {
     @Column(name = "degrees_behind_name")
     private String degreesBehindName;
 
-    @NotNull(message="Email je povinný")
+    @Length(min=1, message="Email je povinný")
     @Email(message = "Zadán chybný email")
     @Column(name = "email")
     private String email;
 
-    @NotNull(message="Heslo je povinné")
     @Length(min=5, message="Heslo musí mít minimálně 5 znaků")
     @Column(name = "password")
     private String password;

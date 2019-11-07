@@ -53,14 +53,11 @@
                     <button type="submit" class="btn btn-primary btn-block">Dokončit registraci</button>
                 </div>
             </div>
-            <span th:utext="${successMessage}"></span>
-            <div class="alert alert-success alert-dismissible col-sm-12"
+            <span th:utext="${Message}"></span>
+            <div class="alert alert-danger alert-dismissible col-sm-12"
                  th:if="${(bindingResult != null && bindingResult.getAllErrors() != null)}">
-                <button type="button" class="close" data-dismiss="alert"
-                        aria-hidden="true">×
-                </button>
                 <ul th:each="data : ${bindingResult.getAllErrors()}">
-                    <li th:text="${data.getObjectName() + ' :: ' + data.getDefaultMessage()}"></li>
+                    <li th:text="${data.getDefaultMessage()}"></li>
                 </ul>
             </div>
         </form>
