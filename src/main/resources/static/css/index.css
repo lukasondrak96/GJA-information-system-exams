@@ -8,14 +8,16 @@ body {
 
 .form-style {
     display: inline-block;
-    margin-top: 100px;
+    margin-top: 150px;
     background-color: #fff;
     border: solid 1px #ddd;
     padding: 20px 50px 30px 50px;
     border-radius: 10px;
 }
+
 .form-signin-heading {
     margin-bottom: 30px;
+    text-align: center;
 }
 
 .update-placeholder ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
@@ -32,3 +34,84 @@ body {
     color: grey;
     opacity: 60%;
 }
+
+.room-diagram {
+    user-select: none;
+    white-space: nowrap;
+}
+
+.block-btn-wrapper {
+    display: inline-block;
+}
+
+.row-number {
+    width: 25px;
+    height: 25px;
+    margin-bottom: 12px;
+}
+
+.block-btn-wrapper input[type="checkbox"] {
+    display: none;
+}
+
+.block-btn-wrapper input[type="checkbox"] + label {
+    margin: 0;
+    user-select: none;
+}
+
+.block-btn-wrapper input[type="checkbox"] + label span {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    margin-left: -1px;
+    margin-right: -1px;
+    background: #F2F2F2;
+    border-radius: 0.25rem;
+}
+
+.block-btn-wrapper input[type="checkbox"] + label span:hover {
+    background: #E5E5E5;
+}
+
+.block-btn-wrapper input[type="checkbox"]:checked + label span {
+    background: darkgray;
+}
+
+.block-btn-wrapper input[type="checkbox"]:checked + label span:hover {
+    background: #8E8E8E;
+}
+
+.my-container {
+    min-width: 650px;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.form-group {
+    text-align: center;
+}
+
+.new-room-form-cell {
+    max-width: 650px;
+    margin: auto auto 20px;
+    text-align: left;
+}
+
+.new-room-form-succes-message {
+    max-width: 650px;
+    margin: auto auto 20px;
+    text-align: center;
+}
+
+.form-rooms {
+    min-width: 650px;
+}
+
+.fixed-nav {
+    width: 100%;
+    position: fixed;
+}
+

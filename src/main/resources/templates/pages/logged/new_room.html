@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Vytvořit novou místnost</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../static/css/index.css" th:href="@{/css/index.css}" type="text/css">
+</head>
+<body>
+<div th:include="fragments/topnav :: navbar"></div>
+<div class="my-container center-class">
+    <div class="row form-style">
+        <form autocomplete="off" th:action="@{/logged/rooms/new_room}" th:object="${room}" method="post"
+              class="form-rooms" role="form">
+            <h3 class="form-signin-heading">Vytvoření nové místnosti</h3>
+            <div class="form-group new-room-form-cell">
+                <label>Číslo místnosti:</label>
+                <div class="update-placeholder">
+                    <input type="text" th:field="*{roomNumber}" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group new-room-form-cell">
+                <label>Počet řad:</label>
+                <div class="update-placeholder">
+                    <input type="number" th:field="*{numberOfRows}" placeholder="0" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group new-room-form-cell">
+                <label>Počet sloupců:</label>
+                <div class="update-placeholder">
+                    <input type="number" th:field="*{numberOfColumns}" placeholder="0" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group new-room-form-cell">
+                <div class="">
+                    <button type="submit" class="btn btn-primary btn-block">Vygenerovat místnost</button>
+                </div>
+            </div>
+            <div class="form-group room-diagram" th:if="${(bindingResult == null && message == null)}">
+                <div th:if="${(room.getNumberOfColumns() != 0 && room.getNumberOfRows() != 0)}">
+                    <div th:each="i: ${#numbers.sequence(0, room.getNumberOfRows() - 1)}">
+                        <label class="row-number" th:text="${room.getNumberOfRows() - i}"></label>
+                        <div class="block-btn-wrapper" th:each="j: ${#numbers.sequence(0, room.getNumberOfColumns() - 1)}">
+                            <input type="checkbox" checked="checked" th:id="${room.getNumberOfRows() - i} + '_' + ${j + 1}" />
+                            <label th:for="${room.getNumberOfRows() - i} + '_' + ${j + 1}">
+                                <span>&nbsp;</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 alert alert-danger" th:if="${message != null}">
+                <span th:utext="${message}"></span>
+            </div>
+            <div class="alert alert-success new-room-form-succes-message" th:if="${successMessage != null}">
+                <span th:utext="${successMessage}"></span>
+            </div>
+            <div class="col-sm-12" th:if="${(bindingResult != null && bindingResult.getAllErrors() != null)}">
+                <div th:each="data : ${bindingResult.getAllErrors()}">
+                    <div class="alert alert-danger">
+                        <span th:text="${data.getDefaultMessage()}"></span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

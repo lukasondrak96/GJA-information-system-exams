@@ -6,5 +6,5 @@ import cz.vutbr.fit.gja.models.Room;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, String> {
-
+    Room findByRoomNumber(String roomNumber);
 }
