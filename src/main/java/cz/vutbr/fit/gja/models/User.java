@@ -2,16 +2,7 @@ package cz.vutbr.fit.gja.models;
 
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
@@ -48,7 +39,8 @@ public class User {
     @Length(min=5, message="Heslo musí mít minimálně 5 znaků")
     @Column(name = "password")
     private String password;
-    
+
+    @Transient
     private String repeatPassword;
 
     @Column(name = "status")
