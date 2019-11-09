@@ -12,11 +12,6 @@ import org.hibernate.validator.constraints.Length;
 @Table(name = "auth_user")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "auth_user_id")
-    private int id;
-
     @Length(min=1, message="Prosím vyplňte jméno")
     @Column(name = "first_name")
     private String name;
@@ -31,6 +26,7 @@ public class User {
     @Column(name = "degrees_behind_name")
     private String degreesBehindName;
 
+    @Id
     @Length(min=1, message="Email je povinný")
     @Email(message = "Zadán chybný email")
     @Column(name = "email")
@@ -47,16 +43,8 @@ public class User {
     private String status;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "auth_user_role", joinColumns = @JoinColumn(name = "auth_user_id"), inverseJoinColumns = @JoinColumn(name = "auth_role_id"))
+    @JoinTable(name = "auth_user_role", joinColumns = @JoinColumn(name = "email"), inverseJoinColumns = @JoinColumn(name = "auth_role_id"))
     private Set<Role> roles;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

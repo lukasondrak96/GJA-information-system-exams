@@ -12,7 +12,7 @@ public class Room {
     private int numberofColumn;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_user_room", referencedColumnName = "AUTH_USER_ID")
+    @JoinColumn(name = "id_user_room", referencedColumnName = "email")
     User user;
 
     public Room() {
