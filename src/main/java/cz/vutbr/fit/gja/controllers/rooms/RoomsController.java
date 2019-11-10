@@ -3,10 +3,9 @@ package cz.vutbr.fit.gja.controllers.rooms;
 import cz.vutbr.fit.gja.Exceptions.RoomNotFoundException;
 import cz.vutbr.fit.gja.models.Room;
 import cz.vutbr.fit.gja.repositories.RoomRepository;
-import cz.vutbr.fit.gja.repositories.UserRepository;
+import cz.vutbr.fit.gja.repositories.TeacherRepository;
 import cz.vutbr.fit.gja.services.RoomServiceDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -25,7 +24,7 @@ public class RoomsController {
     RoomRepository roomRepository;
 
     @Autowired
-    UserRepository userRepository;
+    TeacherRepository teacherRepository;
 
     @Autowired
     RoomServiceDao roomServiceDao;
@@ -91,7 +90,7 @@ public class RoomsController {
             modelAndView.addObject(room);
         } else {
             String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-            room.setRoomCreator(userRepository.findByEmail(userEmail));
+            room.setRoomCreator(teacherRepository.findByEmail(userEmail));
             roomRepository.save(room);
             modelAndView.addObject("successMessage", "Místnost " + room.getRoomNumber() + " byla úspěšně vytvořena.");
             modelAndView.addObject("room", room);

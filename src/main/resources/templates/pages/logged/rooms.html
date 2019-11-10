@@ -10,12 +10,12 @@
 <div th:include="fragments/topnav :: navbar" >
 </div>
 
-Rooms for logged user
+Rooms for logged teacher
 <table>
     <tr th:each="room : ${rooms}">
         <td th:text="${room.roomNumber}">1</td>
-        <td th:text="${room.numberOfColumns}">1</td>
         <td th:text="${room.numberOfRows}">1</td>
+        <td th:text="${room.numberOfColumns}">1</td>
     </tr>
 </table>
 </body>

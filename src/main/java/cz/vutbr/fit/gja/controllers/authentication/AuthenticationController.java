@@ -2,7 +2,8 @@ package cz.vutbr.fit.gja.controllers.authentication;
 
 import javax.validation.Valid;
 
-import cz.vutbr.fit.gja.services.UserServiceDao;
+import cz.vutbr.fit.gja.models.Teacher;
+import cz.vutbr.fit.gja.services.TeacherServiceDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -11,13 +12,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import cz.vutbr.fit.gja.models.User;
-
 @Controller
 public class AuthenticationController {
 
     @Autowired
-    UserServiceDao userServiceDao;
+    TeacherServiceDao teacherServiceDao;
 
     @GetMapping("/")
     public ModelAndView root() {
@@ -36,8 +35,8 @@ public class AuthenticationController {
     @GetMapping(value = "/register")
     public ModelAndView register() {
         ModelAndView modelAndView = new ModelAndView();
-        User user = new User();
-        modelAndView.addObject("user", user);
+        Teacher teacher = new Teacher();
+        modelAndView.addObject("teacher", teacher);
         modelAndView.setViewName("authentication/register"); // resources/templates/authentication/register.html
         return modelAndView;
     }
@@ -57,33 +56,33 @@ public class AuthenticationController {
     }
 
     @PostMapping(value="/register")
-    public ModelAndView registerUser(@Valid User user, BindingResult bindingResult, ModelMap modelMap) {
+    public ModelAndView registerUser(@Valid Teacher teacher, BindingResult bindingResult, ModelMap modelMap) {
         ModelAndView modelAndView = new ModelAndView();
         // Check for the validations
         if(bindingResult.hasErrors()) {
             modelAndView.addObject("Message", "Prosím opravte chyby ve formuláři!");
             modelMap.addAttribute("bindingResult", bindingResult);
-            modelAndView.addObject("user", new User());
+            modelAndView.addObject("teacher", new Teacher());
             modelAndView.setViewName("authentication/register"); // resources/templates/authentication/register.html
-            modelAndView.addObject(user);
+            modelAndView.addObject(teacher);
         }
-        else if(userServiceDao.isUserAlreadyRegistered(user)){
+        else if(teacherServiceDao.isTeacherAlreadySaved(teacher)){
             modelAndView.addObject("Message", "Uživatel s touto emailovou adresou již existuje.");
-            modelAndView.addObject("user", new User());
+            modelAndView.addObject("teacher", new Teacher());
             modelAndView.setViewName("authentication/register"); // resources/templates/authentication/register.html
-            modelAndView.addObject(user);
+            modelAndView.addObject(teacher);
         }
-        else if(userServiceDao.isPasswordSame(user)){
+        else if(teacherServiceDao.isPasswordSame(teacher)){
             modelAndView.addObject("Message", "Hesla se neshodují!");
-            modelAndView.addObject("user", new User());
+            modelAndView.addObject("teacher", new Teacher());
             modelAndView.setViewName("authentication/register"); // resources/templates/authentication/register.html
-            modelAndView.addObject(user);
+            modelAndView.addObject(teacher);
         }
-        // we will save the user if, no binding errors
+        // we will save the teacher if, no binding errors
         else {
-            userServiceDao.saveUser(user);
+            teacherServiceDao.saveTeacher(teacher);
             modelAndView.addObject("Message", "Uživatel byl úspěšně registrován.");
-            modelAndView.addObject("user", new User());
+            modelAndView.addObject("teacher", new Teacher());
             modelAndView.setViewName("authentication/register"); // resources/templates/authentication/register.html
         }
 

@@ -9,14 +9,14 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
-@Table(name = "auth_user")
-public class User {
+@Table(name = "teacher")
+public class Teacher {
 
-    @Length(min=1, message="Prosím vyplňte jméno")
+    @NotNull(message="Prosím vyplňte jméno")
     @Column(name = "first_name")
-    private String name;
+    private String firstName;
 
-    @Length(min=1, message="Prosím vyplňte příjmení")
+    @NotNull(message="Prosím vyplňte příjmení")
     @Column(name = "last_name")
     private String lastName;
 
@@ -27,9 +27,9 @@ public class User {
     private String degreesBehindName;
 
     @Id
-    @Length(min=1, message="Email je povinný")
+    @Length(min=1, message="Prosím vyplňte emailovou adresu")
     @Email(message = "Zadán chybný email")
-    @Column(name = "email")
+    @Column(name = "email", unique=true)
     private String email;
 
     @Length(min=5, message="Heslo musí mít minimálně 5 znaků")
@@ -43,15 +43,37 @@ public class User {
     private String status;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "auth_user_role", joinColumns = @JoinColumn(name = "email"), inverseJoinColumns = @JoinColumn(name = "auth_role_id"))
+    @JoinTable(name = "teacher_has_role", joinColumns = @JoinColumn(name = "email"), inverseJoinColumns = @JoinColumn(name = "id_role"))
     private Set<Role> roles;
 
-    public String getName() {
-        return name;
+    public Teacher() {
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Teacher(@NotNull(message = "Prosím vyplňte jméno") String firstName,
+                   @NotNull(message = "Prosím vyplňte příjmení") String lastName,
+                   String degreesBeforeName, String degreesBehindName,
+                   @Length(min = 1, message = "Prosím vyplňte emailovou adresu") @Email(message = "Zadán chybný email") String email,
+                   @Length(min = 5, message = "Heslo musí mít minimálně 5 znaků") String password,
+                   String repeatPassword,
+                   String status,
+                   Set<Role> roles) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.degreesBeforeName = degreesBeforeName;
+        this.degreesBehindName = degreesBehindName;
+        this.email = email;
+        this.password = password;
+        this.repeatPassword = repeatPassword;
+        this.status = status;
+        this.roles = roles;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {

@@ -3,9 +3,10 @@ package cz.vutbr.fit.gja.models;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Entity
-@Table(name = "rooms")
+@Table(name = "room")
 public class Room {
 
     @Id
@@ -21,12 +22,14 @@ public class Room {
     @Column(name = "number_of_columns")
     private int numberOfColumns;
 
-    @ManyToOne()
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "id_room_creator", referencedColumnName = "email")
-    private User roomCreator;
+    private Teacher idRoomCreator;
+
+    @OneToMany(mappedBy = "roomNumber")
+    private Set<ExamRun> exam_runs;
 
     public Room() {
-
     }
 
     public Room(String roomNumber, int numberOfRows, int numberOfColumns) {
@@ -59,11 +62,11 @@ public class Room {
         this.numberOfColumns = numberOfColumns;
     }
 
-    public User getRoomCreator() {
-        return roomCreator;
+    public Teacher getRoomCreator() {
+        return idRoomCreator;
     }
 
-    public void setRoomCreator(User roomCreator) {
-        this.roomCreator = roomCreator;
+    public void setRoomCreator(Teacher roomCreator) {
+        this.idRoomCreator = roomCreator;
     }
 }

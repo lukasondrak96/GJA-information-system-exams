@@ -6,43 +6,53 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "auth_role")
+@Table(name = "role")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "auth_role_id")
-    private int id;
+    @Column(name = "id_role")
+    private int idRole;
 
+    @NotNull
     @Column(name = "role_name")
-    private String role;
+    private String roleName;
 
     @Column(name = "role_desc")
-    private String desc;
+    private String roleDesc;
 
-    public int getId() {
-        return id;
+    public Role() {
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public Role(@NotNull String roleName, String roleDesc) {
+        this.roleName = roleName;
+        this.roleDesc = roleDesc;
     }
 
-    public String getRole() {
-        return role;
+    public int getIdRole() {
+        return idRole;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setIdRole(int idRole) {
+        this.idRole = idRole;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public String getRoleDesc() {
+        return roleDesc;
+    }
+
+    public void setRoleDesc(String roleDesc) {
+        this.roleDesc = roleDesc;
     }
 
 
