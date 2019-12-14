@@ -4,19 +4,21 @@
     <title>UserHomepage</title>
     <meta charset="utf-8"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/css/index.css" th:href="@{/css/index.css}" type="text/css">
 </head>
 <body>
-<div th:include="fragments/topnav :: navbar" >
+<div th:include="fragments/topnav :: navbar">
 </div>
 
-Rooms for teacher
-
-<table>
-    <tr th:each="room : ${rooms}">
-        <td th:text="${room.roomNumber}">1</td>
-        <td th:text="${room.numberOfRows}">1</td>
-        <td th:text="${room.numberOfColumns}">1</td>
-    </tr>
-</table>
+<div style="margin-top: 100px"></div>
+<div class="container">
+    <div class="card rooms-card" th:each="room : ${rooms}">
+        <div class="card-header rooms-card-header" th:text="${room.roomNumber}"></div>
+        <div class="card-body">
+            <span>Počet míst: </span>
+            <span th:text="${room.numberOfColumns} * ${room.numberOfRows}"></span>
+        </div>
+    </div>
+</div>
 </body>
 </html>

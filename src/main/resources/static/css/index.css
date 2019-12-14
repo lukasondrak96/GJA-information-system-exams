@@ -115,3 +115,32 @@ body {
     position: fixed;
 }
 
+.rooms-card {
+    margin-bottom: 20px;
+    border-color: #a5a5a5;
+}
+
+.rooms-card-header {
+    background: #d5d5d5;
+    font-weight: bold;
+}
+
+.btn-new-room {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.btn-new-room > a {
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.right-float {
+    float: right;
+    color: white;
+}
+
+.right-float > a {
+    display: inline;
+}
