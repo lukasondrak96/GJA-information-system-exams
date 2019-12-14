@@ -96,6 +96,15 @@
                     </div>
                 </div>
             </div>
+            <script>
+                var inputs = document.getElementsByTagName("input");
+                for (var x = 0; x < inputs.length; x++) {
+                    var name = inputs[x].getAttribute("name");
+                    if (name.indexOf("_isSeats") === 0) {
+                        inputs[x].parentNode.removeChild(inputs[x]);
+                    }
+                }
+            </script>
         </form>
     </div>
 </div>
