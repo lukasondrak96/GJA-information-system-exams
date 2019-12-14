@@ -2,14 +2,11 @@ package cz.vutbr.fit.gja.controllers.rooms;
 
 import cz.vutbr.fit.gja.Exceptions.RoomNotFoundException;
 import cz.vutbr.fit.gja.dto.BlocksCreationDto;
-import cz.vutbr.fit.gja.models.Block;
 import cz.vutbr.fit.gja.models.Room;
 import cz.vutbr.fit.gja.repositories.BlockRepository;
 import cz.vutbr.fit.gja.repositories.RoomRepository;
-import cz.vutbr.fit.gja.repositories.TeacherRepository;
 import cz.vutbr.fit.gja.services.RoomServiceDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -27,9 +24,6 @@ public class RoomsController {
 
     @Autowired
     RoomRepository roomRepository;
-
-    @Autowired
-    TeacherRepository teacherRepository;
 
     @Autowired
     RoomServiceDao roomServiceDao;
@@ -88,33 +82,26 @@ public class RoomsController {
         // Check for the validations
         if(bindingResult.hasErrors()) {
             modelMap.addAttribute("bindingResult", bindingResult);
-            modelAndView.addObject("room", new Room());
             modelAndView.setViewName("pages/logged/new_room");
             modelAndView.addObject("room", room);
         } else if(roomServiceDao.isRoomAlreadyCreated(room)) {
             modelAndView.addObject("message", "Místnost s číslem " + room.getRoomNumber() + " již existuje.");
-            modelAndView.addObject("room", new Room());
             modelAndView.setViewName("pages/logged/new_room");
-            modelAndView.addObject(room);
+            modelAndView.addObject("room", new Room());
         } else {
-            String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-            room.setRoomCreator(teacherRepository.findByEmail(userEmail));
-//            roomRepository.save(room);
-
             BlocksCreationDto blocks = new BlocksCreationDto();
             blocks.setRoomReference(room);
-            blocks.setBlocks(new ArrayList<>());
+            blocks.setIsSeats(new ArrayList<>());
             for (int i = 0; i < room.getNumberOfRows(); i++) {
-                List<Block> blockRow = new ArrayList<>();
+                List<Boolean> blockRow = new ArrayList<>();
                 for (int j = 0; j < room.getNumberOfColumns(); j++) {
-                    blockRow.add(new Block(true, j, i, room));
+                    blockRow.add(true);
                 }
                 blocks.addBlockRow(blockRow);
             }
 
-//            modelAndView.addObject("successMessage", "Místnost " + room.getRoomNumber() + " byla úspěšně vytvořena.");
             modelAndView.addObject("room", room);
-            modelAndView.addObject("blocks", blocks);
+            modelAndView.addObject("all_blocks", blocks);
             modelAndView.setViewName("pages/logged/new_room");
         }
         return modelAndView;

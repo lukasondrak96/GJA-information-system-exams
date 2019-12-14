@@ -1,20 +1,19 @@
 package cz.vutbr.fit.gja.dto;
 
-import cz.vutbr.fit.gja.models.Block;
 import cz.vutbr.fit.gja.models.Room;
 
 import java.util.List;
 
 public class BlocksCreationDto {
     private Room roomReference;
-    private List<List<Block>> blocks;
+    private List<List<Boolean>> isSeats;
 
     public BlocksCreationDto() {
     }
 
-    public BlocksCreationDto(Room roomReference, List<List<Block>> blocks) {
+    public BlocksCreationDto(Room roomReference, List<List<Boolean>> isSeats) {
         this.roomReference = roomReference;
-        this.blocks = blocks;
+        this.isSeats = isSeats;
     }
 
     public Room getRoomReference() {
@@ -25,19 +24,19 @@ public class BlocksCreationDto {
         this.roomReference = roomReference;
     }
 
-    public List<List<Block>> getBlocks() {
-        return blocks;
+    public List<List<Boolean>> getIsSeats() {
+        return isSeats;
     }
 
-    public void setBlocks(List<List<Block>> blocks) {
-        this.blocks = blocks;
+    public void setIsSeats(List<List<Boolean>> isSeats) {
+        this.isSeats = isSeats;
     }
 
-    public void addBlockRow(List<Block> blockRow) {
-        this.blocks.add(blockRow);
+    public void addBlockRow(List<Boolean> blockRow) {
+        this.isSeats.add(blockRow);
     }
 
-    public List<Block> getBlockRow(int blockRowNumber) {
-        return blocks.get(blockRowNumber);
+    public List<Boolean> getBlockRow(int blockRowNumber) {
+        return isSeats.get(blockRowNumber);
     }
 }

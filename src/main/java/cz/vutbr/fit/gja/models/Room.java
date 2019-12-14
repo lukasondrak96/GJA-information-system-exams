@@ -2,6 +2,7 @@ package cz.vutbr.fit.gja.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
 
@@ -10,6 +11,7 @@ import java.util.Set;
 public class Room {
 
     @Id
+    @NotEmpty(message = "Jméno místnosti je povinné")
     @NotNull(message="Jméno místnosti je povinné")
     @Column(name = "room_number")
     private String roomNumber;
