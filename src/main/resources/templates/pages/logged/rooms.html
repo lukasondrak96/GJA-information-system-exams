@@ -4,19 +4,36 @@
     <title>UserHomepage</title>
     <meta charset="utf-8"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../static/css/index.css" th:href="@{css/index.css}" type="text/css">
+    <link rel="stylesheet" href="../../static/css/index.css" th:href="@{/css/index.css}" type="text/css">
 </head>
 <body>
-<div th:include="fragments/topnav :: navbar" >
+<div th:include="fragments/topnav :: navbar">
 </div>
 
-Rooms for logged teacher
-<table>
-    <tr th:each="room : ${rooms}">
-        <td th:text="${room.roomNumber}">1</td>
-        <td th:text="${room.numberOfRows}">1</td>
-        <td th:text="${room.numberOfColumns}">1</td>
-    </tr>
-</table>
+<div style="margin-top: 100px"></div>
+<div class="container">
+    <div class="btn-new-room">
+        <a class="btn btn-success col-lg-4" th:href="@{/logged/rooms/new_room}">Vytvořit novou místnost</a>
+    </div>
+    <div class="card rooms-card" th:each="room : ${rooms}">
+        <div class="card-header rooms-card-header" th:text="${room.roomNumber}"></div>
+        <div class="card-body">
+            <div>
+                <span>Počet míst: </span>
+                <span th:text="${room.numberOfColumns} * ${room.numberOfRows}"></span>
+            </div>
+            <div class="right-float" th:if="${room.getRoomCreator().getEmail() == #authentication.name}">
+                <a class="btn btn-primary col-lg-1">Editovat</a>
+                <a class="btn btn-danger col-lg-1">Smazat</a>
+            </div>
+            <div>
+                <span>Vytvořil: </span>
+                <span th:text="${room.getRoomCreator().getDegreesBeforeName() != null} ? ${room.getRoomCreator().getDegreesBeforeName()}"></span>
+                <span th:text="${room.getRoomCreator().getFirstName()} + ' ' + ${room.getRoomCreator().getLastName()}"></span>
+                <span th:text="${room.getRoomCreator().getDegreesBehindName() != null} ? ${room.getRoomCreator().getDegreesBehindName()}"></span>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

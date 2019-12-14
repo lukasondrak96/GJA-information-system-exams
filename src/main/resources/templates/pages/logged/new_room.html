@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="../../../static/css/index.css" th:href="@{/css/index.css}" type="text/css">
 </head>
 <body>
+<div class="fixed-nav">
 <div th:include="fragments/topnav :: navbar"></div>
+</div>
 <div class="my-container center-class">
     <div class="row form-style">
         <form autocomplete="off" th:action="@{/logged/rooms/new_room}" th:object="${room}" method="post"
