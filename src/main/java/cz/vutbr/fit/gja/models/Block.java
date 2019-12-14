@@ -23,8 +23,8 @@ public class Block {
     private int rowNumber;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "room_number_containing_block", referencedColumnName = "room_number")
-    private Room roomNumberContainingBlock;
+    @JoinColumn(name = "room_reference", referencedColumnName = "room_number")
+    private Room roomReference;
 
     @OneToMany(mappedBy = "block")
     private Set<BlockOnExamRun> blocksOnRun;
@@ -33,11 +33,11 @@ public class Block {
 
     }
 
-    public Block(boolean isSeat, int columnNumber, int rowNumber, Room roomNumberContainingBlock) {
+    public Block(boolean isSeat, int columnNumber, int rowNumber, Room roomReference) {
         this.isSeat = isSeat;
         this.columnNumber = columnNumber;
         this.rowNumber = rowNumber;
-        this.roomNumberContainingBlock = roomNumberContainingBlock;
+        this.roomReference = roomReference;
     }
 
     public int getIdBlock() {
@@ -72,11 +72,11 @@ public class Block {
         this.rowNumber = rowNumber;
     }
 
-    public Room getRoomNumberContainingBlock() {
-        return roomNumberContainingBlock;
+    public Room getRoomReference() {
+        return roomReference;
     }
 
-    public void setRoomNumberContainingBlock(Room roomNumberContainingBlock) {
-        this.roomNumberContainingBlock = roomNumberContainingBlock;
+    public void setRoomReference(Room roomReference) {
+        this.roomReference = roomReference;
     }
 }

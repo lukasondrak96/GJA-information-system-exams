@@ -36,19 +36,6 @@
                     <button type="submit" class="btn btn-primary btn-block">Vygenerovat místnost</button>
                 </div>
             </div>
-            <div class="form-group room-diagram" th:if="${(bindingResult == null && message == null)}">
-                <div th:if="${(room.getNumberOfColumns() != 0 && room.getNumberOfRows() != 0)}">
-                    <div th:each="i: ${#numbers.sequence(0, room.getNumberOfRows() - 1)}">
-                        <label class="row-number" th:text="${room.getNumberOfRows() - i}"></label>
-                        <div class="block-btn-wrapper" th:each="j: ${#numbers.sequence(0, room.getNumberOfColumns() - 1)}">
-                            <input type="checkbox" checked="checked" th:id="${room.getNumberOfRows() - i} + '_' + ${j + 1}" />
-                            <label th:for="${room.getNumberOfRows() - i} + '_' + ${j + 1}">
-                                <span>&nbsp;</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <div class="col-sm-12 alert alert-danger" th:if="${message != null}">
                 <span th:utext="${message}"></span>
@@ -60,6 +47,25 @@
                 <div th:each="data : ${bindingResult.getAllErrors()}">
                     <div class="alert alert-danger">
                         <span th:text="${data.getDefaultMessage()}"></span>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <form autocomplete="off" class="form-rooms" method="post" role="form"
+              th:action="@{/logged/rooms/new_room/create}" th:object="${blocks}">
+            <div class="form-group room-diagram" th:if="${(bindingResult == null && message == null)}">
+                <div th:if="${(room.getNumberOfColumns() != 0 && room.getNumberOfRows() != 0)}">
+                    <div th:each="i: ${#numbers.sequence(0, room.getNumberOfRows() - 1)}">
+                        <label class="row-number" th:text="${room.getNumberOfRows() - i}"></label>
+                        <div class="block-btn-wrapper"
+                             th:each="j: ${#numbers.sequence(0, room.getNumberOfColumns() - 1)}">
+                            <input th:checked="*{blocks[__${i}__][__${j}__].seat}"
+                                   th:id="${room.getNumberOfRows() - i} + '_' + ${j + 1}"
+                                   type="checkbox"/>
+                            <label th:for="${room.getNumberOfRows() - i} + '_' + ${j + 1}">
+                                <span>&nbsp;</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
