@@ -39,12 +39,6 @@
                 </div>
             </div>
 
-            <div class="col-sm-12 alert alert-danger" th:if="${message != null}">
-                <span th:utext="${message}"></span>
-            </div>
-            <div class="alert alert-success new-room-form-succes-message" th:if="${successMessage != null}">
-                <span th:utext="${successMessage}"></span>
-            </div>
             <div class="col-sm-12" th:if="${(bindingResult != null && bindingResult.getAllErrors() != null)}">
                 <div th:each="data : ${bindingResult.getAllErrors()}">
                     <div class="alert alert-danger">

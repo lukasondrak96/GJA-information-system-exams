@@ -57,20 +57,29 @@ public class BlockController {
             room.setRoomCreator(teacherRepository.findByEmail(userEmail));
             roomRepository.save(room);
 
+            Room roomReference = roomRepository.findByRoomNumber(room.getRoomNumber());
             for (int i = 0; i < room.getNumberOfRows(); i++) {
                 for (int j = 0; j < room.getNumberOfColumns(); j++) {
-                    Boolean isSeat = blocks.getBlockRow(i).get(j);
-                    if (isSeat == null) {
+                    Boolean isSeat = true;
+                    try {
+                        isSeat = blocks.getBlockRow(i).get(j);
+                    } catch (IndexOutOfBoundsException e) {
                         isSeat = false;
+                        blocks.getBlockRow(i).add(false);
+                    } finally {
+                        if (isSeat == null) {
+                            isSeat = false;
+                            blocks.getBlockRow(i).set(j, false);
+                        }
                     }
-                    Block block = new Block(isSeat, j + 1, room.getNumberOfRows() - i, room);
+                    Block block = new Block(isSeat, j + 1, room.getNumberOfRows() - i, roomReference);
                     blockRepository.save(block);
                 }
             }
 
             modelAndView.addObject("successMessage", "Místnost " + room.getRoomNumber() + " byla úspěšně vytvořena.");
-            modelAndView.addObject("room", room);
-            modelAndView.addObject("blocks", blocks);
+            modelAndView.addObject("room", roomReference);
+            modelAndView.addObject("all_blocks", blocks);
             modelAndView.setViewName("pages/logged/new_room");
         }
         return modelAndView;
