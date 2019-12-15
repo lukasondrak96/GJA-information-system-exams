@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>UserHomepage</title>
+    <meta charset="utf-8"/>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../static/css/index.css" rel="stylesheet" th:href="@{css/index.css}" type="text/css">
+</head>
+<body>
+<div th:include="fragments/topnav :: navbar">
+</div>
+<div class="alert alert-danger" th:if="${message != null}">
+    <span th:utext="${message}"></span>
+</div>
+<div>
+    <a class="btn btn-primary btn-block" th:href="@{/logged/exams}">Zpět na hlavní stranu</a>
+</div>
+</body>
+</html>
