@@ -12,6 +12,12 @@
 
 <div style="margin-top: 100px"></div>
 <div class="container">
+    <div class="alert alert-danger" th:if="${message != null}">
+        <span th:utext="${message}"></span>
+    </div>
+    <div class="alert alert-success new-room-form-success-message" th:if="${successMessage != null}">
+        <span th:utext="${successMessage}"></span>
+    </div>
     <div class="btn-new-room">
         <a class="btn btn-success col-lg-4" th:href="@{/logged/rooms/new_room}">Vytvořit novou místnost</a>
     </div>

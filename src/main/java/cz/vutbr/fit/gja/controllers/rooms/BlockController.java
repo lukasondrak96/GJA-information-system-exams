@@ -77,10 +77,9 @@ public class BlockController {
                 }
             }
 
-            modelAndView.addObject("successMessage", "Místnost " + room.getRoomNumber() + " byla úspěšně vytvořena.");
-            modelAndView.addObject("room", roomReference);
-            modelAndView.addObject("all_blocks", blocks);
-            modelAndView.setViewName("pages/logged/new_room");
+            modelAndView.addObject("successMessage", "Místnost \"" + room.getRoomNumber() + "\" byla úspěšně vytvořena.");
+            modelAndView.addObject("rooms", roomRepository.findAll());
+            modelAndView.setViewName("pages/logged/rooms");
         }
         return modelAndView;
     }
