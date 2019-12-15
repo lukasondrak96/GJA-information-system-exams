@@ -21,22 +21,22 @@
     <div class="btn-new-room">
         <a class="btn btn-success col-lg-4" th:href="@{/logged/rooms/new_room}">Vytvořit novou místnost</a>
     </div>
-    <div class="card rooms-card" th:each="room : ${rooms}">
-        <div class="card-header rooms-card-header" th:text="${room.getRoom().getRoomNumber()}"></div>
+    <div class="card rooms-card" th:each="roomHolder : ${roomHolders}">
+        <div class="card-header rooms-card-header" th:text="${roomHolder.room.roomNumber}"></div>
         <div class="card-body">
             <div>
                 <span>Počet míst: </span>
-                <span th:text="${room.getNumberOfSeats()}"></span>
+                <span th:text="${roomHolder.getNumberOfSeats()}"></span>
             </div>
-            <div class="right-float" th:if="${room.getRoom().getRoomCreator().getEmail() == #authentication.name}">
+            <div class="right-float" th:if="${roomHolder.room.roomCreator.email == #authentication.name}">
                 <a class="btn btn-primary col-lg-1">Editovat</a>
                 <a class="btn btn-danger col-lg-1">Smazat</a>
             </div>
             <div>
                 <span>Vytvořil: </span>
-                <span th:text="${room.getRoom().getRoomCreator().getDegreesBeforeName() != null} ? ${room.getRoom().getRoomCreator().getDegreesBeforeName()}"></span>
-                <span th:text="${room.getRoom().getRoomCreator().getFirstName()} + ' ' + ${room.getRoom().getRoomCreator().getLastName()}"></span>
-                <span th:text="${room.getRoom().getRoomCreator().getDegreesBehindName() != null} ? ${room.getRoom().getRoomCreator().getDegreesBehindName()}"></span>
+                <span th:text="${roomHolder.room.roomCreator.degreesBeforeName != null} ? ${roomHolder.room.roomCreator.degreesBeforeName}"></span>
+                <span th:text="${roomHolder.room.roomCreator.firstName} + ' ' + ${roomHolder.room.roomCreator.lastName}"></span>
+                <span th:text="${roomHolder.room.roomCreator.degreesBehindName != null} ? ${roomHolder.room.roomCreator.degreesBehindName}"></span>
             </div>
         </div>
     </div>

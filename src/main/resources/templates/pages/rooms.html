@@ -12,11 +12,11 @@
 
 <div style="margin-top: 100px"></div>
 <div class="container">
-    <div class="card rooms-card" th:each="room : ${rooms}">
-        <div class="card-header rooms-card-header" th:text="${room.getRoom().getRoomNumber()}"></div>
+    <div class="card rooms-card" th:each="roomHolder : ${roomHolders}">
+        <div class="card-header rooms-card-header" th:text="${roomHolder.room.roomNumber}"></div>
         <div class="card-body">
             <span>Počet míst: </span>
-            <span th:text="${room.getNumberOfSeats()}"></span>
+            <span th:text="${roomHolder.numberOfSeats}"></span>
         </div>
     </div>
 </div>
