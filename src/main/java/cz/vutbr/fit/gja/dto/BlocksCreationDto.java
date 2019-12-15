@@ -2,6 +2,7 @@ package cz.vutbr.fit.gja.dto;
 
 import cz.vutbr.fit.gja.models.Room;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BlocksCreationDto {
@@ -38,5 +39,17 @@ public class BlocksCreationDto {
 
     public List<Boolean> getBlockRow(int blockRowNumber) {
         return isSeats.get(blockRowNumber);
+    }
+
+    public BlocksCreationDto prepareBlockListsAndFillWithFalse(Room room) {
+        BlocksCreationDto blocks = new BlocksCreationDto(room, new ArrayList<>());
+        for (int i = 0; i < room.getNumberOfRows(); i++) {
+            List<Boolean> blockRow = new ArrayList<>();
+            for (int j = 0; j < room.getNumberOfColumns(); j++) {
+                blockRow.add(true);
+            }
+            blocks.addBlockRow(blockRow);
+        }
+        return blocks;
     }
 }

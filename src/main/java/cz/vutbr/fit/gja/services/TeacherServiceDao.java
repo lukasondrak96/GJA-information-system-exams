@@ -9,4 +9,6 @@ public interface TeacherServiceDao {
     boolean isTeacherAlreadySaved(Teacher teacher);
 
     boolean isPasswordSame(Teacher teacher);
+
+    Teacher getTeacher(String email);
 }

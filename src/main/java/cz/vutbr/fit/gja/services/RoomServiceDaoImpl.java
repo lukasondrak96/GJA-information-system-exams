@@ -5,6 +5,8 @@ import cz.vutbr.fit.gja.repositories.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RoomServiceDaoImpl implements RoomServiceDao {
 
@@ -14,7 +16,22 @@ public class RoomServiceDaoImpl implements RoomServiceDao {
     @Override
     public boolean isRoomAlreadyCreated(Room room) {
         String roomNumber = room.getRoomNumber();
-        Room foundRoom = roomRepository.findByRoomNumber(roomNumber);
+        Room foundRoom = getRoom(roomNumber);
         return foundRoom != null;
+    }
+
+    @Override
+    public List<Room> getAllRoomsFromDatabase() {
+        return roomRepository.findAll();
+    }
+
+    @Override
+    public Room getRoom(String roomNumber) {
+        return roomRepository.findByRoomNumber(roomNumber);
+    }
+
+    @Override
+    public void saveRoomToDatabase(Room room) {
+        roomRepository.save(room);
     }
 }

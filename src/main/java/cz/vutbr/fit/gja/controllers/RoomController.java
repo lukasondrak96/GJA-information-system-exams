@@ -1,13 +1,12 @@
-package cz.vutbr.fit.gja.controllers.rooms;
+package cz.vutbr.fit.gja.controllers;
 
-import cz.vutbr.fit.gja.Exceptions.RoomNotFoundException;
+import cz.vutbr.fit.gja.common.ErrorMessageCreator;
 import cz.vutbr.fit.gja.dto.BlocksCreationDto;
-import cz.vutbr.fit.gja.models.Block;
 import cz.vutbr.fit.gja.models.Room;
-import cz.vutbr.fit.gja.repositories.BlockRepository;
-import cz.vutbr.fit.gja.repositories.RoomRepository;
-import cz.vutbr.fit.gja.repositories.TeacherRepository;
+import cz.vutbr.fit.gja.models.Teacher;
+import cz.vutbr.fit.gja.services.BlockServiceDao;
 import cz.vutbr.fit.gja.services.RoomServiceDao;
+import cz.vutbr.fit.gja.services.TeacherServiceDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -19,29 +18,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
-public class RoomsController {
-
-    @Autowired
-    RoomRepository roomRepository;
-
+public class RoomController {
     @Autowired
     RoomServiceDao roomServiceDao;
 
     @Autowired
-    BlockRepository blockRepository;
+    BlockServiceDao blockServiceDao;
 
     @Autowired
-    TeacherRepository teacherRepository;
+    TeacherServiceDaoImpl teacherServiceDao;
 
     @GetMapping("/rooms")
     public ModelAndView getRooms() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("pages/rooms");
-        modelAndView.addObject("rooms", roomRepository.findAll());
+        modelAndView.addObject("rooms", roomServiceDao.getAllRoomsFromDatabase());
         return modelAndView;
     }
 
@@ -49,35 +42,40 @@ public class RoomsController {
     public ModelAndView getRoomsAsLogged() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("pages/logged/rooms");
-        modelAndView.addObject("rooms", roomRepository.findAll());
+        modelAndView.addObject("rooms", roomServiceDao.getAllRoomsFromDatabase());
         return modelAndView;
     }
 
     @GetMapping("/rooms/{id}")
     public ModelAndView getRoom(@PathVariable(value = "id") String roomId) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("pages/room");
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new RoomNotFoundException("číslem", roomId));
-        modelAndView.addObject("room", room);
+        Room room = roomServiceDao.getRoom(roomId);
+        if (room == null) {
+            ErrorMessageCreator.errorPageWithMessage(modelAndView, "Místnost s číslem " + roomId + " neexistuje.");
+        } else {
+            modelAndView.setViewName("pages/room");
+            modelAndView.addObject("room", room);
+        }
         return modelAndView;
     }
 
     @GetMapping("/logged/rooms/{id}")
     public ModelAndView getRoomAsLogged(@PathVariable(value = "id") String roomId) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("pages/logged/room");
-        Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new RoomNotFoundException("číslem", roomId));
-        modelAndView.addObject("room", room);
+        Room room = roomServiceDao.getRoom(roomId);
+        if (room == null) {
+            ErrorMessageCreator.errorPageWithMessageLogged(modelAndView, "Místnost s číslem " + roomId + " neexistuje.");
+        } else {
+            modelAndView.setViewName("pages/logged/room");
+            modelAndView.addObject("room", room);
+        }
         return modelAndView;
     }
 
     @GetMapping("/logged/rooms/new_room")
     public ModelAndView getNewRoomPage() {
         ModelAndView modelAndView = new ModelAndView();
-        Room room = new Room();
-        modelAndView.addObject("room", room);
+        modelAndView.addObject("room", new Room());
         modelAndView.setViewName("pages/logged/new_room");
         return modelAndView;
     }
@@ -95,17 +93,7 @@ public class RoomsController {
             modelAndView.setViewName("pages/logged/new_room");
             modelAndView.addObject("room", new Room());
         } else {
-            BlocksCreationDto blocks = new BlocksCreationDto();
-            blocks.setRoomReference(room);
-            blocks.setIsSeats(new ArrayList<>());
-            for (int i = 0; i < room.getNumberOfRows(); i++) {
-                List<Boolean> blockRow = new ArrayList<>();
-                for (int j = 0; j < room.getNumberOfColumns(); j++) {
-                    blockRow.add(true);
-                }
-                blocks.addBlockRow(blockRow);
-            }
-
+            BlocksCreationDto blocks = new BlocksCreationDto().prepareBlockListsAndFillWithFalse(room);
             modelAndView.addObject("room", room);
             modelAndView.addObject("all_blocks", blocks);
             modelAndView.setViewName("pages/logged/new_room");
@@ -135,31 +123,18 @@ public class RoomsController {
             modelAndView.addObject(room);
         } else {
             String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-            room.setRoomCreator(teacherRepository.findByEmail(userEmail));
-            roomRepository.save(room);
-
-            Room roomReference = roomRepository.findByRoomNumber(room.getRoomNumber());
-            for (int i = 0; i < room.getNumberOfRows(); i++) {
-                for (int j = 0; j < room.getNumberOfColumns(); j++) {
-                    Boolean isSeat = true;
-                    try {
-                        isSeat = blocks.getBlockRow(i).get(j);
-                    } catch (IndexOutOfBoundsException e) {
-                        isSeat = false;
-                        blocks.getBlockRow(i).add(false);
-                    } finally {
-                        if (isSeat == null) {
-                            isSeat = false;
-                            blocks.getBlockRow(i).set(j, false);
-                        }
-                    }
-                    Block block = new Block(isSeat, j + 1, room.getNumberOfRows() - i, roomReference);
-                    blockRepository.save(block);
-                }
+            Teacher roomCreator = teacherServiceDao.getTeacher(userEmail);
+            if (roomCreator == null) {
+                ErrorMessageCreator.errorPageWithMessageLogged(modelAndView, "Tento uživatel neexistuje");
             }
+            room.setRoomCreator(roomCreator);
+            roomServiceDao.saveRoomToDatabase(room);
+
+            Room roomReference = roomServiceDao.getRoom(room.getRoomNumber());
+            blockServiceDao.createAndSaveBlocksForRoom(roomReference, blocks);
 
             modelAndView.addObject("successMessage", "Místnost \"" + room.getRoomNumber() + "\" byla úspěšně vytvořena.");
-            modelAndView.addObject("rooms", roomRepository.findAll());
+            modelAndView.addObject("rooms", roomServiceDao.getAllRoomsFromDatabase());
             modelAndView.setViewName("pages/logged/rooms");
         }
         return modelAndView;

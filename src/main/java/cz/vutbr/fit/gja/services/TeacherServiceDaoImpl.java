@@ -1,16 +1,15 @@
 package cz.vutbr.fit.gja.services;
 
-import java.util.Arrays;
-import java.util.HashSet;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import cz.vutbr.fit.gja.models.Role;
 import cz.vutbr.fit.gja.models.Teacher;
 import cz.vutbr.fit.gja.repositories.RoleRepository;
 import cz.vutbr.fit.gja.repositories.TeacherRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.HashSet;
 
 @Service
 public class TeacherServiceDaoImpl implements TeacherServiceDao {
@@ -45,5 +44,8 @@ public class TeacherServiceDaoImpl implements TeacherServiceDao {
         return !password1.equals(password2);
     }
 
-
+    @Override
+    public Teacher getTeacher(String email) {
+        return teacherRepository.findByEmail(email);
+    }
 }
