@@ -1,4 +1,8 @@
-package cz.vutbr.fit.gja.models;
+package cz.vutbr.fit.gja.models.examRun;
+
+import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRun;
+import cz.vutbr.fit.gja.models.exam.Exam;
+import cz.vutbr.fit.gja.models.room.Room;
 
 import javax.persistence.*;
 import java.util.Set;

@@ -1,7 +1,5 @@
-package cz.vutbr.fit.gja.services;
+package cz.vutbr.fit.gja.models.room;
 
-import cz.vutbr.fit.gja.models.Room;
-import cz.vutbr.fit.gja.repositories.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,10 +1,8 @@
-package cz.vutbr.fit.gja.services;
+package cz.vutbr.fit.gja.models.block;
 
 
 import cz.vutbr.fit.gja.dto.BlocksCreationDto;
-import cz.vutbr.fit.gja.models.Block;
-import cz.vutbr.fit.gja.models.Room;
-import cz.vutbr.fit.gja.repositories.BlockRepository;
+import cz.vutbr.fit.gja.models.room.Room;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

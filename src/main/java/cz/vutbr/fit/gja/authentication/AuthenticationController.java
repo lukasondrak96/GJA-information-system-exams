@@ -1,9 +1,7 @@
-package cz.vutbr.fit.gja.controllers.authentication;
+package cz.vutbr.fit.gja.authentication;
 
-import javax.validation.Valid;
-
-import cz.vutbr.fit.gja.models.Teacher;
-import cz.vutbr.fit.gja.services.TeacherServiceDao;
+import cz.vutbr.fit.gja.models.teacher.Teacher;
+import cz.vutbr.fit.gja.models.teacher.TeacherServiceDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -11,6 +9,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.validation.Valid;
 
 @Controller
 public class AuthenticationController {

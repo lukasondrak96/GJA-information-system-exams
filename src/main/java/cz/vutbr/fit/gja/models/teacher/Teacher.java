@@ -1,12 +1,12 @@
-package cz.vutbr.fit.gja.models;
+package cz.vutbr.fit.gja.models.teacher;
 
-import java.util.Set;
+import cz.vutbr.fit.gja.models.role.Role;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
+import java.util.Set;
 
 @Entity
 @Table(name = "teacher")

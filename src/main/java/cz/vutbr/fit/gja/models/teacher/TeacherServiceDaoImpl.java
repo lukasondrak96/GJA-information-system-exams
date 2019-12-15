@@ -1,9 +1,7 @@
-package cz.vutbr.fit.gja.services;
+package cz.vutbr.fit.gja.models.teacher;
 
-import cz.vutbr.fit.gja.models.Role;
-import cz.vutbr.fit.gja.models.Teacher;
-import cz.vutbr.fit.gja.repositories.RoleRepository;
-import cz.vutbr.fit.gja.repositories.TeacherRepository;
+import cz.vutbr.fit.gja.models.role.Role;
+import cz.vutbr.fit.gja.models.role.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

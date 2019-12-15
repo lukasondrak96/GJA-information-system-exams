@@ -1,4 +1,6 @@
-package cz.vutbr.fit.gja.models;
+package cz.vutbr.fit.gja.models.student;
+
+import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRun;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

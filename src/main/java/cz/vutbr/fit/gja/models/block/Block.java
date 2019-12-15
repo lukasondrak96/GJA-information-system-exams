@@ -1,4 +1,7 @@
-package cz.vutbr.fit.gja.models;
+package cz.vutbr.fit.gja.models.block;
+
+import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRun;
+import cz.vutbr.fit.gja.models.room.Room;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

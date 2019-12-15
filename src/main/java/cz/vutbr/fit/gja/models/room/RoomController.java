@@ -1,12 +1,10 @@
-package cz.vutbr.fit.gja.controllers;
+package cz.vutbr.fit.gja.models.room;
 
 import cz.vutbr.fit.gja.common.ErrorMessageCreator;
 import cz.vutbr.fit.gja.dto.BlocksCreationDto;
-import cz.vutbr.fit.gja.models.Room;
-import cz.vutbr.fit.gja.models.Teacher;
-import cz.vutbr.fit.gja.services.BlockServiceDao;
-import cz.vutbr.fit.gja.services.RoomServiceDao;
-import cz.vutbr.fit.gja.services.TeacherServiceDaoImpl;
+import cz.vutbr.fit.gja.models.block.BlockServiceDao;
+import cz.vutbr.fit.gja.models.teacher.Teacher;
+import cz.vutbr.fit.gja.models.teacher.TeacherServiceDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;

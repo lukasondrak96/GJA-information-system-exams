@@ -1,6 +1,4 @@
-package cz.vutbr.fit.gja.services;
-
-import cz.vutbr.fit.gja.models.Room;
+package cz.vutbr.fit.gja.models.room;
 
 import java.util.List;
 

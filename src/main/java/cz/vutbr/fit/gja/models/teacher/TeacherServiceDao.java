@@ -1,6 +1,4 @@
-package cz.vutbr.fit.gja.services;
-
-import cz.vutbr.fit.gja.models.Teacher;
+package cz.vutbr.fit.gja.models.teacher;
 
 public interface TeacherServiceDao {
 

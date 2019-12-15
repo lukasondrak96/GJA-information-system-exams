@@ -1,6 +1,5 @@
-package cz.vutbr.fit.gja.repositories;
+package cz.vutbr.fit.gja.models.teacher;
 
-import cz.vutbr.fit.gja.models.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

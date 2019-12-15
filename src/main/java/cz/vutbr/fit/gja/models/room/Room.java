@@ -1,4 +1,7 @@
-package cz.vutbr.fit.gja.models;
+package cz.vutbr.fit.gja.models.room;
+
+import cz.vutbr.fit.gja.models.examRun.ExamRun;
+import cz.vutbr.fit.gja.models.teacher.Teacher;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;

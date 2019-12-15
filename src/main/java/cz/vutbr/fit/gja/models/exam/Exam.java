@@ -1,5 +1,7 @@
-package cz.vutbr.fit.gja.models;
+package cz.vutbr.fit.gja.models.exam;
 
+import cz.vutbr.fit.gja.models.examRun.ExamRun;
+import cz.vutbr.fit.gja.models.teacher.Teacher;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;

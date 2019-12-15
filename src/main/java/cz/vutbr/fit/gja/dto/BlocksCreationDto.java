@@ -1,6 +1,6 @@
 package cz.vutbr.fit.gja.dto;
 
-import cz.vutbr.fit.gja.models.Room;
+import cz.vutbr.fit.gja.models.room.Room;
 
 import java.util.ArrayList;
 import java.util.List;
