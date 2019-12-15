@@ -2,15 +2,22 @@ package cz.vutbr.fit.gja.models.block;
 
 
 import cz.vutbr.fit.gja.dto.BlocksCreationDto;
+import cz.vutbr.fit.gja.dto.RoomAndNumberOfSeatsDto;
 import cz.vutbr.fit.gja.models.room.Room;
+import cz.vutbr.fit.gja.models.room.RoomServiceDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class BlockServiceDaoImpl implements BlockServiceDao {
     @Autowired
     BlockRepository blockRepository;
+
+    @Autowired
+    RoomServiceDaoImpl roomServiceDao;
 
     @Override
     public void createAndSaveBlocksForRoom(Room room, BlocksCreationDto blocks) {
@@ -32,5 +39,21 @@ public class BlockServiceDaoImpl implements BlockServiceDao {
                 blockRepository.save(block);
             }
         }
+    }
+
+    @Override
+    public long getNumberOfSeats(Room roomReference) {
+        return blockRepository.countAllByRoomReferenceAndSeatTrue(roomReference);
+    }
+
+    @Override
+    public List<RoomAndNumberOfSeatsDto> getRoomAndNumberOfSeatsOfAllRooms() {
+        List<RoomAndNumberOfSeatsDto> roomAndNumberOfSeatsDtoList = new ArrayList<>();
+        List<Room> rooms = roomServiceDao.getAllRoomsFromDatabase();
+        for (Room room : rooms) {
+            long numberOfSeats = getNumberOfSeats(room);
+            roomAndNumberOfSeatsDtoList.add(new RoomAndNumberOfSeatsDto(room, numberOfSeats));
+        }
+        return roomAndNumberOfSeatsDtoList;
     }
 }

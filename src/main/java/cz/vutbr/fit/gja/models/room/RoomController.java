@@ -32,7 +32,7 @@ public class RoomController {
     public ModelAndView getRooms() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("pages/rooms");
-        modelAndView.addObject("rooms", roomServiceDao.getAllRoomsFromDatabase());
+        modelAndView.addObject("rooms", blockServiceDao.getRoomAndNumberOfSeatsOfAllRooms());
         return modelAndView;
     }
 
@@ -40,7 +40,7 @@ public class RoomController {
     public ModelAndView getRoomsAsLogged() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("pages/logged/rooms");
-        modelAndView.addObject("rooms", roomServiceDao.getAllRoomsFromDatabase());
+        modelAndView.addObject("rooms", blockServiceDao.getRoomAndNumberOfSeatsOfAllRooms());
         return modelAndView;
     }
 
@@ -132,7 +132,7 @@ public class RoomController {
             blockServiceDao.createAndSaveBlocksForRoom(roomReference, blocks);
 
             modelAndView.addObject("successMessage", "Místnost \"" + room.getRoomNumber() + "\" byla úspěšně vytvořena.");
-            modelAndView.addObject("rooms", roomServiceDao.getAllRoomsFromDatabase());
+            modelAndView.addObject("rooms", blockServiceDao.getRoomAndNumberOfSeatsOfAllRooms());
             modelAndView.setViewName("pages/logged/rooms");
         }
         return modelAndView;

@@ -16,8 +16,8 @@ public class Block {
     @Column(name = "id_block")
     private int idBlock;
 
-    @Column(name = "is_seat")
-    private boolean isSeat;
+    @Column(name = "seat")
+    private boolean seat;
 
     @Column(name = "column_number")
     private int columnNumber;
@@ -36,8 +36,8 @@ public class Block {
 
     }
 
-    public Block(boolean isSeat, int columnNumber, int rowNumber, Room roomReference) {
-        this.isSeat = isSeat;
+    public Block(boolean seat, int columnNumber, int rowNumber, Room roomReference) {
+        this.seat = seat;
         this.columnNumber = columnNumber;
         this.rowNumber = rowNumber;
         this.roomReference = roomReference;
@@ -52,11 +52,11 @@ public class Block {
     }
 
     public boolean isSeat() {
-        return isSeat;
+        return seat;
     }
 
     public void setSeat(boolean seat) {
-        this.isSeat = seat;
+        this.seat = seat;
     }
 
     public int getColumnNumber() {
