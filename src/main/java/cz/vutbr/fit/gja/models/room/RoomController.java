@@ -64,8 +64,9 @@ public class RoomController {
         if (room == null) {
             ErrorMessageCreator.errorPageWithMessageLogged(modelAndView, "Místnost s číslem " + roomId + " neexistuje.");
         } else {
+            BlocksCreationDto blocks = new BlocksCreationDto().prepareBlockListsAndFillWithFalse(room);
+            modelAndView.addObject("all_blocks", blocks);
             modelAndView.setViewName("pages/logged/room");
-            modelAndView.addObject("room", room);
         }
         return modelAndView;
     }

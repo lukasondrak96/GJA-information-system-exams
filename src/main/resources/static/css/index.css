@@ -42,6 +42,7 @@ body {
 
 .block-btn-wrapper {
     display: inline-block;
+    font-size: 14px;
 }
 
 .row-number {
