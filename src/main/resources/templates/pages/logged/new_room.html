@@ -15,25 +15,25 @@
         <form autocomplete="off" th:action="@{/logged/rooms/new_room}" th:object="${room}" method="post"
               class="form-rooms" role="form">
             <h3 class="form-signin-heading">Vytvoření nové místnosti</h3>
-            <div class="form-group new-room-form-cell">
+            <div class="form-group room-form-cell">
                 <label>Číslo místnosti:</label>
                 <div class="update-placeholder">
                     <input type="text" th:field="*{roomNumber}" class="form-control"/>
                 </div>
             </div>
-            <div class="form-group new-room-form-cell">
+            <div class="form-group room-form-cell">
                 <label>Počet řad:</label>
                 <div class="update-placeholder">
                     <input type="number" th:field="*{numberOfRows}" placeholder="0" class="form-control"/>
                 </div>
             </div>
-            <div class="form-group new-room-form-cell">
+            <div class="form-group room-form-cell">
                 <label>Počet sloupců:</label>
                 <div class="update-placeholder">
                     <input type="number" th:field="*{numberOfColumns}" placeholder="0" class="form-control"/>
                 </div>
             </div>
-            <div class="form-group new-room-form-cell">
+            <div class="form-group room-form-cell">
                 <div>
                     <button type="submit" class="btn btn-primary btn-block">Vygenerovat místnost</button>
                 </div>
@@ -71,7 +71,7 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group new-room-form-cell">
+            <div class="form-group room-form-cell">
                 <div class="">
                     <button class="btn btn-success btn-block" type="submit">Uložit místnost</button>
                 </div>

@@ -13,11 +13,13 @@
 <div style="margin-top: 100px"></div>
 <div class="container">
     <div class="card rooms-card" th:each="roomHolder : ${roomHolders}">
-        <div class="card-header rooms-card-header" th:text="${roomHolder.room.roomNumber}"></div>
-        <div class="card-body">
-            <span>Počet míst: </span>
-            <span th:text="${roomHolder.numberOfSeats}"></span>
-        </div>
+        <a th:href="@{/rooms/{id}(id=${roomHolder.room.roomNumber})}">
+            <div class="card-header rooms-card-header" th:text="${roomHolder.room.roomNumber}"></div>
+            <div class="card-body">
+                <span>Počet míst: </span>
+                <span th:text="${roomHolder.numberOfSeats}"></span>
+            </div>
+        </a>
     </div>
 </div>
 </body>
