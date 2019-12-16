@@ -30,7 +30,8 @@
             </div>
             <div class="right-float" th:if="${roomHolder.room.roomCreator.email == #authentication.name}">
                 <a class="btn btn-primary col-lg-1">Editovat</a>
-                <a class="btn btn-danger col-lg-1">Smazat</a>
+                <a class="btn btn-danger col-lg-1"
+                   th:href="@{/logged/rooms/{id}/delete(id=${roomHolder.room.roomNumber})}">Smazat</a>
             </div>
             <div>
                 <span>Vytvořil: </span>

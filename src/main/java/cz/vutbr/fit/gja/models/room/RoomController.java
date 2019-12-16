@@ -70,6 +70,20 @@ public class RoomController {
         return modelAndView;
     }
 
+    @GetMapping("/logged/rooms/{id}/delete")
+    public ModelAndView deleteRoomAsLogged(@PathVariable(value = "id") String roomId) {
+        ModelAndView modelAndView = new ModelAndView();
+        long numberOfDeletedRooms = roomServiceDao.deleteRoom(roomId);
+        if (numberOfDeletedRooms == 0) {
+            ErrorMessageCreator.errorPageWithMessageLogged(modelAndView, "Místnost s číslem " + roomId + " neexistuje.");
+        } else {
+            modelAndView.setViewName("pages/logged/rooms");
+            modelAndView.addObject("successMessage", "Místnost \"" + roomId + "\" byla úspěšně odstraněna.");
+            modelAndView.addObject("roomHolders", blockServiceDao.getRoomAndNumberOfSeatsOfAllRooms());
+        }
+        return modelAndView;
+    }
+
     @GetMapping("/logged/rooms/new_room")
     public ModelAndView getNewRoomPage() {
         ModelAndView modelAndView = new ModelAndView();

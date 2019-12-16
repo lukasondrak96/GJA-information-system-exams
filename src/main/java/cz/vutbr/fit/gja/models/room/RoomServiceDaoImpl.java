@@ -32,4 +32,9 @@ public class RoomServiceDaoImpl implements RoomServiceDao {
     public void saveRoomToDatabase(Room room) {
         roomRepository.save(room);
     }
+
+    @Override
+    public long deleteRoom(String roomNumber) {
+        return roomRepository.deleteByRoomNumber(roomNumber);
+    }
 }

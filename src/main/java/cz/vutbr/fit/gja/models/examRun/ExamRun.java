@@ -3,6 +3,8 @@ package cz.vutbr.fit.gja.models.examRun;
 import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRun;
 import cz.vutbr.fit.gja.models.exam.Exam;
 import cz.vutbr.fit.gja.models.room.Room;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -16,11 +18,13 @@ public class ExamRun {
     @Column(name = "id_exam_run")
     private int idExamRun;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "id_exam")
     private Exam idExam;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "room_number")
     private Room roomNumber;
 

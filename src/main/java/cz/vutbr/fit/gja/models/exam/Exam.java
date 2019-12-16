@@ -2,6 +2,8 @@ package cz.vutbr.fit.gja.models.exam;
 
 import cz.vutbr.fit.gja.models.examRun.ExamRun;
 import cz.vutbr.fit.gja.models.teacher.Teacher;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
@@ -31,7 +33,8 @@ public class Exam {
     @Range(min=0, max=2, message="Mezery mezi studenty mohou být v rozmezí 0 až 2")
     private int spacingBetweenStudents;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "id_exam_creator", referencedColumnName = "email")
     private Teacher idExamCreator;
 

@@ -10,4 +10,6 @@ public interface RoomServiceDao {
     Room getRoom(String name);
 
     void saveRoomToDatabase(Room room);
+
+    long deleteRoom(String roomNumber);
 }

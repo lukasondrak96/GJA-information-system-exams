@@ -2,6 +2,8 @@ package cz.vutbr.fit.gja.models.room;
 
 import cz.vutbr.fit.gja.models.examRun.ExamRun;
 import cz.vutbr.fit.gja.models.teacher.Teacher;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -27,7 +29,8 @@ public class Room {
     @Column(name = "number_of_columns")
     private int numberOfColumns;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "id_room_creator", referencedColumnName = "email")
     private Teacher idRoomCreator;
 

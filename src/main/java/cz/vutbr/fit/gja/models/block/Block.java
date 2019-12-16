@@ -2,6 +2,8 @@ package cz.vutbr.fit.gja.models.block;
 
 import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRun;
 import cz.vutbr.fit.gja.models.room.Room;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -25,7 +27,8 @@ public class Block {
     @Column(name = "row_number")
     private int rowNumber;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "room_reference", referencedColumnName = "room_number")
     private Room roomReference;
 
