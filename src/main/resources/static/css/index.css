@@ -144,3 +144,9 @@ body {
 .right-float > a {
     display: inline;
 }
+
+.error-msg {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
