@@ -150,3 +150,12 @@ body {
     align-items: center;
     justify-content: space-around;
 }
+
+.btn-rooms-z-index {
+    z-index: 1;
+}
+
+.a-style, .a-style:hover {
+    text-decoration: none; !important;
+    color: black; !important;
+}
