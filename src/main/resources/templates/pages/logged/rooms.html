@@ -30,7 +30,6 @@
                     <span th:text="${roomHolder.getNumberOfSeats()}"></span>
                 </div>
                 <div class="right-float" th:if="${roomHolder.room.roomCreator.email == #authentication.name}">
-                    <a class="btn btn-primary col-lg-1 btn-rooms-z-index">Editovat</a>
                     <a class="btn btn-danger col-lg-1 btn-rooms-z-index"
                        th:href="@{/logged/rooms/{id}/delete(id=${roomHolder.room.roomNumber})}">Smazat</a>
                 </div>
