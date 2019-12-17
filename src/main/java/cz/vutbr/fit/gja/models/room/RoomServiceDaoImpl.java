@@ -1,6 +1,7 @@
 package cz.vutbr.fit.gja.models.room;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,7 +35,12 @@ public class RoomServiceDaoImpl implements RoomServiceDao {
     }
 
     @Override
-    public long deleteRoom(String roomNumber) {
+    public long deleteRoom(String roomNumber) throws IllegalAccessError {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Room room = roomRepository.findByRoomNumber(roomNumber);
+        if (!userEmail.equals(room.getRoomCreator().getEmail())) {
+            throw new IllegalAccessError("Nelze smazat místnost jiného uživatele");
+        }
         return roomRepository.deleteByRoomNumber(roomNumber);
     }
 }

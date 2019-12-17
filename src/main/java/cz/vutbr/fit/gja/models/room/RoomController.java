@@ -74,7 +74,13 @@ public class RoomController {
     @GetMapping("/logged/rooms/{id}/delete")
     public ModelAndView deleteRoomAsLogged(@PathVariable(value = "id") String roomId) {
         ModelAndView modelAndView = new ModelAndView();
-        long numberOfDeletedRooms = roomServiceDao.deleteRoom(roomId);
+        long numberOfDeletedRooms = 0;
+        try {
+            numberOfDeletedRooms = roomServiceDao.deleteRoom(roomId);
+        } catch (IllegalAccessError e) {
+            return ErrorMessageCreator.errorPageWithMessageLogged(modelAndView, e.getMessage());
+        }
+
         if (numberOfDeletedRooms == 0) {
             ErrorMessageCreator.errorPageWithMessageLogged(modelAndView, "Místnost s číslem " + roomId + " neexistuje.");
         } else {

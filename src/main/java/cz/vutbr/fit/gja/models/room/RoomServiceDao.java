@@ -11,5 +11,5 @@ public interface RoomServiceDao {
 
     void saveRoomToDatabase(Room room);
 
-    long deleteRoom(String roomNumber);
+    long deleteRoom(String roomNumber) throws IllegalAccessError;
 }
