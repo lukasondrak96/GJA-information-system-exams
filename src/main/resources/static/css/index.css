@@ -101,6 +101,11 @@ body {
     text-align: left;
 }
 
+.edit-room-form-cell {
+    max-width: 650px;
+    margin: auto auto 20px;
+}
+
 .new-room-form-success-message {
     max-width: 650px;
     margin: auto auto 20px;
