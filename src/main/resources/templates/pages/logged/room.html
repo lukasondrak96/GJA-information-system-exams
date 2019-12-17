@@ -49,8 +49,8 @@
             <span th:text="*{roomReference.getRoomCreator().getDegreesBehindName() != null} ? *{roomReference.getRoomCreator().getDegreesBehindName()}"></span>
         </div>
         <div th:if="*{roomReference.getRoomCreator().getEmail() == #authentication.name}">
-            <a class="btn btn-primary btn-block" th:href="@{/logged/rooms}">Uložit změny</a>
-            <a class="btn btn-danger btn-block" th:href="@{/logged/rooms}">Smazat</a>
+            <a class="btn btn-primary btn-block" th:href="@{/logged/rooms/{id}/edit(id=*{roomReference.getRoomNumber()})}">Editovat</a>
+            <a class="btn btn-danger btn-block" th:href="@{/logged/rooms/{id}/delete(id=*{roomReference.getRoomNumber()})}">Smazat</a>
         </div>
     </div>
 </div>
