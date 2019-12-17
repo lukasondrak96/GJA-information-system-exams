@@ -14,7 +14,8 @@ import java.util.Set;
 public class Block {
     @Id
     @NotNull(message="Id bloku je povinné")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "BlockIdGenerator", sequenceName = "BLOCK_SEQUENCE")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BlockIdGenerator")
     @Column(name = "id_block")
     private int idBlock;
 

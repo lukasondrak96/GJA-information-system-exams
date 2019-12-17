@@ -21,18 +21,12 @@ INSERT INTO ROOM (room_number, number_of_columns, number_of_rows, id_room_creato
 INSERT INTO ROOM (room_number, number_of_columns, number_of_rows, id_room_creator) VALUES ('E112', '20', '20', 'b@b');
 
 -- boolean is stored as 1/0
-INSERT INTO BLOCK (id_block, seat, column_number, row_number, room_reference)
-VALUES (1, 1, 1, 1, 'E104');
-INSERT INTO BLOCK (id_block, seat, column_number, row_number, room_reference)
-VALUES (2, 1, 2, 2, 'D105');
-INSERT INTO BLOCK (id_block, seat, column_number, row_number, room_reference)
-VALUES (3, 1, 3, 2, 'D105');
-INSERT INTO BLOCK (id_block, seat, column_number, row_number, room_reference)
-VALUES (4, 1, 4, 2, 'D105');
-INSERT INTO BLOCK (id_block, seat, column_number, row_number, room_reference)
-VALUES (5, 0, 1, 4, 'E112');
-INSERT INTO BLOCK (id_block, seat, column_number, row_number, room_reference)
-VALUES (6, 0, 1, 5, 'E112');
+INSERT INTO BLOCK (id_block, seat, column_number, row_number, room_reference) VALUES (BLOCK_SEQUENCE.nextval, 1, 1, 1, 'E104');
+INSERT INTO BLOCK (id_block, seat, column_number, row_number, room_reference) VALUES (BLOCK_SEQUENCE.nextval, 1, 2, 2, 'D105');
+INSERT INTO BLOCK (id_block, seat, column_number, row_number, room_reference) VALUES (BLOCK_SEQUENCE.nextval, 1, 3, 2, 'D105');
+INSERT INTO BLOCK (id_block, seat, column_number, row_number, room_reference) VALUES (BLOCK_SEQUENCE.nextval, 1, 4, 2, 'D105');
+INSERT INTO BLOCK (id_block, seat, column_number, row_number, room_reference) VALUES (BLOCK_SEQUENCE.nextval, 0, 1, 4, 'E112');
+INSERT INTO BLOCK (id_block, seat, column_number, row_number, room_reference) VALUES (BLOCK_SEQUENCE.nextval, 0, 1, 5, 'E112');
 --
 -- INSERT INTO EXAM (id_exam, academic_year, exam_name, spacing_between_students, subject, id_exam_creator) VALUES (1, '2014/2015', 'IZU-semestralka', 2, 'IZU', 'a@a');
 -- INSERT INTO EXAM (id_exam, academic_year, exam_name, spacing_between_students, subject, id_exam_creator) VALUES (2, '2019/2020', 'TIN-semestralka', 1, 'TIN', 'a@a');
