@@ -11,8 +11,8 @@
 </div>
 <div class="my-container center-class">
     <div class="row form-style" th:object="${all_blocks}">
-        <h2 class="card-header rooms-card-header mb-5" th:text="*{roomReference.getRoomNumber()}"></h2>
-        <form autocomplete="off" class="form-rooms mt-5">
+        <h2 class="mb-4" th:text="*{roomReference.getRoomNumber()}"></h2>
+        <form autocomplete="off" class="form-rooms mt-4">
             <div class="form-group room-diagram">
                 <div>
                     <div th:each="i: ${#numbers.sequence(0, all_blocks.getRoomReference().getNumberOfRows() - 1)}">
@@ -43,14 +43,25 @@
             </script>
         </form>
         <div>
+            <table>
+                <tbody>
+                <tr><td></td><td>Katedra</td></tr>
+                <tr><td></td><td>Ulička</td></tr>
+                <tr><td></td><td>Sedadlo</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="right-float" th:if="*{roomReference.getRoomCreator().getEmail() == #authentication.name}">
+            <a class="btn btn-primary btn-block edit-room-form-cell"
+               th:href="@{/logged/rooms/{id}/edit(id=*{roomReference.getRoomNumber()})}">Editovat</a>
+            <a class="btn btn-danger btn-block edit-room-form-cell"
+               th:href="@{/logged/rooms/{id}/delete(id=*{roomReference.getRoomNumber()})}">Smazat</a>
+        </div>
+        <div class="text-left">
             <span>Vytvořil: </span>
             <span th:text="*{roomReference.getRoomCreator().getDegreesBeforeName() != null} ? *{roomReference.getRoomCreator().getDegreesBeforeName()}"></span>
             <span th:text="${all_blocks.getRoomReference().getRoomCreator().getFirstName()} + ' ' + ${all_blocks.getRoomReference().getRoomCreator().getLastName()}"></span>
             <span th:text="*{roomReference.getRoomCreator().getDegreesBehindName() != null} ? *{roomReference.getRoomCreator().getDegreesBehindName()}"></span>
-        </div>
-        <div th:if="*{roomReference.getRoomCreator().getEmail() == #authentication.name}">
-            <a class="btn btn-primary btn-block edit-room-form-cell" th:href="@{/logged/rooms/{id}/edit(id=*{roomReference.getRoomNumber()})}">Editovat</a>
-            <a class="btn btn-danger btn-block edit-room-form-cell" th:href="@{/logged/rooms/{id}/delete(id=*{roomReference.getRoomNumber()})}">Smazat</a>
         </div>
     </div>
 </div>
