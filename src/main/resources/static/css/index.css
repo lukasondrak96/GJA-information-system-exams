@@ -185,3 +185,12 @@ body {
     border-collapse: separate;
     border-spacing: 10px;
 }
+
+.desk {
+    display: inline-block;
+    width: 80px;
+    height: 25px;
+    background: #FFA500;
+    border-radius: 0.25rem;
+    margin-left: 28px;
+}
