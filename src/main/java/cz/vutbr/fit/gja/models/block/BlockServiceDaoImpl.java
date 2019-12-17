@@ -73,7 +73,7 @@ public class BlockServiceDaoImpl implements BlockServiceDao {
 
         List<Block> blockList = blockRepository.findByRoomReference(room);
         for (Block block : blockList) {
-            blocksDto.getBlockRow(block.getRowNumber() - 1).set(block.getColumnNumber() - 1, block.isSeat());
+            blocksDto.getBlockRow(room.getNumberOfRows() - block.getRowNumber()).set(block.getColumnNumber() - 1, block.isSeat());
         }
         return blocksDto;
     }
