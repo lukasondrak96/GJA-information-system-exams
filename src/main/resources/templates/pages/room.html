@@ -4,19 +4,54 @@
     <title th:text="${all_blocks.getRoomReference().getRoomNumber()}"></title>
     <meta charset="utf-8"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../static/css/index.css" th:href="@{css/index.css}" type="text/css">
+    <link rel="stylesheet" href="../../static/css/index.css" th:href="@{/css/index.css}" type="text/css">
 </head>
 <body>
-<div th:include="fragments/topnav :: navbar" >
+<div class="fixed-nav">
+    <div th:include="fragments/topnav :: navbar"></div>
 </div>
-
-Specific information about room for normal user
-<table>
-    <tr>
-        <td th:text="${room.roomNumber}">1</td>
-        <td th:text="${room.numberOfRows}">1</td>
-        <td th:text="${room.numberOfColumns}">1</td>
-    </tr>
-</table>
+<div class="my-container center-class">
+    <div class="row form-style" th:object="${all_blocks}">
+        <h2 class="mb-4" th:text="*{roomReference.getRoomNumber()}"></h2>
+        <form autocomplete="off" class="form-rooms mt-4">
+            <div class="form-group room-diagram">
+                <div>
+                    <div th:each="i: ${#numbers.sequence(0, all_blocks.getRoomReference().getNumberOfRows() - 1)}">
+                        <label class="row-number"
+                               th:text="${all_blocks.getRoomReference().getNumberOfRows() - i}"></label>
+                        <div class="block-btn-wrapper"
+                             th:each="j: ${#numbers.sequence(0, all_blocks.getRoomReference().getNumberOfColumns() - 1)}">
+                            <input disabled
+                                   th:checked="*{isSeatList[__${i}__][__${j}__]}"
+                                   th:field="*{isSeatList[__${i}__][__${j}__]}"
+                                   th:id="${all_blocks.getRoomReference().getNumberOfRows() - i} + '_' + ${j + 1}"
+                                   type="checkbox"/>
+                            <label th:for="${all_blocks.getRoomReference().getNumberOfRows() - i} + '_' + ${j + 1}">
+                                <span>&nbsp;</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                var inputs = document.getElementsByTagName("input");
+                for (var x = 0; x < inputs.length; x++) {
+                    var name = inputs[x].getAttribute("name");
+                    if (name.indexOf("_isSeatList") === 0) {
+                        inputs[x].parentNode.removeChild(inputs[x]);
+                    }
+                }
+            </script>
+        </form>
+        <div th:class="desk"></div>
+        <div>
+            <table class="my-table-room">
+                <tr><td class="row-number institute-color"></td><td class="text-left">Katedra</td></tr>
+                <tr><td class="row-number corridor-color"></td><td class="text-left">Ulička</td></tr>
+                <tr><td class="row-number seat-color"></td><td class="text-left">Sedadlo</td></tr>
+            </table>
+        </div>
+    </div>
+</div>
 </body>
 </html>

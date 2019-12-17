@@ -51,8 +51,9 @@ public class RoomController {
         if (room == null) {
             ErrorMessageCreator.errorPageWithMessage(modelAndView, "Místnost s číslem " + roomId + " neexistuje.");
         } else {
+            BlocksDto blocks = blockServiceDao.getAllBlocksOfRoom(room);
+            modelAndView.addObject("all_blocks", blocks);
             modelAndView.setViewName("pages/room");
-            modelAndView.addObject("room", room);
         }
         return modelAndView;
     }
