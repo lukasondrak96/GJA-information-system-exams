@@ -20,7 +20,9 @@
                                th:text="${all_blocks.getRoomReference().getNumberOfRows() - i}"></label>
                         <div class="block-btn-wrapper"
                              th:each="j: ${#numbers.sequence(0, all_blocks.getRoomReference().getNumberOfColumns() - 1)}">
-                            <input th:checked="*{isSeats[__${i}__][__${j}__]}"
+                            <input th:attrappend="disabled=${all_blocks.getRoomReference().getRoomCreator().getEmail() != #authentication.name}?disabled"
+                                   th:checked="*{isSeats[__${i}__][__${j}__]}"
+                                   th:field="*{isSeats[__${i}__][__${j}__]}"
                                    th:id="${all_blocks.getRoomReference().getNumberOfRows() - i} + '_' + ${j + 1}"
                                    type="checkbox"/>
                             <label th:for="${all_blocks.getRoomReference().getNumberOfRows() - i} + '_' + ${j + 1}">
@@ -30,6 +32,15 @@
                     </div>
                 </div>
             </div>
+            <script>
+                var inputs = document.getElementsByTagName("input");
+                for (var x = 0; x < inputs.length; x++) {
+                    var name = inputs[x].getAttribute("name");
+                    if (name.indexOf("_isSeats") === 0) {
+                        inputs[x].parentNode.removeChild(inputs[x]);
+                    }
+                }
+            </script>
         </form>
         <div>
             <span>Vytvořil: </span>
@@ -38,7 +49,7 @@
             <span th:text="*{roomReference.getRoomCreator().getDegreesBehindName() != null} ? *{roomReference.getRoomCreator().getDegreesBehindName()}"></span>
         </div>
         <div th:if="*{roomReference.getRoomCreator().getEmail() == #authentication.name}">
-            <a class="btn btn-primary btn-block" th:href="@{/logged/rooms}">Editovat</a>
+            <a class="btn btn-primary btn-block" th:href="@{/logged/rooms}">Uložit změny</a>
             <a class="btn btn-danger btn-block" th:href="@{/logged/rooms}">Smazat</a>
         </div>
     </div>
