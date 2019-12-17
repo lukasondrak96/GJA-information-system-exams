@@ -38,6 +38,9 @@ public class RoomServiceDaoImpl implements RoomServiceDao {
     public long deleteRoom(String roomNumber) throws IllegalAccessError {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Room room = roomRepository.findByRoomNumber(roomNumber);
+        if(room == null) {
+            return 0;
+        }
         if (!userEmail.equals(room.getRoomCreator().getEmail())) {
             throw new IllegalAccessError("Nelze smazat místnost jiného uživatele");
         }

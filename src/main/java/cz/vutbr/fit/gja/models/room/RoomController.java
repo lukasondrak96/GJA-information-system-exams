@@ -82,10 +82,10 @@ public class RoomController {
         }
 
         if (numberOfDeletedRooms == 0) {
-            ErrorMessageCreator.errorPageWithMessageLogged(modelAndView, "Místnost s číslem " + roomId + " neexistuje.");
+            ErrorMessageCreator.errorPageWithMessageLogged(modelAndView, "Místnost s číslem \"" + roomId + "\" neexistuje.");
         } else {
             modelAndView.setViewName("pages/logged/rooms");
-            modelAndView.addObject("successMessage", "Místnost \"" + roomId + "\" byla úspěšně odstraněna.");
+            modelAndView.addObject("successMessage", "Místnost s číslem\"" + roomId + "\" byla úspěšně odstraněna.");
             modelAndView.addObject("roomHolders", blockServiceDao.getRoomAndNumberOfSeatsOfAllRooms());
         }
         return modelAndView;
@@ -108,7 +108,7 @@ public class RoomController {
             modelAndView.setViewName("pages/logged/new_room");
             modelAndView.addObject("room", room);
         } else if(roomServiceDao.isRoomAlreadyCreated(room)) {
-            modelAndView.addObject("message", "Místnost s číslem " + room.getRoomNumber() + " již existuje.");
+            modelAndView.addObject("message", "Místnost s číslem \"" + room.getRoomNumber() + "\" již existuje.");
             modelAndView.setViewName("pages/logged/new_room");
             modelAndView.addObject("room", new Room());
         } else {
@@ -136,7 +136,7 @@ public class RoomController {
             modelAndView.addObject("blocks", blocks);
             modelAndView.setViewName("pages/logged/new_room");
         } else if (roomServiceDao.isRoomAlreadyCreated(room)) {
-            modelAndView.addObject("message", "Místnost s číslem " + room.getRoomNumber() + " již existuje.");
+            modelAndView.addObject("message", "Místnost s číslem \"" + room.getRoomNumber() + "\" již existuje.");
             modelAndView.addObject("room", new Room());
             modelAndView.setViewName("pages/logged/new_room");
             modelAndView.addObject(room);
