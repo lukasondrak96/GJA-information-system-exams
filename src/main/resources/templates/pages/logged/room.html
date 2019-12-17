@@ -20,7 +20,7 @@
                                th:text="${all_blocks.getRoomReference().getNumberOfRows() - i}"></label>
                         <div class="block-btn-wrapper"
                              th:each="j: ${#numbers.sequence(0, all_blocks.getRoomReference().getNumberOfColumns() - 1)}">
-                            <input th:attrappend="disabled=${all_blocks.getRoomReference().getRoomCreator().getEmail() != #authentication.name}?disabled"
+                            <input disabled
                                    th:checked="*{isSeatList[__${i}__][__${j}__]}"
                                    th:field="*{isSeatList[__${i}__][__${j}__]}"
                                    th:id="${all_blocks.getRoomReference().getNumberOfRows() - i} + '_' + ${j + 1}"
@@ -42,6 +42,7 @@
                 }
             </script>
         </form>
+        <div class="desk"></div>
         <div>
             <table class="my-table-room">
                 <tr><td class="row-number institute-color"></td><td class="text-left">Katedra</td></tr>
