@@ -1,7 +1,7 @@
 package cz.vutbr.fit.gja.models.room;
 
 import cz.vutbr.fit.gja.common.ErrorMessageCreator;
-import cz.vutbr.fit.gja.dto.BlocksCreationDto;
+import cz.vutbr.fit.gja.dto.BlocksDto;
 import cz.vutbr.fit.gja.models.block.BlockServiceDao;
 import cz.vutbr.fit.gja.models.teacher.Teacher;
 import cz.vutbr.fit.gja.models.teacher.TeacherServiceDaoImpl;
@@ -64,7 +64,7 @@ public class RoomController {
         if (room == null) {
             ErrorMessageCreator.errorPageWithMessageLogged(modelAndView, "Místnost s číslem " + roomId + " neexistuje.");
         } else {
-            BlocksCreationDto blocks = new BlocksCreationDto().prepareBlockListsAndFillWithFalse(room);
+            BlocksDto blocks = blockServiceDao.getAllBlocksOfRoom(room);
             modelAndView.addObject("all_blocks", blocks);
             modelAndView.setViewName("pages/logged/room");
         }
@@ -112,7 +112,7 @@ public class RoomController {
             modelAndView.setViewName("pages/logged/new_room");
             modelAndView.addObject("room", new Room());
         } else {
-            BlocksCreationDto blocks = new BlocksCreationDto().prepareBlockListsAndFillWithFalse(room);
+            BlocksDto blocks = new BlocksDto().prepareBlockListsAndFillWithFalse(room);
             modelAndView.addObject("room", room);
             modelAndView.addObject("all_blocks", blocks);
             modelAndView.setViewName("pages/logged/new_room");
@@ -121,7 +121,7 @@ public class RoomController {
     }
 
     @PostMapping("/logged/rooms/new_room/create")
-    public ModelAndView createNewRoom(@Valid BlocksCreationDto blocks, BindingResult bindingResult, ModelMap modelMap) {
+    public ModelAndView createNewRoom(@Valid BlocksDto blocks, BindingResult bindingResult, ModelMap modelMap) {
         ModelAndView modelAndView = new ModelAndView();
         Room room = blocks.getRoomReference();
         if (room == null) {

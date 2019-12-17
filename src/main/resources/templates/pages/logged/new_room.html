@@ -60,8 +60,8 @@
                         <label class="row-number" th:text="${room.getNumberOfRows() - i}"></label>
                         <div class="block-btn-wrapper"
                              th:each="j: ${#numbers.sequence(0, room.getNumberOfColumns() - 1)}">
-                            <input th:checked="*{isSeats[__${i}__][__${j}__]}"
-                                   th:field="*{isSeats[__${i}__][__${j}__]}"
+                            <input th:checked="*{isSeatList[__${i}__][__${j}__]}"
+                                   th:field="*{isSeatList[__${i}__][__${j}__]}"
                                    th:id="${room.getNumberOfRows() - i} + '_' + ${j + 1}"
                                    type="checkbox"/>
                             <label th:for="${room.getNumberOfRows() - i} + '_' + ${j + 1}">
@@ -94,7 +94,7 @@
                 var inputs = document.getElementsByTagName("input");
                 for (var x = 0; x < inputs.length; x++) {
                     var name = inputs[x].getAttribute("name");
-                    if (name.indexOf("_isSeats") === 0) {
+                    if (name.indexOf("_isSeatList") === 0) {
                         inputs[x].parentNode.removeChild(inputs[x]);
                     }
                 }
