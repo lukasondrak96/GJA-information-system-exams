@@ -50,6 +50,7 @@ body {
     width: 25px;
     height: 25px;
     margin-bottom: 12px;
+    border-radius: 0.25rem;
 }
 
 .block-btn-wrapper input[type="checkbox"] {
@@ -166,4 +167,21 @@ body {
 .a-style, .a-style:hover {
     text-decoration: none; !important;
     color: black; !important;
+}
+
+.institute-color {
+    background-color: orange;
+}
+
+.corridor-color {
+    background-color: #F2F2F2;
+}
+
+.seat-color {
+    background-color: #A9A9A9;
+}
+
+.my-table-room {
+    border-collapse: separate;
+    border-spacing: 10px;
 }

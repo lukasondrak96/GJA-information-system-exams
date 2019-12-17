@@ -43,12 +43,10 @@
             </script>
         </form>
         <div>
-            <table>
-                <tbody>
-                <tr><td></td><td>Katedra</td></tr>
-                <tr><td></td><td>Ulička</td></tr>
-                <tr><td></td><td>Sedadlo</td></tr>
-                </tbody>
+            <table class="my-table-room">
+                <tr><td class="row-number institute-color"></td><td class="text-left">Katedra</td></tr>
+                <tr><td class="row-number corridor-color"></td><td class="text-left">Ulička</td></tr>
+                <tr><td class="row-number seat-color"></td><td class="text-left">Sedadlo</td></tr>
             </table>
         </div>
         <div class="right-float" th:if="*{roomReference.getRoomCreator().getEmail() == #authentication.name}">
@@ -57,7 +55,7 @@
             <a class="btn btn-danger btn-block edit-room-form-cell"
                th:href="@{/logged/rooms/{id}/delete(id=*{roomReference.getRoomNumber()})}">Smazat</a>
         </div>
-        <div class="text-left">
+        <div class="text-left font-weight-bold">
             <span>Vytvořil: </span>
             <span th:text="*{roomReference.getRoomCreator().getDegreesBeforeName() != null} ? *{roomReference.getRoomCreator().getDegreesBeforeName()}"></span>
             <span th:text="${all_blocks.getRoomReference().getRoomCreator().getFirstName()} + ' ' + ${all_blocks.getRoomReference().getRoomCreator().getLastName()}"></span>
