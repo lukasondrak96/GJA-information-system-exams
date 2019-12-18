@@ -40,6 +40,48 @@ public class ExamController {
         return modelAndView;
     }
 
+    @PostMapping("/logged/exams/new_exam_file")
+    public ModelAndView createNewRoomHandleFile(@RequestParam("file") MultipartFile file,
+                                                @RequestParam("seating") String seating,
+                                                @RequestParam("login_position") int loginPosition,
+                                                @RequestParam("name_position") int namePosition) {
+        List<String> rows = new ArrayList<>();
+        List<String> names = new ArrayList<>();
+        List<String> logins = new ArrayList<>();
+        try {
+            rows = getListOfCsvFile(file);
+        } catch (FileUploadException e) {
+            //todo vratit error - spatny file
+        } catch (IOException e) {
+            //todo vratit error - chyba pri cteni
+        }
+
+        if(loginPosition == namePosition) {
+            //todo vratit error - pozice jmena a loginu se musi lisit
+        }
+
+        for (String row: rows) {
+            String[] split = row.split(",");
+            names.add(split[namePosition-1]);
+            logins.add(split[loginPosition-1]);
+        }
+
+        System.out.println("names:");
+        for (String name: names) {
+            System.out.println(name);
+            //add new student with name and login
+        }
+        System.out.println("\nlogins:");
+        for (String login: logins) {
+            System.out.println(login);
+        }
+
+
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("pages/logged/new_exam_1");
+        return modelAndView;
+
     @PostMapping("/logged/exams/new_exam_1")
     public ModelAndView createNewRoomHandleFile(@RequestParam("file") MultipartFile file,
                                                 @RequestParam("seating") String seating,
