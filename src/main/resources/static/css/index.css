@@ -134,12 +134,12 @@ body {
     font-weight: bold;
 }
 
-.btn-new-room {
+.btn-new-room, .btn-new-exam {
     text-align: center;
     margin-bottom: 50px;
 }
 
-.btn-new-room > a {
+.btn-new-room > a, .btn-new-exam > a  {
     font-weight: bold;
     padding-top: 10px;
     padding-bottom: 10px;
