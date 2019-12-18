@@ -1,10 +1,7 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Chyba</title>
-    <meta charset="utf-8"/>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../../static/css/index.css" rel="stylesheet" th:href="@{/css/index.css}" type="text/css">
+<html lang="cs" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head (${'Chyba'})">
+    Head from fragment
 </head>
 <body>
 <div th:include="fragments/topnav :: navbar">
