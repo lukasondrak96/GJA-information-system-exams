@@ -1,5 +1,6 @@
 package cz.vutbr.fit.gja.models.exam;
 
+import cz.vutbr.fit.gja.models.student.Student;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,8 +39,7 @@ public class ExamController {
                                                 @RequestParam("login_position") int loginPosition,
                                                 @RequestParam("name_position") int namePosition) {
         List<String> rows = new ArrayList<>();
-        List<String> names = new ArrayList<>();
-        List<String> logins = new ArrayList<>();
+        List<Student> newStudents = new ArrayList<>();
         try {
             rows = getListOfCsvFile(file);
         } catch (FileUploadException e) {
@@ -53,22 +53,14 @@ public class ExamController {
         }
 
         for (String row: rows) {
-            String[] split = row.split(",");
-            names.add(split[namePosition-1]);
-            logins.add(split[loginPosition-1]);
+            String[] splittedRowArray = row.split(",");
+            newStudents.add(new Student(splittedRowArray[loginPosition-1], splittedRowArray[namePosition-1]));
         }
 
-        System.out.println("names:");
-        for (String name: names) {
-            System.out.println(name);
-            //add new student with name and login
+        for (Student student: newStudents) {
+            System.out.println(student.getLogin() + ", " + student.getNameWithDegrees());
+            //todo add new student with name and login
         }
-        System.out.println("\nlogins:");
-        for (String login: logins) {
-            System.out.println(login);
-        }
-
-
 
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("pages/logged/new_exam_1");
