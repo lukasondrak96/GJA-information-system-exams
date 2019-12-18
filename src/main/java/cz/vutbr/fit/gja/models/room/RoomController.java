@@ -49,7 +49,7 @@ public class RoomController {
         ModelAndView modelAndView = new ModelAndView();
         Room room = roomServiceDao.getRoom(roomId);
         if (room == null) {
-            ErrorMessageCreator.errorPageWithMessage(modelAndView, "Místnost s číslem " + roomId + " neexistuje.");
+            ErrorMessageCreator.errorPageWithMessage(modelAndView, "Místnost s číslem \"" + roomId + "\" neexistuje.");
         } else {
             BlocksDto blocks = blockServiceDao.getAllBlocksOfRoom(room);
             modelAndView.addObject("all_blocks", blocks);
@@ -63,7 +63,7 @@ public class RoomController {
         ModelAndView modelAndView = new ModelAndView();
         Room room = roomServiceDao.getRoom(roomId);
         if (room == null) {
-            ErrorMessageCreator.errorPageWithMessageLogged(modelAndView, "Místnost s číslem " + roomId + " neexistuje.");
+            ErrorMessageCreator.errorPageWithMessageLogged(modelAndView, "Místnost s číslem \"" + roomId + "\" neexistuje.");
         } else {
             BlocksDto blocks = blockServiceDao.getAllBlocksOfRoom(room);
             modelAndView.addObject("all_blocks", blocks);
