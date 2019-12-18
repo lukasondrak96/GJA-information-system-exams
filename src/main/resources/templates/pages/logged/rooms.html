@@ -4,11 +4,11 @@
     Head from fragment
 </head>
 <body>
-<div th:include="fragments/topnav :: navbar">
+<div th:replace="fragments/topnav :: navbar">
+    Menu
 </div>
 
-<div style="margin-top: 100px"></div>
-<div class="container">
+<div class="container list-style">
     <div class="alert alert-danger" th:if="${message != null}">
         <span th:utext="${message}"></span>
     </div>

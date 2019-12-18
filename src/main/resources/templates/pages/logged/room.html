@@ -3,8 +3,9 @@
 <head th:replace="fragments/head :: head (${all_blocks.getRoomReference().getRoomNumber()})">
     Head from fragment
 </head>
-<div class="fixed-nav">
-    <div th:include="fragments/topnav :: navbar"></div>
+<body>
+<div th:replace="fragments/topnav :: navbar">
+    Menu
 </div>
 <div class="my-container center-class">
     <div class="row form-style" th:object="${all_blocks}">

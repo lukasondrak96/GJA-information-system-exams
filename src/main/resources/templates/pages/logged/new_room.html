@@ -4,8 +4,8 @@
     Head from fragment
 </head>
 <body>
-<div class="fixed-nav">
-<div th:include="fragments/topnav :: navbar"></div>
+<div th:replace="fragments/topnav :: navbar">
+    Menu
 </div>
 <div class="my-container center-class">
     <div class="row form-style">

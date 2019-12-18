@@ -4,7 +4,8 @@
     Head from fragment
 </head>
 <body>
-<div th:include="fragments/topnav :: navbar">
+<div th:replace="fragments/topnav :: navbar">
+    Menu
 </div>
 <div class="error-msg">
     <div class="col-sm-4 form-group form-style">

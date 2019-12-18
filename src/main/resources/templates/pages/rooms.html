@@ -4,11 +4,11 @@
     Head from fragment
 </head>
 <body>
-<div th:include="fragments/topnav :: navbar">
+<div th:replace="fragments/topnav :: navbar">
+    Menu
 </div>
 
-<div style="margin-top: 100px"></div>
-<div class="container">
+<div class="container list-style">
     <div class="card rooms-card" th:each="roomHolder : ${roomHolders}">
         <a class="a-style" th:href="@{/rooms/{id}(id=${roomHolder.room.roomNumber})}">
             <div class="card-header rooms-card-header" th:text="${roomHolder.room.roomNumber}"></div>
