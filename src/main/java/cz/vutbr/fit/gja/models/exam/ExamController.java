@@ -33,44 +33,63 @@ public class ExamController {
         return modelAndView;
     }
 
-    @PostMapping("/logged/exams/new_exam_file")
+    @PostMapping("/logged/exams/new_exam_1")
     public ModelAndView createNewRoomHandleFile(@RequestParam("file") MultipartFile file,
                                                 @RequestParam("seating") String seating,
-                                                @RequestParam("login_position") int loginPosition,
-                                                @RequestParam("name_position") int namePosition) {
-        List<String> rows = new ArrayList<>();
+                                                @RequestParam("login_position") String loginPosition,
+                                                @RequestParam("name_position") String namePosition) {
+        List<String> rows;
         List<Student> newStudents = new ArrayList<>();
+        int loginPos;
+        int namePos;
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("pages/logged/new_exam_1");
+
+        try {
+            loginPos = Integer.parseInt(loginPosition);
+            if (loginPos < 1)
+                throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            modelAndView.addObject("message", "Pozice loginu v souboru musí být celé kladné číslo.");
+            return modelAndView;
+        }
+
+        try {
+            namePos = Integer.parseInt(namePosition);
+            if (namePos < 1)
+                throw new NumberFormatException();
+        } catch (NumberFormatException e) {
+            modelAndView.addObject("message", "Pozice jména v souboru musí být celé kladné číslo.");
+            return modelAndView;
+        }
 
         try {
             rows = getListOfCsvFile(file);
         } catch (FileUploadException e) {
-            //todo vratit error - spatny file
-            modelAndView.addObject("message", "Soubor není ve formátu csv;");
-            modelAndView.setViewName("pages/logged/new_exam_1");
+            modelAndView.addObject("message", "Prosím vyberte soubor ve formátu csv!");
             return modelAndView;
 
         } catch (IOException e) {
-            //todo vratit error - chyba pri cteni
+            modelAndView.addObject("message", "Při čtení souboru došlo k chybě.");
+            return modelAndView;
         }
 
-        if(loginPosition == namePosition) {
-            //todo vratit error - pozice jmena a loginu se musi lisit
+        if (loginPos == namePos) {
+            modelAndView.addObject("message", "Pozice jména v souboru nesmí být stejná jako pozice loginu.");
+            return modelAndView;
         }
 
-        for (String row: rows) {
+        for (String row : rows) {
             String[] splittedRowArray = row.split(",");
-            newStudents.add(new Student(splittedRowArray[loginPosition-1], splittedRowArray[namePosition-1]));
+            newStudents.add(new Student(splittedRowArray[loginPos - 1], splittedRowArray[namePos - 1]));
         }
 
-        for (Student student: newStudents) {
+        for (Student student : newStudents) {
             System.out.println(student.getLogin() + ", " + student.getNameWithDegrees());
             //todo add new student with name and login
         }
-
         modelAndView.setViewName("pages/logged/new_exam_2");
         return modelAndView;
-
     }
 
     private List<String> getListOfCsvFile(MultipartFile file) throws FileUploadException, IOException {
