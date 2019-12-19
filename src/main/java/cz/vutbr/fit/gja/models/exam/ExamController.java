@@ -1,6 +1,7 @@
 package cz.vutbr.fit.gja.models.exam;
 
 import cz.vutbr.fit.gja.models.student.Student;
+import cz.vutbr.fit.gja.models.student.StudentServiceDao;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,9 @@ public class ExamController {
     @Autowired
     ExamServiceDao examServiceDao;
 
+    @Autowired
+    StudentServiceDao studentServiceDao;
+
     private static final String CSV_FILE = "application/vnd.ms-excel";
 
     @GetMapping("/exams")
@@ -36,13 +40,12 @@ public class ExamController {
     public ModelAndView getNewExamFirstPage() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("pages/logged/new_exam_1");
-        modelAndView.addObject("exam", new Exam());
         return modelAndView;
     }
 
     @PostMapping("/logged/exams/new_exam_1")
     public ModelAndView createNewRoomHandleFile(@RequestParam("file") MultipartFile file,
-                                                @RequestParam("seating") String seating,
+                                                @RequestParam("spacing") String spacing,
                                                 @RequestParam("login_position") String loginPosition,
                                                 @RequestParam("name_position") String namePosition) {
         List<String> rows;
@@ -91,12 +94,43 @@ public class ExamController {
             newStudents.add(new Student(splittedRowArray[loginPos - 1], splittedRowArray[namePos - 1]));
         }
 
-        for (Student student : newStudents) {
-            System.out.println(student.getLogin() + ", " + student.getNameWithDegrees());
-            //todo add new student with name and login
+        ArrayList<Student> studentsInDb = (ArrayList<Student>) studentServiceDao.getAllStudentsFromDatabase();
+
+        for (Student adeptToNewStudent : newStudents) {
+            boolean foundInDb = false;
+            for (Student studentInDb : studentsInDb) {
+                if (studentInDb.getLogin().equals(adeptToNewStudent.getLogin())) {
+                    foundInDb = true;
+                    break;
+                }
+            }
+            if (!foundInDb)
+                studentServiceDao.saveStudentToDatabase(adeptToNewStudent);
         }
+
+        Exam newExam = new Exam();
+        setSpacingOfExam(newExam, spacing);
+
+        modelAndView.addObject("exam", newExam);
         modelAndView.setViewName("pages/logged/new_exam_2");
         return modelAndView;
+    }
+
+    private int setSpacingOfExam(Exam exam, String spacing) {
+        int spacesBetweenStudents;
+        switch (spacing) {
+            default:
+            case "no_space":
+                spacesBetweenStudents = 0;
+                break;
+            case "one_space":
+                spacesBetweenStudents = 1;
+                break;
+            case "two_space":
+                spacesBetweenStudents = 2;
+                break;
+        }
+        return spacesBetweenStudents;
     }
 
     private List<String> getListOfCsvFile(MultipartFile file) throws FileUploadException, IOException {
