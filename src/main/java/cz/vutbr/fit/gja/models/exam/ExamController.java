@@ -40,44 +40,6 @@ public class ExamController {
         return modelAndView;
     }
 
-    @PostMapping("/logged/exams/new_exam_file")
-    public ModelAndView createNewRoomHandleFile(@RequestParam("file") MultipartFile file,
-                                                @RequestParam("seating") String seating,
-                                                @RequestParam("login_position") int loginPosition,
-                                                @RequestParam("name_position") int namePosition) {
-        List<String> rows = new ArrayList<>();
-        List<Student> newStudents = new ArrayList<>();
-        ModelAndView modelAndView = new ModelAndView();
-
-        try {
-            rows = getListOfCsvFile(file);
-        } catch (FileUploadException e) {
-            //todo vratit error - spatny file
-            modelAndView.addObject("message", "Soubor není ve formátu csv;");
-            modelAndView.setViewName("pages/logged/new_exam_1");
-            return modelAndView;
-
-        } catch (IOException e) {
-            //todo vratit error - chyba pri cteni
-        }
-
-        if(loginPosition == namePosition) {
-            //todo vratit error - pozice jmena a loginu se musi lisit
-        }
-
-        for (String row: rows) {
-            String[] splittedRowArray = row.split(",");
-            newStudents.add(new Student(splittedRowArray[loginPosition-1], splittedRowArray[namePosition-1]));
-        }
-
-        for (Student student: newStudents) {
-            System.out.println(student.getLogin() + ", " + student.getNameWithDegrees());
-            //todo add new student with name and login
-        }
-
-        modelAndView.setViewName("pages/logged/new_exam_2");
-        return modelAndView;
-
     @PostMapping("/logged/exams/new_exam_1")
     public ModelAndView createNewRoomHandleFile(@RequestParam("file") MultipartFile file,
                                                 @RequestParam("seating") String seating,
