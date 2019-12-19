@@ -122,6 +122,7 @@ body {
 .fixed-nav {
     width: 100%;
     position: fixed;
+    z-index: 10;
 }
 
 .rooms-card {
