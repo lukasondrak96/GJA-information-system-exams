@@ -50,6 +50,9 @@
                         <button class="btn btn-success btn-block" type="submit">Uložit zkoušku</button>
                     </div>
                 </div>
+                <div class="col-sm-12 alert alert-danger" th:if="${message != null}">
+                    <span th:utext="${message}"></span>
+                </div>
             </form>
         </div>
 
