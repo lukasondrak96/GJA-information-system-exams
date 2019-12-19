@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="cs" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" th:fragment="roomPage (loggedUser)">
+<head th:replace="fragments/head :: head (${all_blocks.getRoomReference().getRoomNumber()})">
+    Head from fragment
+</head>
+<body>
+<div th:replace="fragments/topnav :: navbar">
+    Menu
+</div>
+<div class="my-container center-class">
+    <div class="row form-style" th:object="${all_blocks}">
+        <h2 class="mb-4" th:text="*{roomReference.getRoomNumber()}"></h2>
+        <form autocomplete="off" class="form-rooms mt-4">
+            <div class="form-group room-diagram">
+                <div>
+                    <div th:each="i: ${#numbers.sequence(0, all_blocks.getRoomReference().getNumberOfRows() - 1)}">
+                        <label class="row-number"
+                               th:text="${all_blocks.getRoomReference().getNumberOfRows() - i}"></label>
+                        <div class="block-btn-wrapper"
+                             th:each="j: ${#numbers.sequence(0, all_blocks.getRoomReference().getNumberOfColumns() - 1)}">
+                            <input disabled
+                                   th:checked="*{isSeatList[__${i}__][__${j}__]}"
+                                   th:field="*{isSeatList[__${i}__][__${j}__]}"
+                                   th:id="${all_blocks.getRoomReference().getNumberOfRows() - i} + '_' + ${j + 1}"
+                                   type="checkbox"/>
+                            <label th:for="${all_blocks.getRoomReference().getNumberOfRows() - i} + '_' + ${j + 1}">
+                                <span>&nbsp;</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                var inputs = document.getElementsByTagName("input");
+                for (var x = 0; x < inputs.length; x++) {
+                    var name = inputs[x].getAttribute("name");
+                    if (name.indexOf("_isSeatList") === 0) {
+                        inputs[x].parentNode.removeChild(inputs[x]);
+                    }
+                }
+            </script>
+        </form>
+        <div th:class="desk"></div>
+        <div>
+            <table class="my-table-room">
+                <tr><td class="row-number institute-color"></td><td class="text-left">Katedra</td></tr>
+                <tr><td class="row-number corridor-color"></td><td class="text-left">Ulička</td></tr>
+                <tr><td class="row-number seat-color"></td><td class="text-left">Sedadlo</td></tr>
+            </table>
+        </div>
+        <div th:if="${loggedUser}">
+            <div class="right-float" th:if="*{roomReference.getRoomCreator().getEmail() == #authentication.name}">
+                <a class="btn btn-primary btn-block edit-room-form-cell"
+                   th:href="@{/logged/rooms/{id}/edit(id=*{roomReference.getRoomNumber()})}">Editovat</a>
+                <a class="btn btn-danger btn-block edit-room-form-cell"
+                   th:href="@{/logged/rooms/{id}/delete(id=*{roomReference.getRoomNumber()})}">Smazat</a>
+            </div>
+            <div class="text-left font-weight-bold">
+                <span>Vytvořil: </span>
+                <span th:text="*{roomReference.getRoomCreator().getDegreesBeforeName() != null} ? *{roomReference.getRoomCreator().getDegreesBeforeName()}"></span>
+                <span th:text="${all_blocks.getRoomReference().getRoomCreator().getFirstName()} + ' ' + ${all_blocks.getRoomReference().getRoomCreator().getLastName()}"></span>
+                <span th:text="*{roomReference.getRoomCreator().getDegreesBehindName() != null} ? *{roomReference.getRoomCreator().getDegreesBehindName()}"></span>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
