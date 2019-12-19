@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="cs" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head (${all_blocks.getRoomReference().getRoomNumber()})">
+    Head from fragment
+</head>
+<body>
+    <div th:fragment="roomSchema (room, isSeatList)">
+        <div th:each="i: ${#numbers.sequence(0, room.getNumberOfRows() - 1)}">
+            <label class="row-number" th:text="${room.getNumberOfRows() - i}"></label>
+            <div class="block-btn-wrapper"
+                 th:each="j: ${#numbers.sequence(0, room.getNumberOfColumns() - 1)}">
+                <input th:checked="*{isSeatList[__${i}__][__${j}__]}"
+                       th:field="*{isSeatList[__${i}__][__${j}__]}"
+                       th:id="${room.getNumberOfRows() - i} + '_' + ${j + 1}"
+                       type="checkbox"/>
+                <label th:for="${room.getNumberOfRows() - i} + '_' + ${j + 1}">
+                    <span>&nbsp;</span>
+                </label>
+            </div>
+        </div>
+        <script>
+            var inputs = document.getElementsByTagName("input");
+            for (var x = 0; x < inputs.length; x++) {
+                var name = inputs[x].getAttribute("name");
+                if (name.indexOf("_isSeatList") === 0) {
+                    inputs[x].parentNode.removeChild(inputs[x]);
+                }
+            }
+        </script>
+    </div>
+</body>
+</html>
