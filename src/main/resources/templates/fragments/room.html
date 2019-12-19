@@ -12,7 +12,7 @@
         <h2 class="mb-4" th:text="*{roomReference.getRoomNumber()}"></h2>
         <form autocomplete="off" class="form-rooms mt-4">
             <div class="form-group room-diagram">
-                <div th:replace="fragments/room_schema :: roomSchema(${all_blocks.getRoomReference()}, ${all_blocks.getIsSeatList()})">
+                <div th:replace="fragments/room_schema :: roomSchema(${all_blocks.getRoomReference()}, ${all_blocks.getIsSeatList()}, false)">
                     <!-- Room schema -->
                 </div>
             </div>
