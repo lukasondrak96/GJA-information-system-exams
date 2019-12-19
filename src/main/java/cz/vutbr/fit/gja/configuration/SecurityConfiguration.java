@@ -49,7 +49,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/rooms").permitAll()
                 .antMatchers("/rooms/**").permitAll()
                 .antMatchers("/register").permitAll()
-                .antMatchers("/admin/**").hasAnyAuthority("LOGGED_IN_USER")
+                .antMatchers("/logged/**").hasAnyAuthority("LOGGED_IN_USER")
                 .anyRequest().authenticated()
                 .and()
                 // form login
