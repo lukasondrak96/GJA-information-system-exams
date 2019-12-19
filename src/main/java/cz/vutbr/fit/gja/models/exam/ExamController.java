@@ -104,8 +104,9 @@ public class ExamController {
                     break;
                 }
             }
-            if (!foundInDb)
+            if (!foundInDb) {
                 studentServiceDao.saveStudentToDatabase(adeptToNewStudent);
+            }
         }
 
         Exam newExam = new Exam();
@@ -116,7 +117,7 @@ public class ExamController {
         return modelAndView;
     }
 
-    private int setSpacingOfExam(Exam exam, String spacing) {
+    private void setSpacingOfExam(Exam exam, String spacing) {
         int spacesBetweenStudents;
         switch (spacing) {
             default:
@@ -130,7 +131,7 @@ public class ExamController {
                 spacesBetweenStudents = 2;
                 break;
         }
-        return spacesBetweenStudents;
+        exam.setSpacingBetweenStudents(spacesBetweenStudents);
     }
 
     private List<String> getListOfCsvFile(MultipartFile file) throws FileUploadException, IOException {
