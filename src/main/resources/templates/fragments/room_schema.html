@@ -4,7 +4,7 @@
     Head from fragment
 </head>
 <body>
-    <div th:fragment="roomSchema (room, isSeatList, loggedIn)">
+    <div th:fragment="roomSchema (room, isSeatList)">
         <div th:each="i: ${#numbers.sequence(0, room.getNumberOfRows() - 1)}">
             <label class="row-number" th:text="${room.getNumberOfRows() - i}"></label>
             <div class="block-btn-wrapper"
