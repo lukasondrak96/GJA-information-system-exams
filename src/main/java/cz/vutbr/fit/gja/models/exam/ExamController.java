@@ -47,10 +47,16 @@ public class ExamController {
                                                 @RequestParam("name_position") int namePosition) {
         List<String> rows = new ArrayList<>();
         List<Student> newStudents = new ArrayList<>();
+        ModelAndView modelAndView = new ModelAndView();
+
         try {
             rows = getListOfCsvFile(file);
         } catch (FileUploadException e) {
             //todo vratit error - spatny file
+            modelAndView.addObject("message", "Soubor není ve formátu csv;");
+            modelAndView.setViewName("pages/logged/new_exam_1");
+            return modelAndView;
+
         } catch (IOException e) {
             //todo vratit error - chyba pri cteni
         }
@@ -69,8 +75,7 @@ public class ExamController {
             //todo add new student with name and login
         }
 
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("pages/logged/new_exam_1");
+        modelAndView.setViewName("pages/logged/new_exam_2");
         return modelAndView;
 
     @PostMapping("/logged/exams/new_exam_1")
