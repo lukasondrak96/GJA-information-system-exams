@@ -25,6 +25,13 @@ public class ExamController {
 
     private static final String CSV_FILE = "application/vnd.ms-excel";
 
+    @GetMapping("/exams")
+    public ModelAndView getExams() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("pages/exams");
+        return modelAndView;
+    }
+
     @GetMapping("/logged/exams/new_exam_1")
     public ModelAndView getNewExamFirstPage() {
         ModelAndView modelAndView = new ModelAndView();

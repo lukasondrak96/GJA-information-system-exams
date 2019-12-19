@@ -41,14 +41,11 @@
                         <input name="name_position" type="number" value="2" class="form-control"/>
                     </div>
                 </div>
-
                 <div class="form-group room-form-cell">
-                    <a class="btn btn-danger btn-block" th:href="@{/}">Zrušit</a>
+                        <button class="btn btn-success btn-block" type="submit">Uložit zkoušku</button>
                 </div>
                 <div class="form-group room-form-cell">
-                    <div class="">
-                        <button class="btn btn-success btn-block" type="submit">Uložit zkoušku</button>
-                    </div>
+                    <a class="btn btn-danger btn-block" th:href="@{/logged/exams}">Zrušit</a>
                 </div>
                 <div class="col-sm-12 alert alert-danger" th:if="${message != null}">
                     <span th:utext="${message}"></span>
