@@ -159,6 +159,81 @@ public class RoomController {
         return modelAndView;
     }
 
+    @GetMapping("/logged/rooms/{id}/edit")
+    public ModelAndView getEditPage(@PathVariable(value = "id") String name) {
+        ModelAndView modelAndView = new ModelAndView();
+        Room room = roomServiceDao.getRoom(name);
+        if (room == null) {
+            return ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Místnost s číslem \"" + name + "\" neexistuje.");
+        }
+        BlocksDto blocks = blockServiceDao.getAllBlocksOfRoom(room);
+
+        modelAndView.addObject("room", room);
+        modelAndView.addObject("all_blocks", blocks);
+        modelAndView.setViewName("pages/logged/edit_room");
+        return modelAndView;
+    }
+
+    @PostMapping("/logged/rooms/{id}/edit")
+    public ModelAndView editRoom(@PathVariable(value = "id") String name, @Valid Room room, BindingResult bindingResult, ModelMap modelMap) {
+        ModelAndView modelAndView = new ModelAndView();
+        // Check for the validations
+        if(bindingResult.hasErrors()) {
+            modelMap.addAttribute("bindingResult", bindingResult);
+            modelAndView.setViewName("pages/logged/edit_room");
+            modelAndView.addObject("room", room);
+        } else {
+            try {
+                roomServiceDao.deleteRoom(name);
+            } catch (IllegalAccessError e) {
+                return ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, e.getMessage());
+            }
+
+            BlocksDto blocks = new BlocksDto();
+            blocks.createIsSeatListOfSeats(room);
+            modelAndView.addObject("isNew", false);
+            modelAndView.addObject("room", room);
+            modelAndView.addObject("all_blocks", blocks);
+            modelAndView.setViewName("pages/logged/edit_room");
+        }
+        return modelAndView;
+    }
+
+    @PostMapping("/logged/rooms/{id}/edit/update")
+    public ModelAndView updateRoom(@PathVariable(value = "id") String name, @Valid BlocksDto blocks, BindingResult bindingResult, ModelMap modelMap) {
+        ModelAndView modelAndView = new ModelAndView();
+        Room room = blocks.getRoomReference();
+        if (room == null) {
+            modelAndView.addObject("message", "Vyskytla se chyba. Prosím, zkuste to znovu;");
+            modelAndView.addObject("room", new Room());
+            modelAndView.setViewName("pages/logged/new_room");
+        }
+        // Check for the validations
+        if (bindingResult.hasErrors()) {
+            modelMap.addAttribute("bindingResult", bindingResult);
+            modelAndView.addObject("room", room);
+            modelAndView.addObject("blocks", blocks);
+            modelAndView.setViewName("pages/logged/new_room");
+        } else if (roomServiceDao.isRoomAlreadyCreated(room)) {
+            roomServiceDao.deleteRoom(room.getRoomNumber());
+            String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+            Teacher roomCreator = teacherServiceDao.getTeacher(userEmail);
+            if (roomCreator == null) {
+                ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Tento uživatel neexistuje");
+            }
+            room.setRoomCreator(roomCreator);
+            roomServiceDao.saveRoomToDatabase(room);
+
+            Room roomReference = roomServiceDao.getRoom(room.getRoomNumber());
+            blockServiceDao.createAndSaveBlocksForRoom(roomReference, blocks);
+
+            modelAndView.addObject("successMessage", "Místnost \"" + room.getRoomNumber() + "\" byla úspěšně vytvořena.");
+            modelAndView.addObject("roomHolders", blockServiceDao.getRoomAndNumberOfSeatsOfAllRooms());
+            modelAndView.setViewName("pages/logged/rooms");
+        }
+        return modelAndView;
+    }
+
     private void setModelAndView(ModelAndView modelAndView, @Valid BlocksDto blocks, Room room) {
         blocks.replaceNullValuesWithFalse();
         modelAndView.addObject("room", room);
