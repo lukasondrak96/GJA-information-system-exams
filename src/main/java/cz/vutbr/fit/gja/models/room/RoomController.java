@@ -147,7 +147,7 @@ public class RoomController {
             if (roomCreator == null) {
                 ErrorMessageCreator.errorPageWithMessageLogged(modelAndView, "Tento uživatel neexistuje");
             }
-            room.setRoomCreator(roomCreator);
+            room.setTeacherReference(roomCreator);
             roomServiceDao.saveRoomToDatabase(room);
 
             Room roomReference = roomServiceDao.getRoom(room.getRoomNumber());

@@ -1,32 +1,24 @@
 package cz.vutbr.fit.gja.models.examRun;
 
-import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRun;
 import cz.vutbr.fit.gja.models.exam.Exam;
 import cz.vutbr.fit.gja.models.room.Room;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @Table(name = "exam_run")
 public class ExamRun {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "ExamRunIdGenerator", sequenceName = "EXAM_RUN_SEQUENCE", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ExamRunIdGenerator")
     @Column(name = "id_exam_run")
     private int idExamRun;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "id_exam")
-    private Exam idExam;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "room_number")
-    private Room roomNumber;
+    @Column(name = "exam_date")
+    private String examDate;
 
     @Column(name = "start_time")
     private String startTime;
@@ -34,15 +26,26 @@ public class ExamRun {
     @Column(name = "end_time")
     private String endTime;
 
-    @OneToMany(mappedBy = "examRun")
-    private Set<BlockOnExamRun> blocksOnRun;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "exam_reference", referencedColumnName = "id_exam")
+    private Exam examReference;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "room_reference", referencedColumnName = "id_room")
+    private Room roomReference;
+
+//    @OneToMany(mappedBy = "examRun")
+//    private Set<BlockOnExamRun> blocksOnRun;
 
     public ExamRun() {
     }
 
-    public ExamRun(Exam idExam, Room roomNumber, String startTime, String endTime) {
-        this.idExam = idExam;
-        this.roomNumber = roomNumber;
+    public ExamRun(Exam examReference, Room roomReference, String examDate, String startTime, String endTime) {
+        this.examReference = examReference;
+        this.roomReference = roomReference;
+        this.examDate = examDate;
         this.startTime = startTime;
         this.endTime = endTime;
     }
@@ -51,24 +54,28 @@ public class ExamRun {
         return idExamRun;
     }
 
-    public void setIdExamRun(int idExamRun) {
-        this.idExamRun = idExamRun;
+    public Room getRoomReference() {
+        return roomReference;
     }
 
-    public Exam getIdExam() {
-        return idExam;
+    public void setRoomReference(Room roomReference) {
+        this.roomReference = roomReference;
     }
 
-    public void setIdExam(Exam idExam) {
-        this.idExam = idExam;
+    public Exam getExamReference() {
+        return examReference;
     }
 
-    public Room getRoomNumber() {
-        return roomNumber;
+    public void setExamReference(Exam examReference) {
+        this.examReference = examReference;
     }
 
-    public void setRoomNumber(Room roomNumber) {
-        this.roomNumber = roomNumber;
+    public String getExamDate() {
+        return examDate;
+    }
+
+    public void setExamDate(String examDate) {
+        this.examDate = examDate;
     }
 
     public String getStartTime() {

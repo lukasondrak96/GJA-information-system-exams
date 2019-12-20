@@ -26,7 +26,7 @@
                     <span>Počet míst: </span>
                     <span th:text="${roomHolder.getNumberOfSeats()}"></span>
                 </div>
-                <div class="right-float" th:if="${roomHolder.room.roomCreator.email == #authentication.name}">
+                <div class="right-float" th:if="${roomHolder.room.teacherReference.email == #authentication.name}">
                     <a class="btn btn-primary col-lg-1 btn-rooms-z-index"
                        th:href="@{/logged/rooms/{id}/edit(id=*{roomHolder.room.roomNumber})}">Editovat</a>
                     <a class="btn btn-danger col-lg-1 btn-rooms-z-index"
@@ -34,9 +34,9 @@
                 </div>
                 <div>
                     <span>Vytvořil: </span>
-                    <span th:text="${roomHolder.room.roomCreator.degreesBeforeName != null} ? ${roomHolder.room.roomCreator.degreesBeforeName}"></span>
-                    <span th:text="${roomHolder.room.roomCreator.firstName} + ' ' + ${roomHolder.room.roomCreator.lastName}"></span>
-                    <span th:text="${roomHolder.room.roomCreator.degreesBehindName != null} ? ${roomHolder.room.roomCreator.degreesBehindName}"></span>
+                    <span th:text="${roomHolder.room.teacherReference.degreesBeforeName != null} ? ${roomHolder.room.teacherReference.degreesBeforeName}"></span>
+                    <span th:text="${roomHolder.room.teacherReference.firstName} + ' ' + ${roomHolder.room.teacherReference.lastName}"></span>
+                    <span th:text="${roomHolder.room.teacherReference.degreesBehindName != null} ? ${roomHolder.room.teacherReference.degreesBehindName}"></span>
                 </div>
             </div>
         </a>

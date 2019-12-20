@@ -7,38 +7,41 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="block_on_exam_run")
 public class BlockOnExamRun {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @NotNull(message="Id místa na zkoušce je povinné")
+    @SequenceGenerator(name = "BlockOnExamRunIdGenerator", sequenceName = "BLOCK_ON_EXAM_RUN_SEQUENCE", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BlockOnExamRunIdGenerator")
     @Column(name = "id_block_on_exam_run")
     private int idBlockOnExamRun;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "id_exam_run")
-    private ExamRun examRun;
+    @JoinColumn(name = "exam_run_reference", referencedColumnName = "id_exam_run")
+    private ExamRun examRunReference;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "id_block")
-    private Block block;
+    @JoinColumn(name = "block_reference", referencedColumnName = "id_block" )
+    private Block blockReference;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "login_of_student_in_block", referencedColumnName = "login")
-    private Student student;
+    @JoinColumn(name = "student_reference", referencedColumnName = "id_student")
+    private Student studentReference;
 
     public BlockOnExamRun() {
     }
 
-    public BlockOnExamRun(ExamRun examRun, Block block, Student student) {
-        this.examRun = examRun;
-        this.block = block;
-        this.student = student;
+    public BlockOnExamRun(ExamRun examRunReference, Block blockReference, Student studentReference) {
+        this.examRunReference = examRunReference;
+        this.blockReference = blockReference;
+        this.studentReference = studentReference;
     }
 
     public int getIdBlockOnExamRun() {
@@ -49,27 +52,27 @@ public class BlockOnExamRun {
         this.idBlockOnExamRun = idBlockOnExamRun;
     }
 
-    public ExamRun getExamRun() {
-        return examRun;
+    public ExamRun getExamRunReference() {
+        return examRunReference;
     }
 
-    public void setExamRun(ExamRun examRun) {
-        this.examRun = examRun;
+    public void setExamRunReference(ExamRun examRunReference) {
+        this.examRunReference = examRunReference;
     }
 
-    public Block getBlock() {
-        return block;
+    public Block getBlockReference() {
+        return blockReference;
     }
 
-    public void setBlock(Block block) {
-        this.block = block;
+    public void setBlockReference(Block blockReference) {
+        this.blockReference = blockReference;
     }
 
-    public Student getStudent() {
-        return student;
+    public Student getStudentReference() {
+        return studentReference;
     }
 
-    public void setStudent(Student student) {
-        this.student = student;
+    public void setStudentReference(Student studentReference) {
+        this.studentReference = studentReference;
     }
 }

@@ -41,7 +41,7 @@ public class RoomServiceDaoImpl implements RoomServiceDao {
         if(room == null) {
             return 0;
         }
-        if (!userEmail.equals(room.getRoomCreator().getEmail())) {
+        if (!userEmail.equals(room.getTeacherReference().getEmail())) {
             throw new IllegalAccessError("Nelze smazat místnost jiného uživatele");
         }
         return roomRepository.deleteByRoomNumber(roomNumber);
