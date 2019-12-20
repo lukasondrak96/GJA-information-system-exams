@@ -26,7 +26,7 @@
             </table>
         </div>
         <div th:if="${loggedUser}">
-            <div class="right-float" th:if="*{roomReference.getRoomCreator().getEmail() == #authentication.name}">
+            <div class="right-float" th:if="*{roomReference.getTeacherReference().getEmail() == #authentication.name}">
                 <a class="btn btn-primary btn-block edit-room-form-cell"
                    th:href="@{/logged/rooms/{id}/edit(id=*{roomReference.getRoomNumber()})}">Editovat</a>
                 <a class="btn btn-danger btn-block edit-room-form-cell"
@@ -34,9 +34,9 @@
             </div>
             <div class="text-left font-weight-bold">
                 <span>Vytvořil: </span>
-                <span th:text="*{roomReference.getRoomCreator().getDegreesBeforeName() != null} ? *{roomReference.getRoomCreator().getDegreesBeforeName()}"></span>
-                <span th:text="${all_blocks.getRoomReference().getRoomCreator().getFirstName()} + ' ' + ${all_blocks.getRoomReference().getRoomCreator().getLastName()}"></span>
-                <span th:text="*{roomReference.getRoomCreator().getDegreesBehindName() != null} ? *{roomReference.getRoomCreator().getDegreesBehindName()}"></span>
+                <span th:text="*{roomReference.getTeacherReference().getDegreesBeforeName() != null} ? *{roomReference.getTeacherReference().getDegreesBeforeName()}"></span>
+                <span th:text="${all_blocks.getRoomReference().getTeacherReference().getFirstName()} + ' ' + ${all_blocks.getRoomReference().getTeacherReference().getLastName()}"></span>
+                <span th:text="*{roomReference.getTeacherReference().getDegreesBehindName() != null} ? *{roomReference.getTeacherReference().getDegreesBehindName()}"></span>
             </div>
         </div>
     </div>
