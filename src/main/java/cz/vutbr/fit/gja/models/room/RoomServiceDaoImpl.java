@@ -14,8 +14,8 @@ public class RoomServiceDaoImpl implements RoomServiceDao {
 
     @Override
     public boolean isRoomAlreadyCreated(Room room) {
-        int id = room.getIdRoom();
-        Room foundRoom = getRoomById(id);
+        String roomNumber = room.getRoomNumber();
+        Room foundRoom = getRoomByRoomNumber(roomNumber);
         return foundRoom != null;
     }
 
