@@ -37,6 +37,9 @@
                     </select>
                 </div>
             </div>
+            <div class="form-group room-form-cell">
+                <span th:text="'Počet studentů na zkoušce: ' + ${dto.numberOfStudents}"></span>
+            </div>
 
             <div class="form-group room-form-cell">
                 <label>Místnost:</label>
@@ -44,7 +47,7 @@
                     <select form="new_exam_2" th:field="*{examRun.roomReference}">
                         <option th:value="${room.idRoom}"
                                 th:each="room: *{roomsInDb}"
-                                th:text="${room.roomNumber}"></option>
+                                th:text="${room.roomNumber} + ' (' + ${room.numberOfColumns * room.numberOfRows} + ')'"></option>
                     </select>
                 </div>
             </div>

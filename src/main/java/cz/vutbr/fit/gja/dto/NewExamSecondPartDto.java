@@ -11,15 +11,17 @@ public class NewExamSecondPartDto {
     private Exam exam;
     private ArrayList<Room> roomsInDb;
     private ArrayList<AcademicYearDto> academicYearDto;
+    private int numberOfStudents;
 
     public NewExamSecondPartDto() {
     }
 
-    public NewExamSecondPartDto(ExamRun examRun, Exam exam, ArrayList<Room> roomsInDb, ArrayList<AcademicYearDto> academicYearDto) {
+    public NewExamSecondPartDto(ExamRun examRun, Exam exam, ArrayList<Room> roomsInDb, ArrayList<AcademicYearDto> academicYearDto, int numberOfStudents) {
         this.examRun = examRun;
         this.exam = exam;
         this.roomsInDb = roomsInDb;
         this.academicYearDto = academicYearDto;
+        this.numberOfStudents = numberOfStudents;
     }
 
     public ExamRun getExamRun() {
@@ -52,5 +54,13 @@ public class NewExamSecondPartDto {
 
     public void setAcademicYearDto(ArrayList<AcademicYearDto> academicYearDto) {
         this.academicYearDto = academicYearDto;
+    }
+
+    public int getNumberOfStudents() {
+        return numberOfStudents;
+    }
+
+    public void setNumberOfStudents(int numberOfStudents) {
+        this.numberOfStudents = numberOfStudents;
     }
 }

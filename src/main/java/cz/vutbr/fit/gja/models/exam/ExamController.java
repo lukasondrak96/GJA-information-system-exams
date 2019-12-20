@@ -140,7 +140,7 @@ public class ExamController {
         this.spacing = spacing;
         ArrayList<Room> rooms = new ArrayList<>(roomServiceDao.getAllRoomsFromDatabase());
 
-        NewExamSecondPartDto dto = new NewExamSecondPartDto(new ExamRun(), new Exam(), rooms, getOptionsForAcademicYear() );
+        NewExamSecondPartDto dto = new NewExamSecondPartDto(new ExamRun(), new Exam(), rooms, getOptionsForAcademicYear(), newStudents.size());
         modelAndView.addObject("dto", dto);
 
         modelAndView.setViewName("pages/logged/new_exam_2");
