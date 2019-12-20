@@ -156,7 +156,7 @@ public class ExamController {
         run.setExamReference(examFromDb);
         examRunServiceDao.saveExamRunToDatabase(run);
 
-        modelAndView.setViewName("pages/exams");
+        modelAndView.setViewName("redirect:/pages/logged/exams");
         return modelAndView;
     }
 
