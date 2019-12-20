@@ -6,8 +6,13 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 
 @Repository
-public interface RoomRepository extends JpaRepository<Room, String> {
+public interface RoomRepository extends JpaRepository<Room, Integer> {
+    Room findById(int id);
+
     Room findByRoomNumber(String roomNumber);
+
+    @Transactional
+    Long deleteById(int id);
 
     @Transactional
     Long deleteByRoomNumber(String roomNumber);

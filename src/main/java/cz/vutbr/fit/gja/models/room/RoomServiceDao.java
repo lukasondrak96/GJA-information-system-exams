@@ -7,9 +7,15 @@ public interface RoomServiceDao {
 
     List<Room> getAllRoomsFromDatabase();
 
-    Room getRoom(String name);
+    Room getRoomById(int id);
+
+    Room getRoomByRoomNumber(String roomNumber);
+
 
     void saveRoomToDatabase(Room room);
 
-    long deleteRoom(String roomNumber) throws IllegalAccessError;
+    long deleteRoomById(int id) throws IllegalAccessError;
+
+    long deleteRoomByRoomNumber(String roomNumber) throws IllegalAccessError;
+
 }

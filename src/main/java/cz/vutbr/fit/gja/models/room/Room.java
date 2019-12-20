@@ -43,10 +43,11 @@ public class Room {
     public Room() {
     }
 
-    public Room(String roomNumber, int numberOfRows, int numberOfColumns) {
+    public Room(String roomNumber, int numberOfRows, int numberOfColumns, Teacher teacherReference) {
         this.roomNumber = roomNumber;
         this.numberOfRows = numberOfRows;
         this.numberOfColumns = numberOfColumns;
+        this.teacherReference = teacherReference;
     }
 
     public int getIdRoom() {

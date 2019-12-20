@@ -14,8 +14,8 @@ public class RoomServiceDaoImpl implements RoomServiceDao {
 
     @Override
     public boolean isRoomAlreadyCreated(Room room) {
-        String roomNumber = room.getRoomNumber();
-        Room foundRoom = getRoom(roomNumber);
+        int id = room.getIdRoom();
+        Room foundRoom = getRoomById(id);
         return foundRoom != null;
     }
 
@@ -25,7 +25,12 @@ public class RoomServiceDaoImpl implements RoomServiceDao {
     }
 
     @Override
-    public Room getRoom(String roomNumber) {
+    public Room getRoomById(int id) {
+        return roomRepository.findById(id);
+    }
+
+    @Override
+    public Room getRoomByRoomNumber(String roomNumber) {
         return roomRepository.findByRoomNumber(roomNumber);
     }
 
@@ -35,7 +40,20 @@ public class RoomServiceDaoImpl implements RoomServiceDao {
     }
 
     @Override
-    public long deleteRoom(String roomNumber) throws IllegalAccessError {
+    public long deleteRoomById(int id) throws IllegalAccessError {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Room room = roomRepository.findById(id);
+        if(room == null) {
+            return 0;
+        }
+        if (!userEmail.equals(room.getTeacherReference().getEmail())) {
+            throw new IllegalAccessError("Nelze smazat místnost jiného uživatele");
+        }
+        return roomRepository.deleteById(id);
+    }
+
+    @Override
+    public long deleteRoomByRoomNumber(String roomNumber) throws IllegalAccessError {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Room room = roomRepository.findByRoomNumber(roomNumber);
         if(room == null) {

@@ -47,7 +47,7 @@ public class RoomController {
     @GetMapping("/rooms/{id}")
     public ModelAndView getRoom(@PathVariable(value = "id") String roomId) {
         ModelAndView modelAndView = new ModelAndView();
-        Room room = roomServiceDao.getRoom(roomId);
+        Room room = roomServiceDao.getRoomByRoomNumber(roomId);
         if (room == null) {
             ModelAndViewSetter.errorPageWithMessage(modelAndView, "Místnost s číslem \"" + roomId + "\" neexistuje.");
         } else {
@@ -59,11 +59,11 @@ public class RoomController {
     }
 
     @GetMapping("/logged/rooms/{id}")
-    public ModelAndView getRoomAsLogged(@PathVariable(value = "id") String roomId) {
+    public ModelAndView getRoomAsLogged(@PathVariable(value = "id") String roomNumber) {
         ModelAndView modelAndView = new ModelAndView();
-        Room room = roomServiceDao.getRoom(roomId);
+        Room room = roomServiceDao.getRoomByRoomNumber(roomNumber);
         if (room == null) {
-            ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Místnost s číslem \"" + roomId + "\" neexistuje.");
+            ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Místnost s číslem \"" + roomNumber + "\" neexistuje.");
         } else {
             BlocksDto blocks = blockServiceDao.getAllBlocksOfRoom(room);
             modelAndView.addObject("all_blocks", blocks);
@@ -73,20 +73,20 @@ public class RoomController {
     }
 
     @GetMapping("/logged/rooms/{id}/delete")
-    public ModelAndView deleteRoomAsLogged(@PathVariable(value = "id") String roomId) {
+    public ModelAndView deleteRoomAsLogged(@PathVariable(value = "id") String roomNumber) {
         ModelAndView modelAndView = new ModelAndView();
         long numberOfDeletedRooms = 0;
         try {
-            numberOfDeletedRooms = roomServiceDao.deleteRoom(roomId);
+            numberOfDeletedRooms = roomServiceDao.deleteRoomByRoomNumber(roomNumber);
         } catch (IllegalAccessError e) {
             return ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, e.getMessage());
         }
 
         if (numberOfDeletedRooms == 0) {
-            ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Místnost s číslem \"" + roomId + "\" neexistuje.");
+            ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Místnost s číslem \"" + roomNumber + "\" neexistuje.");
         } else {
             modelAndView.setViewName("pages/logged/rooms");
-            modelAndView.addObject("successMessage", "Místnost s číslem\"" + roomId + "\" byla úspěšně odstraněna.");
+            modelAndView.addObject("successMessage", "Místnost s číslem\"" + roomNumber + "\" byla úspěšně odstraněna.");
             modelAndView.addObject("roomHolders", blockServiceDao.getRoomAndNumberOfSeatsOfAllRooms());
         }
         return modelAndView;
@@ -146,10 +146,10 @@ public class RoomController {
             if (roomCreator == null) {
                 ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Tento uživatel neexistuje");
             }
-            room.setRoomCreator(roomCreator);
+            room.setTeacherReference(roomCreator);
             roomServiceDao.saveRoomToDatabase(room);
 
-            Room roomReference = roomServiceDao.getRoom(room.getRoomNumber());
+            Room roomReference = roomServiceDao.getRoomByRoomNumber(room.getRoomNumber());
             blockServiceDao.createAndSaveBlocksForRoom(roomReference, blocks);
 
             modelAndView.addObject("successMessage", "Místnost \"" + room.getRoomNumber() + "\" byla úspěšně vytvořena.");
@@ -162,7 +162,7 @@ public class RoomController {
     @GetMapping("/logged/rooms/{id}/edit")
     public ModelAndView getEditPage(@PathVariable(value = "id") String name) {
         ModelAndView modelAndView = new ModelAndView();
-        Room room = roomServiceDao.getRoom(name);
+        Room room = roomServiceDao.getRoomByRoomNumber(name);
         if (room == null) {
             return ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Místnost s číslem \"" + name + "\" neexistuje.");
         }
@@ -184,7 +184,7 @@ public class RoomController {
             modelAndView.addObject("room", room);
         } else {
             try {
-                roomServiceDao.deleteRoom(name);
+                roomServiceDao.deleteRoomByRoomNumber(name);
             } catch (IllegalAccessError e) {
                 return ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, e.getMessage());
             }
@@ -215,16 +215,16 @@ public class RoomController {
             modelAndView.addObject("blocks", blocks);
             modelAndView.setViewName("pages/logged/new_room");
         } else if (roomServiceDao.isRoomAlreadyCreated(room)) {
-            roomServiceDao.deleteRoom(room.getRoomNumber());
+            roomServiceDao.deleteRoomByRoomNumber(room.getRoomNumber());
             String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
             Teacher roomCreator = teacherServiceDao.getTeacher(userEmail);
             if (roomCreator == null) {
                 ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Tento uživatel neexistuje");
             }
-            room.setRoomCreator(roomCreator);
+            room.setTeacherReference(roomCreator);
             roomServiceDao.saveRoomToDatabase(room);
 
-            Room roomReference = roomServiceDao.getRoom(room.getRoomNumber());
+            Room roomReference = roomServiceDao.getRoomByRoomNumber(room.getRoomNumber());
             blockServiceDao.createAndSaveBlocksForRoom(roomReference, blocks);
 
             modelAndView.addObject("successMessage", "Místnost \"" + room.getRoomNumber() + "\" byla úspěšně vytvořena.");
