@@ -9,7 +9,13 @@ import java.util.Set;
 @Entity
 @Table(name = "student")
 public class Student {
+
     @Id
+    @SequenceGenerator(name = "StudentIdGenerator", sequenceName = "STUDENT_SEQUENCE", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "StudentIdGenerator")
+    @Column(name = "id_student")
+    private int idStudent;
+
     @NotNull(message="Login je u studenta povinný")
     @Column(name = "login")
     private String login;
@@ -17,8 +23,8 @@ public class Student {
     @Column(name = "name_with_degrees")
     private String nameWithDegrees;
 
-    @OneToMany(mappedBy = "student")
-    private Set<BlockOnExamRun> runsOfStudent;
+//    @OneToMany(mappedBy = "student")
+//    private Set<BlockOnExamRun> runsOfStudent;
 
     public Student() {
     }
@@ -26,6 +32,14 @@ public class Student {
     public Student(@NotNull(message = "Login je u studenta povinný") String login, String nameWithDegrees) {
         this.login = login;
         this.nameWithDegrees = nameWithDegrees;
+    }
+
+    public int getIdStudent() {
+        return idStudent;
+    }
+
+    public void setIdStudent(int idStudent) {
+        this.idStudent = idStudent;
     }
 
     public String getLogin() {

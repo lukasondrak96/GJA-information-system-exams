@@ -48,8 +48,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").permitAll()
                 .antMatchers("/rooms").permitAll()
                 .antMatchers("/rooms/**").permitAll()
+                .antMatchers("/exams").permitAll()
+                .antMatchers("/exams/**").permitAll()
                 .antMatchers("/register").permitAll()
-                .antMatchers("/admin/**").hasAnyAuthority("LOGGED_IN_USER")
+                .antMatchers("/logged/**").hasAnyAuthority("LOGGED_IN_USER")
                 .anyRequest().authenticated()
                 .and()
                 // form login

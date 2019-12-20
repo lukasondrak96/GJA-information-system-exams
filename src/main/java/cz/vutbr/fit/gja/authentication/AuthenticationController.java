@@ -41,14 +41,7 @@ public class AuthenticationController {
         return modelAndView;
     }
 
-    @GetMapping(value = "/home")
-    public ModelAndView home() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("pages/exams");
-        return modelAndView;
-    }
-
-    @GetMapping(value = "/admin")
+    @GetMapping(value = "/logged/exams")
     public ModelAndView adminHome() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("pages/logged/exams");

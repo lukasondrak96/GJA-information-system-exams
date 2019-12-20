@@ -7,7 +7,18 @@
 <div th:replace="fragments/topnav :: navbar">
     Menu
 </div>
-
-Hello admin
+<div class="container list-style">
+    <div class="btn-new-exam">
+        <a class="btn btn-success col-lg-4" th:href="@{/logged/exams/new_exam_1}" th:method="get" >Vytvořit novou zkoušku</a>
+    </div>
+    <div class="card exams-card">
+        <a class="stretched-link a-style">
+            <div class="card-header exams-card-header">TODO head</div>
+            <div class="card-body">
+                TODO body
+            </div>
+        </a>
+    </div>
+</div>
 </body>
 </html>

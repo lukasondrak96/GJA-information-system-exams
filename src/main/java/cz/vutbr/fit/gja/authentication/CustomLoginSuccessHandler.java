@@ -42,7 +42,7 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
         // check user role and decide the redirect URL
         if (roles.contains("LOGGED_IN_USER")) {
-            url = "/admin";
+            url = "/logged/exams";
         }
 
         return url;

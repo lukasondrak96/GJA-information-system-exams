@@ -1,6 +1,5 @@
 package cz.vutbr.fit.gja.models.exam;
 
-import cz.vutbr.fit.gja.models.examRun.ExamRun;
 import cz.vutbr.fit.gja.models.teacher.Teacher;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -8,7 +7,6 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
 
 @Entity
 @Table(name = "exam")
@@ -16,7 +14,8 @@ public class Exam {
 
     @Id
     @NotNull(message="Id zkoušky je povinné")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "ExamIdGenerator", sequenceName = "EXAM_SEQUENCE", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ExamIdGenerator")
     @Column(name = "id_exam")
     private int idExam;
 
@@ -35,21 +34,18 @@ public class Exam {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "id_exam_creator", referencedColumnName = "email")
-    private Teacher idExamCreator;
-
-    @OneToMany(mappedBy = "idExam")
-    private Set<ExamRun> examRuns;
+    @JoinColumn(name = "email_exam_creator", referencedColumnName = "email")
+    private Teacher examCreator;
 
     public Exam() {
     }
 
-    public Exam(String examName, String academicYear, String subject, @Range(min = 0, max = 2, message = "Mezery mezi studenty mohou být v rozmezí 0 až 2") int spacingBetweenStudents, Teacher idExamCreator) {
+    public Exam(String examName, String academicYear, String subject, @Range(min = 0, max = 2, message = "Mezery mezi studenty mohou být v rozmezí 0 až 2") int spacingBetweenStudents, Teacher examCreator) {
         this.examName = examName;
         this.academicYear = academicYear;
         this.subject = subject;
         this.spacingBetweenStudents = spacingBetweenStudents;
-        this.idExamCreator = idExamCreator;
+        this.examCreator = examCreator;
     }
 
     public int getIdExam() {
@@ -92,12 +88,12 @@ public class Exam {
         this.spacingBetweenStudents = spacingBetweenStudents;
     }
 
-    public Teacher getIdExamCreator() {
-        return idExamCreator;
+    public Teacher getExamCreator() {
+        return examCreator;
     }
 
-    public void setIdExamCreator(Teacher idExamCreator) {
-        this.idExamCreator = idExamCreator;
+    public void setExamCreator(Teacher examCreator) {
+        this.examCreator = examCreator;
     }
 
 

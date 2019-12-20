@@ -122,24 +122,25 @@ body {
 .fixed-nav {
     width: 100%;
     position: fixed;
+    z-index: 10;
 }
 
-.rooms-card {
+.rooms-card, .exams-card {
     margin-bottom: 20px;
     border-color: #a5a5a5;
 }
 
-.rooms-card-header {
+.rooms-card-header, .exams-card-header {
     background: #d5d5d5;
     font-weight: bold;
 }
 
-.btn-new-room {
+.btn-new-room, .btn-new-exam {
     text-align: center;
     margin-bottom: 50px;
 }
 
-.btn-new-room > a {
+.btn-new-room > a, .btn-new-exam > a  {
     font-weight: bold;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -197,4 +198,8 @@ body {
 
 .list-style {
     padding-top: 100px;
+}
+
+.btn-search-login {
+    margin-top: -5px;
 }

@@ -1,6 +1,5 @@
 package cz.vutbr.fit.gja.models.room;
 
-import cz.vutbr.fit.gja.models.examRun.ExamRun;
 import cz.vutbr.fit.gja.models.teacher.Teacher;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -9,13 +8,17 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
 
 @Entity
 @Table(name = "room")
 public class Room {
 
     @Id
+    @SequenceGenerator(name = "RoomIdGenerator", sequenceName = "ROOM_SEQUENCE", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RoomIdGenerator")
+    @Column(name = "id_room")
+    private int idRoom;
+
     @NotEmpty(message = "Jméno místnosti je povinné")
     @NotNull(message="Jméno místnosti je povinné")
     @Column(name = "room_number")
@@ -31,11 +34,11 @@ public class Room {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "id_room_creator", referencedColumnName = "email")
-    private Teacher idRoomCreator;
+    @JoinColumn(name = "teacher_reference", referencedColumnName = "email")
+    private Teacher teacherReference;
 
-    @OneToMany(mappedBy = "roomNumber")
-    private Set<ExamRun> exam_runs;
+//    @OneToMany(mappedBy = "roomNumber")
+//    private Set<ExamRun> exam_runs;
 
     public Room() {
     }
@@ -44,6 +47,14 @@ public class Room {
         this.roomNumber = roomNumber;
         this.numberOfRows = numberOfRows;
         this.numberOfColumns = numberOfColumns;
+    }
+
+    public int getIdRoom() {
+        return idRoom;
+    }
+
+    public void setIdRoom(int idRoom) {
+        this.idRoom = idRoom;
     }
 
     public String getRoomNumber() {
@@ -70,11 +81,11 @@ public class Room {
         this.numberOfColumns = numberOfColumns;
     }
 
-    public Teacher getRoomCreator() {
-        return idRoomCreator;
+    public Teacher getTeacherReference() {
+        return teacherReference;
     }
 
-    public void setRoomCreator(Teacher roomCreator) {
-        this.idRoomCreator = roomCreator;
+    public void setTeacherReference(Teacher teacherReference) {
+        this.teacherReference = teacherReference;
     }
 }

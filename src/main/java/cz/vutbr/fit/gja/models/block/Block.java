@@ -13,8 +13,8 @@ import java.util.Set;
 @Table(name = "block")
 public class Block {
     @Id
-    @NotNull(message="Id bloku je povinné")
-    @SequenceGenerator(name = "BlockIdGenerator", sequenceName = "BLOCK_SEQUENCE")
+    @NotNull(message="ID místa je povinné")
+    @SequenceGenerator(name = "BlockIdGenerator", sequenceName = "BLOCK_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BlockIdGenerator")
     @Column(name = "id_block")
     private int idBlock;
@@ -30,11 +30,11 @@ public class Block {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "room_reference", referencedColumnName = "room_number")
+    @JoinColumn(name = "room_reference", referencedColumnName = "id_room")
     private Room roomReference;
 
-    @OneToMany(mappedBy = "block")
-    private Set<BlockOnExamRun> blocksOnRun;
+//    @OneToMany(mappedBy = "block")
+//    private Set<BlockOnExamRun> blocksOnRun;
 
     public Block() {
 
