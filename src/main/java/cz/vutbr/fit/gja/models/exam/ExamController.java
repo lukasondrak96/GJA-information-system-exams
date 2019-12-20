@@ -1,6 +1,7 @@
 package cz.vutbr.fit.gja.models.exam;
 
 import cz.vutbr.fit.gja.dto.AcademicYearDto;
+import cz.vutbr.fit.gja.dto.ExamsDto;
 import cz.vutbr.fit.gja.dto.NewExamSecondPartDto;
 import cz.vutbr.fit.gja.models.examRun.ExamRun;
 import cz.vutbr.fit.gja.models.examRun.ExamRunServiceDao;
@@ -53,7 +54,15 @@ public class ExamController {
     @GetMapping("/exams")
     public ModelAndView getExams() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("examsRun",  examRunServiceDao.getAllExamRunsFromDatabase());
+        List<ExamsDto> listDto = new ArrayList<>();
+        List<Exam> allExamsFromDatabase = examServiceDao.getAllExamsFromDatabase();
+        for (Exam exam : allExamsFromDatabase) {
+            List<ExamRun> examRuns = examRunServiceDao.getAllExamRunsByExam(exam);
+            listDto.add(new ExamsDto(exam, examRuns));
+        }
+        examRunServiceDao.getAllExamRunsFromDatabase();
+        modelAndView.addObject("listOfExamsDto", listDto);
+
         modelAndView.setViewName("pages/exams");
         return modelAndView;
     }
