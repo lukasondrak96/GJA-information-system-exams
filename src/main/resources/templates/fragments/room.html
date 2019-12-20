@@ -35,7 +35,7 @@
             <div class="text-left font-weight-bold">
                 <span>Vytvořil: </span>
                 <span th:text="*{roomReference.getTeacherReference().getDegreesBeforeName() != null} ? *{roomReference.getTeacherReference().getDegreesBeforeName()}"></span>
-                <span th:text="${all_blocks.getRoomReference().getTeacherReference().getFirstName()} + ' ' + ${all_blocks.getRoomReference().getRoomCreator().getLastName()}"></span>
+                <span th:text="${all_blocks.getRoomReference().getTeacherReference().getFirstName()} + ' ' + ${all_blocks.getRoomReference().getTeacherReference().getLastName()}"></span>
                 <span th:text="*{roomReference.getTeacherReference().getDegreesBehindName() != null} ? *{roomReference.getTeacherReference().getDegreesBehindName()}"></span>
             </div>
         </div>
