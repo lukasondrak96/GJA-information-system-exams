@@ -8,8 +8,11 @@ import cz.vutbr.fit.gja.models.room.Room;
 import cz.vutbr.fit.gja.models.room.RoomServiceDao;
 import cz.vutbr.fit.gja.models.student.Student;
 import cz.vutbr.fit.gja.models.student.StudentServiceDao;
+import cz.vutbr.fit.gja.models.teacher.Teacher;
+import cz.vutbr.fit.gja.models.teacher.TeacherServiceDaoImpl;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,6 +43,10 @@ public class ExamController {
     @Autowired
     RoomServiceDao roomServiceDao;
 
+    @Autowired
+    TeacherServiceDaoImpl teacherServiceDao;
+
+    private String spacing;
 
     private static final String CSV_FILE = "application/vnd.ms-excel";
 
@@ -123,11 +130,10 @@ public class ExamController {
             }
         }
 
-        Exam newExam = new Exam();
-        setSpacingOfExam(newExam, spacing);
+        this.spacing = spacing;
         ArrayList<Room> rooms = new ArrayList<>(roomServiceDao.getAllRoomsFromDatabase());
 
-        NewExamSecondPartDto dto = new NewExamSecondPartDto(new ExamRun(), newExam, rooms, getOptionsForAcademicYear() );
+        NewExamSecondPartDto dto = new NewExamSecondPartDto(new ExamRun(), new Exam(), rooms, getOptionsForAcademicYear() );
         modelAndView.addObject("dto", dto);
 
         modelAndView.setViewName("pages/logged/new_exam_2");
@@ -138,6 +144,11 @@ public class ExamController {
     public ModelAndView createNewRoomHandleFile(NewExamSecondPartDto dto) {
         ModelAndView modelAndView = new ModelAndView();
         Exam exam = dto.getExam();
+        setSpacingOfExam(exam, spacing);
+
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Teacher roomCreator = teacherServiceDao.getTeacher(userEmail);
+        exam.setExamCreator(roomCreator);
 
         Exam examFromDb = examServiceDao.saveExamToDatabase(exam);
 
@@ -145,14 +156,7 @@ public class ExamController {
         run.setExamReference(examFromDb);
         examRunServiceDao.saveExamRunToDatabase(run);
 
-
-        List<ExamRun> allExamRunsFromDatabase = examRunServiceDao.getAllExamRunsFromDatabase();
-        for (ExamRun run2 : allExamRunsFromDatabase) {
-            System.out.println(run2.getIdExamRun());
-        }
-
-
-        modelAndView.setViewName("pages/logged/new_exam_2");
+        modelAndView.setViewName("pages/exams");
         return modelAndView;
     }
 
