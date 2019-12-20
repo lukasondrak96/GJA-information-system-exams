@@ -43,6 +43,7 @@
                 </div>
                 <input th:field="*{roomReference.numberOfRows}" th:type="hidden" th:value="${room.numberOfRows}">
                 <input th:field="*{roomReference.numberOfColumns}" th:type="hidden" th:value="${room.numberOfColumns}">
+                <input th:field="*{roomReference.idRoom}" th:type="hidden" th:value="${room.idRoom}">
                 <div th:replace="fragments/room_schema :: roomSchema(${room}, ${all_blocks.getIsSeatList()}, true)">
                     <!-- Room schema -->
                 </div>
