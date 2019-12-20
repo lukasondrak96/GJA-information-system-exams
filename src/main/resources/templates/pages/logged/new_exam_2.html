@@ -14,17 +14,6 @@
             <h3 class="form-signin-heading">Vytvoření zkoušky - popis a vybrání termínů</h3>
 
             <div class="form-group room-form-cell">
-                <label>Akademický rok:</label>
-                <div class="update-placeholder">
-                    <select form="new_exam_2" th:field="*{exam.academicYear}">
-                        <option th:value="${acadYear.toString()}"
-                                th:each="acadYear: *{academicYearDto}"
-                                th:text="${acadYear.toString()}"></option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group room-form-cell">
                 <label>Název zkoušky:</label>
                 <div class="update-placeholder">
                     <input type="text" th:field="*{exam.examName}" class="form-control"/>
@@ -38,34 +27,45 @@
                 </div>
             </div>
 
+            <div class="form-group room-form-cell">
+                <label>Akademický rok:</label>
+                <div class="update-placeholder">
+                    <select form="new_exam_2" th:field="*{exam.academicYear}">
+                        <option th:value="${acadYear.toString()}"
+                                th:each="acadYear: *{academicYearDto}"
+                                th:text="${acadYear.toString()}"></option>
+                    </select>
+                </div>
+            </div>
 
-            <div class="form-group room-form-cell">
-                <div><label>Časy zkoušky</label></div>
-                <div class="update-placeholder">
-                    <input type="date" th:field="*{examRun.examDate}" class="form-control"/>
-                </div>
-            </div>
-            <div class="form-group room-form-cell">
-                <div class="update-placeholder">
-                    <input type="time" th:field="*{examRun.startTime}" class="form-control"/>
-                </div>
-            </div>
-            <div class="form-group room-form-cell">
-                <div class="update-placeholder">
-                    <input type="time" th:field="*{examRun.endTime}" class="form-control"/>
-                </div>
-            </div>
             <div class="form-group room-form-cell">
                 <label>Místnost:</label>
                 <div class="update-placeholder">
                     <select form="new_exam_2" th:field="*{examRun.roomReference}">
-                        <option th:value="${room.roomNumber}"
+                        <option th:value="${room.idRoom}"
                                 th:each="room: *{roomsInDb}"
                                 th:text="${room.roomNumber}"></option>
                     </select>
                 </div>
             </div>
-
+            <div class="form-group room-form-cell">
+                <label>Datum zkoušky:</label>
+                <div class="update-placeholder">
+                    <input type="date" th:field="*{examRun.examDate}" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group room-form-cell">
+                <label>Začátek zkoušky:</label>
+                <div class="update-placeholder">
+                    <input type="time" th:field="*{examRun.startTime}" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group room-form-cell">
+                <label>Konec zkoušky:</label>
+                <div class="update-placeholder">
+                    <input type="time" th:field="*{examRun.endTime}" class="form-control"/>
+                </div>
+            </div>
 
             <div class="form-group room-form-cell">
                 <div class="">
