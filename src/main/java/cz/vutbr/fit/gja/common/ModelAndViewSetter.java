@@ -2,7 +2,7 @@ package cz.vutbr.fit.gja.common;
 
 import org.springframework.web.servlet.ModelAndView;
 
-public class ErrorMessageCreator {
+public class ModelAndViewSetter {
     public static ModelAndView errorPageWithMessage(ModelAndView modelAndView, String errorMessage) {
         modelAndView.addObject("message", errorMessage);
         modelAndView.setViewName("pages/error");

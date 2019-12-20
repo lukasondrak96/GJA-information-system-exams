@@ -13,21 +13,15 @@
               class="form-rooms" role="form">
             <h3 class="form-signin-heading">Vytvoření nové místnosti</h3>
             <div class="form-group room-form-cell">
-                <label>Číslo místnosti:</label>
-                <div class="update-placeholder">
-                    <input type="text" th:field="*{roomNumber}" class="form-control"/>
-                </div>
-            </div>
-            <div class="form-group room-form-cell">
                 <label>Počet řad:</label>
                 <div class="update-placeholder">
-                    <input type="number" th:field="*{numberOfRows}" placeholder="0" class="form-control"/>
+                    <input type="number" min="1" th:field="*{numberOfRows}" placeholder="0" class="form-control"/>
                 </div>
             </div>
             <div class="form-group room-form-cell">
-                <label>Počet sloupců:</label>
+                <label>Počet míst v každé řadě:</label>
                 <div class="update-placeholder">
-                    <input type="number" th:field="*{numberOfColumns}" placeholder="0" class="form-control"/>
+                    <input type="number" min="1" th:field="*{numberOfColumns}" placeholder="0" class="form-control"/>
                 </div>
             </div>
             <div class="form-group room-form-cell">
@@ -35,23 +29,20 @@
                     <button type="submit" class="btn btn-primary btn-block">Vygenerovat místnost</button>
                 </div>
             </div>
-
-            <div class="col-sm-12" th:if="${(bindingResult != null && bindingResult.getAllErrors() != null)}">
-                <div th:each="data : ${bindingResult.getAllErrors()}">
-                    <div class="alert alert-danger">
-                        <span th:text="${data.getDefaultMessage()}"></span>
-                    </div>
-                </div>
-            </div>
         </form>
         <form autocomplete="off" class="form-rooms" method="post" role="form"
               th:action="@{/logged/rooms/new_room/create}"
-              th:if="${(room.getNumberOfColumns() > 0 && room.getNumberOfRows() > 0 && !room.getRoomNumber().isBlank())}"
+              th:if="${(room.getNumberOfColumns() > 0 && room.getNumberOfRows() > 0)}"
               th:object="${all_blocks}">
-            <div class="form-group room-diagram" th:if="${(bindingResult == null && message == null)}">
-                <input th:field="*{roomReference.numberOfColumns}" th:type="hidden" th:value="${room.numberOfColumns}">
+            <div class="form-group room-diagram">
+                <div class="form-group room-form-cell">
+                    <label>Číslo místnosti:</label>
+                    <div class="update-placeholder">
+                        <input type="text" th:field="*{roomReference.roomNumber}" class="form-control"/>
+                    </div>
+                </div>
                 <input th:field="*{roomReference.numberOfRows}" th:type="hidden" th:value="${room.numberOfRows}">
-                <input th:field="*{roomReference.roomNumber}" th:type="hidden" th:value="${room.roomNumber}">
+                <input th:field="*{roomReference.numberOfColumns}" th:type="hidden" th:value="${room.numberOfColumns}">
                 <div th:replace="fragments/room_schema :: roomSchema(${room}, ${all_blocks.getIsSeatList()}, true)">
                     <!-- Room schema -->
                 </div>
@@ -61,23 +52,22 @@
                     <button class="btn btn-success btn-block" type="submit">Uložit místnost</button>
                 </div>
             </div>
-
-            <div class="col-sm-12 alert alert-danger" th:if="${message != null}">
-                <span th:utext="${message}"></span>
-            </div>
-            <div class="alert alert-success new-room-form-success-message" th:if="${successMessage != null}">
-                <span th:utext="${successMessage}"></span>
-            </div>
-            <div class="col-sm-12" th:if="${(bindingResult != null && bindingResult.getAllErrors() != null)}">
-                <div th:each="data : ${bindingResult.getAllErrors()}">
-                    <div class="alert alert-danger">
-                        <span th:text="${data.getDefaultMessage()}"></span>
-                    </div>
-                </div>
-            </div>
         </form>
         <div class="form-group room-form-cell">
             <a class="btn btn-danger btn-block" th:href="@{/logged/rooms}">Zrušit</a>
+        </div>
+        <div class="col-sm-12 alert alert-danger" th:if="${message != null}">
+            <span th:utext="${message}"></span>
+        </div>
+        <div class="alert alert-success new-room-form-success-message" th:if="${successMessage != null}">
+            <span th:utext="${successMessage}"></span>
+        </div>
+        <div class="col-sm-12" th:if="${(bindingResult != null && bindingResult.getAllErrors() != null)}">
+            <div th:each="data : ${bindingResult.getAllErrors()}">
+                <div class="alert alert-danger">
+                    <span th:text="${data.getDefaultMessage()}"></span>
+                </div>
+            </div>
         </div>
     </div>
 </div>

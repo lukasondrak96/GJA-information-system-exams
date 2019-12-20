@@ -41,27 +41,42 @@ public class BlocksDto {
         return isSeatList.get(blockRowNumber);
     }
 
-    public BlocksDto prepareBlockListsAndFillWithFalse(Room room) {
-        BlocksDto blocks = new BlocksDto(room, new ArrayList<>());
-        for (int i = 0; i < room.getNumberOfRows(); i++) {
-            List<Boolean> blockRow = new ArrayList<>();
-            for (int j = 0; j < room.getNumberOfColumns(); j++) {
-                blockRow.add(true);
-            }
-            blocks.addBlockRow(blockRow);
-        }
-        return blocks;
+    public void createIsSeatListOfSeats(Room room) {
+        this.roomReference = room;
+        fillList(room,true);
     }
 
-    public void createEmptyIsSeatList(Room room) {
-        List<List<Boolean>> isSeatList = new ArrayList<>();
+    public void createIsSeatListOfAisles(Room room) {
+        this.roomReference = room;
+        fillList(room,false);
+    }
+
+    public void replaceNullValuesWithFalse() {
+        Room room = this.roomReference;
+        for (int i = 0; i < room.getNumberOfRows(); i++) {
+            List<Boolean> isSeatRow = this.isSeatList.get(i);
+            for (int j = 0; j < room.getNumberOfColumns(); j++) {
+                try {
+                    if(isSeatRow.get(j) == null) {
+                        isSeatRow.set(j, false);
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    isSeatRow.add(false);
+                }
+            }
+            getIsSeatList().add(isSeatRow);
+        }
+    }
+
+    private void fillList(Room room, Boolean fillWith) {
+        this.isSeatList = new ArrayList<>();
         for (int i = 0; i < room.getNumberOfRows(); i++) {
             List<Boolean> isSeatRow = new ArrayList<>();
             for (int j = 0; j < room.getNumberOfColumns(); j++) {
-                isSeatRow.add(false);
+                isSeatRow.add(fillWith);
             }
-            isSeatList.add(isSeatRow);
+            getIsSeatList().add(isSeatRow);
         }
-        setIsSeatList(isSeatList);
+        setIsSeatList(this.isSeatList);
     }
 }

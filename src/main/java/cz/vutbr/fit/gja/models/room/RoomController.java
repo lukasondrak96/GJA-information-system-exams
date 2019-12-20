@@ -1,6 +1,6 @@
 package cz.vutbr.fit.gja.models.room;
 
-import cz.vutbr.fit.gja.common.ErrorMessageCreator;
+import cz.vutbr.fit.gja.common.ModelAndViewSetter;
 import cz.vutbr.fit.gja.dto.BlocksDto;
 import cz.vutbr.fit.gja.models.block.BlockServiceDao;
 import cz.vutbr.fit.gja.models.teacher.Teacher;
@@ -49,7 +49,7 @@ public class RoomController {
         ModelAndView modelAndView = new ModelAndView();
         Room room = roomServiceDao.getRoom(roomId);
         if (room == null) {
-            ErrorMessageCreator.errorPageWithMessage(modelAndView, "Místnost s číslem \"" + roomId + "\" neexistuje.");
+            ModelAndViewSetter.errorPageWithMessage(modelAndView, "Místnost s číslem \"" + roomId + "\" neexistuje.");
         } else {
             BlocksDto blocks = blockServiceDao.getAllBlocksOfRoom(room);
             modelAndView.addObject("all_blocks", blocks);
@@ -63,7 +63,7 @@ public class RoomController {
         ModelAndView modelAndView = new ModelAndView();
         Room room = roomServiceDao.getRoom(roomId);
         if (room == null) {
-            ErrorMessageCreator.errorPageWithMessageLogged(modelAndView, "Místnost s číslem \"" + roomId + "\" neexistuje.");
+            ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Místnost s číslem \"" + roomId + "\" neexistuje.");
         } else {
             BlocksDto blocks = blockServiceDao.getAllBlocksOfRoom(room);
             modelAndView.addObject("all_blocks", blocks);
@@ -79,11 +79,11 @@ public class RoomController {
         try {
             numberOfDeletedRooms = roomServiceDao.deleteRoom(roomId);
         } catch (IllegalAccessError e) {
-            return ErrorMessageCreator.errorPageWithMessageLogged(modelAndView, e.getMessage());
+            return ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, e.getMessage());
         }
 
         if (numberOfDeletedRooms == 0) {
-            ErrorMessageCreator.errorPageWithMessageLogged(modelAndView, "Místnost s číslem \"" + roomId + "\" neexistuje.");
+            ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Místnost s číslem \"" + roomId + "\" neexistuje.");
         } else {
             modelAndView.setViewName("pages/logged/rooms");
             modelAndView.addObject("successMessage", "Místnost s číslem\"" + roomId + "\" byla úspěšně odstraněna.");
@@ -101,22 +101,22 @@ public class RoomController {
     }
 
     @PostMapping("/logged/rooms/new_room")
-    public ModelAndView generateRoom(@Valid Room room, BindingResult bindingResult, ModelMap modelMap) {
+    public ModelAndView generateRoom(Room room, BindingResult bindingResult, ModelMap modelMap) {
         ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("room", room);
+        modelAndView.setViewName("pages/logged/new_room");
         // Check for the validations
         if(bindingResult.hasErrors()) {
             modelMap.addAttribute("bindingResult", bindingResult);
-            modelAndView.setViewName("pages/logged/new_room");
-            modelAndView.addObject("room", room);
-        } else if(roomServiceDao.isRoomAlreadyCreated(room)) {
-            modelAndView.addObject("message", "Místnost s číslem \"" + room.getRoomNumber() + "\" již existuje.");
-            modelAndView.setViewName("pages/logged/new_room");
-            modelAndView.addObject("room", new Room());
+        } else if(room.getNumberOfRows() < 1) {
+            modelMap.addAttribute("message", "Počet řad musí být větší než 0");
+        } else if(room.getNumberOfColumns() < 1) {
+            modelMap.addAttribute("message", "Počet míst v řadě musí být větší než 0");
         } else {
-            BlocksDto blocks = new BlocksDto().prepareBlockListsAndFillWithFalse(room);
+            BlocksDto blocks = new BlocksDto();
+            blocks.createIsSeatListOfSeats(room);
             modelAndView.addObject("room", room);
             modelAndView.addObject("all_blocks", blocks);
-            modelAndView.setViewName("pages/logged/new_room");
         }
         return modelAndView;
     }
@@ -133,19 +133,18 @@ public class RoomController {
         // Check for the validations
         if (bindingResult.hasErrors()) {
             modelMap.addAttribute("bindingResult", bindingResult);
-            modelAndView.addObject("room", room);
-            modelAndView.addObject("blocks", blocks);
-            modelAndView.setViewName("pages/logged/new_room");
+            setModelAndView(modelAndView, blocks, room);
+        } else if(room.getRoomNumber().isEmpty()) {
+            modelAndView.addObject("message", "Číslo místnosti je povinné");
+            setModelAndView(modelAndView, blocks, room);
         } else if (roomServiceDao.isRoomAlreadyCreated(room)) {
             modelAndView.addObject("message", "Místnost s číslem \"" + room.getRoomNumber() + "\" již existuje.");
-            modelAndView.addObject("room", new Room());
-            modelAndView.setViewName("pages/logged/new_room");
-            modelAndView.addObject(room);
+            setModelAndView(modelAndView, blocks, room);
         } else {
             String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
             Teacher roomCreator = teacherServiceDao.getTeacher(userEmail);
             if (roomCreator == null) {
-                ErrorMessageCreator.errorPageWithMessageLogged(modelAndView, "Tento uživatel neexistuje");
+                ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Tento uživatel neexistuje");
             }
             room.setRoomCreator(roomCreator);
             roomServiceDao.saveRoomToDatabase(room);
@@ -158,5 +157,12 @@ public class RoomController {
             modelAndView.setViewName("pages/logged/rooms");
         }
         return modelAndView;
+    }
+
+    private void setModelAndView(ModelAndView modelAndView, @Valid BlocksDto blocks, Room room) {
+        blocks.replaceNullValuesWithFalse();
+        modelAndView.addObject("room", room);
+        modelAndView.addObject("all_blocks", blocks);
+        modelAndView.setViewName("pages/logged/new_room");
     }
 }
