@@ -26,7 +26,7 @@ public class RoomServiceDaoImpl implements RoomServiceDao {
 
     @Override
     public Room getRoomById(int id) {
-        return roomRepository.findById(id);
+        return roomRepository.findByIdRoom(id);
     }
 
     @Override
@@ -42,14 +42,14 @@ public class RoomServiceDaoImpl implements RoomServiceDao {
     @Override
     public long deleteRoomById(int id) throws IllegalAccessError {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Room room = roomRepository.findById(id);
+        Room room = roomRepository.findByIdRoom(id);
         if(room == null) {
             return 0;
         }
         if (!userEmail.equals(room.getTeacherReference().getEmail())) {
             throw new IllegalAccessError("Nelze smazat místnost jiného uživatele");
         }
-        return roomRepository.deleteById(id);
+        return roomRepository.deleteByIdRoom(id);
     }
 
     @Override
