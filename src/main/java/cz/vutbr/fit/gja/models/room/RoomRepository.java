@@ -7,12 +7,12 @@ import javax.transaction.Transactional;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Integer> {
-    Room findById(int id);
+    Room findByIdRoom(int id);
 
     Room findByRoomNumber(String roomNumber);
 
     @Transactional
-    Long deleteById(int id);
+    Long deleteByIdRoom(int id);
 
     @Transactional
     Long deleteByRoomNumber(String roomNumber);

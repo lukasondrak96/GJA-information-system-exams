@@ -1,5 +1,6 @@
 package cz.vutbr.fit.gja.models.examRun;
 
+import cz.vutbr.fit.gja.models.exam.Exam;
 import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,4 +37,8 @@ public class ExamRunServiceDaoImpl implements ExamRunServiceDao {
         throw new NotYetImplementedException();
     }
 
+    @Override
+    public List<ExamRun> getAllExamRunsByExam(Exam exam) {
+        return examRunRepository.findAllByExamReference(exam);
+    }
 }

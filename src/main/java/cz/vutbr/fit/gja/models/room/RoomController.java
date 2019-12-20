@@ -141,16 +141,7 @@ public class RoomController {
             modelAndView.addObject("message", "Místnost s číslem \"" + room.getRoomNumber() + "\" již existuje.");
             setModelAndView(modelAndView, blocks, room);
         } else {
-            String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-            Teacher roomCreator = teacherServiceDao.getTeacher(userEmail);
-            if (roomCreator == null) {
-                ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Tento uživatel neexistuje");
-            }
-            room.setTeacherReference(roomCreator);
-            roomServiceDao.saveRoomToDatabase(room);
-
-            Room roomReference = roomServiceDao.getRoomByRoomNumber(room.getRoomNumber());
-            blockServiceDao.createAndSaveBlocksForRoom(roomReference, blocks);
+            createAndSaveRoom(blocks, modelAndView, room);
 
             modelAndView.addObject("successMessage", "Místnost \"" + room.getRoomNumber() + "\" byla úspěšně vytvořena.");
             modelAndView.addObject("roomHolders", blockServiceDao.getRoomAndNumberOfSeatsOfAllRooms());
@@ -175,12 +166,12 @@ public class RoomController {
     }
 
     @PostMapping("/logged/rooms/{id}/edit")
-    public ModelAndView editRoom(@PathVariable(value = "id") String name, @Valid Room room, BindingResult bindingResult, ModelMap modelMap) {
+    public ModelAndView editRoom(@PathVariable(value = "id") String name, Room room, BindingResult bindingResult, ModelMap modelMap) {
         ModelAndView modelAndView = new ModelAndView();
+        room.setRoomNumber(name);
         // Check for the validations
         if(bindingResult.hasErrors()) {
             modelMap.addAttribute("bindingResult", bindingResult);
-            modelAndView.setViewName("pages/logged/edit_room");
             modelAndView.addObject("room", room);
         } else {
             try {
@@ -194,8 +185,9 @@ public class RoomController {
             modelAndView.addObject("isNew", false);
             modelAndView.addObject("room", room);
             modelAndView.addObject("all_blocks", blocks);
-            modelAndView.setViewName("pages/logged/edit_room");
+
         }
+        modelAndView.setViewName("pages/logged/edit_room");
         return modelAndView;
     }
 
@@ -214,24 +206,28 @@ public class RoomController {
             modelAndView.addObject("room", room);
             modelAndView.addObject("blocks", blocks);
             modelAndView.setViewName("pages/logged/new_room");
-        } else if (roomServiceDao.isRoomAlreadyCreated(room)) {
-            roomServiceDao.deleteRoomByRoomNumber(room.getRoomNumber());
-            String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-            Teacher roomCreator = teacherServiceDao.getTeacher(userEmail);
-            if (roomCreator == null) {
-                ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Tento uživatel neexistuje");
-            }
-            room.setTeacherReference(roomCreator);
-            roomServiceDao.saveRoomToDatabase(room);
+        } else {
+            roomServiceDao.deleteRoomById(room.getIdRoom());
+            createAndSaveRoom(blocks, modelAndView, room);
 
-            Room roomReference = roomServiceDao.getRoomByRoomNumber(room.getRoomNumber());
-            blockServiceDao.createAndSaveBlocksForRoom(roomReference, blocks);
-
-            modelAndView.addObject("successMessage", "Místnost \"" + room.getRoomNumber() + "\" byla úspěšně vytvořena.");
+            modelAndView.addObject("successMessage", "Editace byla úspěšná");
             modelAndView.addObject("roomHolders", blockServiceDao.getRoomAndNumberOfSeatsOfAllRooms());
             modelAndView.setViewName("pages/logged/rooms");
         }
         return modelAndView;
+    }
+
+    private void createAndSaveRoom(@Valid BlocksDto blocks, ModelAndView modelAndView, Room room) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Teacher roomCreator = teacherServiceDao.getTeacher(userEmail);
+        if (roomCreator == null) {
+            ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Tento uživatel neexistuje");
+        }
+        room.setTeacherReference(roomCreator);
+        roomServiceDao.saveRoomToDatabase(room);
+
+        Room roomReference = roomServiceDao.getRoomByRoomNumber(room.getRoomNumber());
+        blockServiceDao.createAndSaveBlocksForRoom(roomReference, blocks);
     }
 
     private void setModelAndView(ModelAndView modelAndView, @Valid BlocksDto blocks, Room room) {

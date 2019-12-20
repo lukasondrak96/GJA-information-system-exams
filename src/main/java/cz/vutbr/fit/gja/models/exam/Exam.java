@@ -4,7 +4,6 @@ import cz.vutbr.fit.gja.models.teacher.Teacher;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -95,6 +94,5 @@ public class Exam {
     public void setExamCreator(Teacher examCreator) {
         this.examCreator = examCreator;
     }
-
 
 }
