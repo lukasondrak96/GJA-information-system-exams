@@ -47,12 +47,7 @@ public class AuthenticationController {
         return modelAndView;
     }
 
-    @GetMapping(value = "/logged/exams")
-    public ModelAndView adminHome() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("pages/logged/exams");
-        return modelAndView;
-    }
+
 
     @PostMapping(value="/register")
     public ModelAndView registerUser(@Valid Teacher teacher, BindingResult bindingResult, ModelMap modelMap) {

@@ -58,6 +58,12 @@ public class ExamController {
         return modelAndView;
     }
 
+    @GetMapping(value = "/logged/exams")
+    public ModelAndView getExamsAsLogged() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("pages/logged/exams");
+        return modelAndView;
+    }
 
     @GetMapping("/logged/exams/new_exam_1")
     public ModelAndView getNewExamFirstPage() {
@@ -158,7 +164,7 @@ public class ExamController {
         run.setExamReference(examFromDb);
         examRunServiceDao.saveExamRunToDatabase(run);
 
-        modelAndView.setViewName("pages/logged/exams");
+        modelAndView.setViewName("pages/exams");
         return modelAndView;
     }
 
