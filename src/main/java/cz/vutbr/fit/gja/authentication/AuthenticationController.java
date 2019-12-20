@@ -9,7 +9,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.validation.Valid;
 
 @Controller
@@ -17,6 +16,13 @@ public class AuthenticationController {
 
     @Autowired
     TeacherServiceDao teacherServiceDao;
+
+    @GetMapping(value = "/error", produces = "text/html")
+    public ModelAndView errorHtml() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("pages/exams");
+        return modelAndView;
+    }
 
     @GetMapping("/")
     public ModelAndView root() {
