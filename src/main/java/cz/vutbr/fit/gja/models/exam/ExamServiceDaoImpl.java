@@ -26,8 +26,8 @@ public class ExamServiceDaoImpl implements ExamServiceDao {
     }
 
     @Override
-    public void saveExamToDatabase(Exam exam) {
-        examRepository.save(exam);
+    public Exam saveExamToDatabase(Exam exam) {
+        return examRepository.save(exam);
     }
 
     @Override

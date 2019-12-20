@@ -8,7 +8,7 @@ public interface ExamServiceDao {
 
     Exam getExam(int id);
 
-    void saveExamToDatabase(Exam exam);
+    Exam saveExamToDatabase(Exam exam);
 
     long deleteExam(int examId) throws IllegalAccessError;
 }

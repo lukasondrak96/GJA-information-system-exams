@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="cs" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head (${'Vytvořit novou zkoušku'})">
+    Head from fragment
+</head>
+<body>
+<div th:replace="fragments/topnav :: navbar">
+    Menu
+</div>
+<div class="my-container center-class">
+    <div class="row form-style">
+        <form class="form-rooms" id="new_exam_2" autocomplete="off" th:action="@{/logged/exams/new_exam_2}"
+              th:object="${dto}" method="post" role="form">
+            <h3 class="form-signin-heading">Vytvoření zkoušky - popis a vybrání termínů</h3>
+
+            <div class="form-group room-form-cell">
+                <label>Akademický rok:</label>
+                <div class="update-placeholder">
+                    <select form="new_exam_2" th:field="*{exam.academicYear}">
+                        <option th:value="${acadYear.toString()}"
+                                th:each="acadYear: *{academicYearDto}"
+                                th:text="${acadYear.toString()}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group room-form-cell">
+                <label>Název zkoušky:</label>
+                <div class="update-placeholder">
+                    <input type="text" th:field="*{exam.examName}" class="form-control"/>
+                </div>
+            </div>
+
+            <div class="form-group room-form-cell">
+                <label>Předmět:</label>
+                <div class="update-placeholder">
+                    <input type="text" th:field="*{exam.subject}" class="form-control"/>
+                </div>
+            </div>
+
+
+            <div class="form-group room-form-cell">
+                <div><label>Časy zkoušky</label></div>
+                <div class="update-placeholder">
+                    <input type="date" th:field="*{examRun.date}" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group room-form-cell">
+                <div class="update-placeholder">
+                    <input type="time" th:field="*{examRun.startTime}" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group room-form-cell">
+                <div class="update-placeholder">
+                    <input type="time" th:field="*{examRun.endTime}" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group room-form-cell">
+                <label>Místnost:</label>
+                <div class="update-placeholder">
+                    <select form="new_exam_2" th:field="*{examRun.roomNumber}">
+                        <option th:value="${room.roomNumber}"
+                                th:each="room: *{roomsInDb}"
+                                th:text="${room.roomNumber}"></option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="form-group room-form-cell">
+                <div class="">
+                    <button class="btn btn-success btn-block" type="submit">Vytvořit</button>
+                </div>
+            </div>
+            <div class="form-group room-form-cell">
+                <a class="btn btn-danger btn-block" th:href="@{/logged/exams}">Zrušit</a>
+            </div>
+            <div class="col-sm-12 alert alert-danger" th:if="${message != null}">
+                <span th:utext="${message}"></span>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

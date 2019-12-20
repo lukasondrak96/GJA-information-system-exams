@@ -13,21 +13,13 @@
     <div class="my-container center-class">
         <div class="row form-style">
             <form  class="form-rooms" id="new_exam" autocomplete="off" th:action="@{/logged/exams/new_exam_1}" method="post" enctype="multipart/form-data">
+                <h3 class="form-signin-heading">Vytvoření nové zkoušky</h3>
                 <div class="form-group room-form-cell">
                     <label>Vyberte csv soubor se studenty:</label>
                     <div class="update-placeholder">
                         <input type="file" name="file" class="form-control"/>
                     </div>
                 </div>
-                <div class="form-group room-form-cell">
-                    <label>Způsob rozsazení:</label>
-                    <select name="spacing" form="new_exam">
-                        <option value="no_space">Vedle sebe</option>
-                        <option value="one_space">Ob jednoho</option>
-                        <option value="two_space">Ob dva</option>
-                    </select>
-                </div>
-
                 <div class="form-group room-form-cell">
                     <label>Pozice loginu studenta na řádku v souboru:</label>
                     <div class="update-placeholder">
@@ -40,8 +32,18 @@
                         <input name="name_position" type="number" value="2" class="form-control"/>
                     </div>
                 </div>
+
                 <div class="form-group room-form-cell">
-                        <button class="btn btn-success btn-block" type="submit">Uložit zkoušku</button>
+                    <label>Způsob rozsazení:</label>
+                    <select name="spacing" form="new_exam">
+                        <option value="no_space">Vedle sebe</option>
+                        <option value="one_space">Ob jednoho</option>
+                        <option value="two_space">Ob dva</option>
+                    </select>
+                </div>
+
+                <div class="form-group room-form-cell">
+                        <button class="btn btn-success btn-block" type="submit">Pokračovat k vytváření termínů</button>
                 </div>
                 <div class="form-group room-form-cell">
                     <a class="btn btn-danger btn-block" th:href="@{/logged/exams}">Zrušit</a>

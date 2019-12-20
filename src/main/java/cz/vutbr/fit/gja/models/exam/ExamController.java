@@ -1,5 +1,11 @@
 package cz.vutbr.fit.gja.models.exam;
 
+import cz.vutbr.fit.gja.dto.AcademicYearDto;
+import cz.vutbr.fit.gja.dto.NewExamSecondPartDto;
+import cz.vutbr.fit.gja.models.examRun.ExamRun;
+import cz.vutbr.fit.gja.models.examRun.ExamRunServiceDao;
+import cz.vutbr.fit.gja.models.room.Room;
+import cz.vutbr.fit.gja.models.room.RoomServiceDao;
 import cz.vutbr.fit.gja.models.student.Student;
 import cz.vutbr.fit.gja.models.student.StudentServiceDao;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
@@ -16,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Controller
@@ -25,7 +32,14 @@ public class ExamController {
     ExamServiceDao examServiceDao;
 
     @Autowired
+    ExamRunServiceDao examRunServiceDao;
+
+    @Autowired
     StudentServiceDao studentServiceDao;
+
+    @Autowired
+    RoomServiceDao roomServiceDao;
+
 
     private static final String CSV_FILE = "application/vnd.ms-excel";
 
@@ -111,8 +125,33 @@ public class ExamController {
 
         Exam newExam = new Exam();
         setSpacingOfExam(newExam, spacing);
+        ArrayList<Room> rooms = new ArrayList<>(roomServiceDao.getAllRoomsFromDatabase());
 
-        modelAndView.addObject("exam", newExam);
+        NewExamSecondPartDto dto = new NewExamSecondPartDto(new ExamRun(), newExam, rooms, getOptionsForAcademicYear() );
+        modelAndView.addObject("dto", dto);
+
+        modelAndView.setViewName("pages/logged/new_exam_2");
+        return modelAndView;
+    }
+
+    @PostMapping("/logged/exams/new_exam_2")
+    public ModelAndView createNewRoomHandleFile(NewExamSecondPartDto dto) {
+        ModelAndView modelAndView = new ModelAndView();
+        Exam exam = dto.getExam();
+
+        Exam examFromDb = examServiceDao.saveExamToDatabase(exam);
+
+        ExamRun run = dto.getExamRun();
+        run.setExamReference(examFromDb);
+        examRunServiceDao.saveExamRunToDatabase(run);
+
+
+        List<ExamRun> allExamRunsFromDatabase = examRunServiceDao.getAllExamRunsFromDatabase();
+        for (ExamRun run2 : allExamRunsFromDatabase) {
+            System.out.println(run2.getIdExamRun());
+        }
+
+
         modelAndView.setViewName("pages/logged/new_exam_2");
         return modelAndView;
     }
@@ -150,6 +189,23 @@ public class ExamController {
             list.add(line);
         }
         return list;
+    }
+
+    private ArrayList<AcademicYearDto> getOptionsForAcademicYear() {
+        Calendar calendar = Calendar.getInstance();
+        ArrayList<AcademicYearDto> listAcademicYearDtos = new ArrayList<>();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+
+        listAcademicYearDtos.add(new AcademicYearDto(year));
+        listAcademicYearDtos.add(new AcademicYearDto(year + 1));
+
+        if (month < 7) {
+            listAcademicYearDtos.add(0, new AcademicYearDto(year - 1));
+        } else {
+            listAcademicYearDtos.add(new AcademicYearDto(year + 2));
+        }
+        return listAcademicYearDtos;
     }
 
 }
