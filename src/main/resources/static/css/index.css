@@ -125,12 +125,12 @@ body {
     z-index: 10;
 }
 
-.rooms-card {
+.rooms-card, .exams-card {
     margin-bottom: 20px;
     border-color: #a5a5a5;
 }
 
-.rooms-card-header {
+.rooms-card-header, .exams-card-header {
     background: #d5d5d5;
     font-weight: bold;
 }
@@ -198,4 +198,8 @@ body {
 
 .list-style {
     padding-top: 100px;
+}
+
+.btn-search-login {
+    margin-top: -5px;
 }
