@@ -11,4 +11,6 @@ public interface ExamServiceDao {
     Exam saveExamToDatabase(Exam exam);
 
     long deleteExam(int examId) throws IllegalAccessError;
+
+    void setSpacingOfExam(Exam exam, String spacing);
 }

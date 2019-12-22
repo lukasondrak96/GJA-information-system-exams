@@ -1,5 +1,6 @@
 package cz.vutbr.fit.gja.models.exam;
 
+import cz.vutbr.fit.gja.common.CsvParser;
 import cz.vutbr.fit.gja.dto.AcademicYearDto;
 import cz.vutbr.fit.gja.dto.ExamsDto;
 import cz.vutbr.fit.gja.dto.NewExamSecondPartDto;
@@ -21,12 +22,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 @Controller
@@ -112,7 +109,7 @@ public class ExamController {
         }
 
         try {
-            rows = getListOfCsvFile(file);
+            rows = CsvParser.getListOfCsvFile(file);
         } catch (FileUploadException e) {
             modelAndView.addObject("message", "Prosím vyberte soubor ve formátu csv!");
             return modelAndView;
@@ -150,7 +147,7 @@ public class ExamController {
         this.spacing = spacing;
         ArrayList<Room> rooms = new ArrayList<>(roomServiceDao.getAllRoomsFromDatabase());
 
-        NewExamSecondPartDto dto = new NewExamSecondPartDto(new ExamRun(), new Exam(), rooms, getOptionsForAcademicYear(), newStudents.size());
+        NewExamSecondPartDto dto = new NewExamSecondPartDto(new ExamRun(), new Exam(), rooms, AcademicYearDto.getOptionsForAcademicYear(), newStudents.size());
         modelAndView.addObject("dto", dto);
 
         modelAndView.setViewName("pages/logged/new_exam_2");
@@ -161,7 +158,7 @@ public class ExamController {
     public ModelAndView createNewRoomHandleFile(NewExamSecondPartDto dto) {
         ModelAndView modelAndView = new ModelAndView();
         Exam exam = dto.getExam();
-        setSpacingOfExam(exam, spacing);
+        examServiceDao.setSpacingOfExam(exam, spacing);
 
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Teacher roomCreator = teacherServiceDao.getTeacher(userEmail);
@@ -176,57 +173,4 @@ public class ExamController {
         modelAndView.setViewName("pages/exams");
         return modelAndView;
     }
-
-    private void setSpacingOfExam(Exam exam, String spacing) {
-        int spacesBetweenStudents;
-        switch (spacing) {
-            default:
-            case "no_space":
-                spacesBetweenStudents = 0;
-                break;
-            case "one_space":
-                spacesBetweenStudents = 1;
-                break;
-            case "two_space":
-                spacesBetweenStudents = 2;
-                break;
-        }
-        exam.setSpacingBetweenStudents(spacesBetweenStudents);
-    }
-
-    private List<String> getListOfCsvFile(MultipartFile file) throws FileUploadException, IOException {
-        String type = file.getContentType();
-        if (!type.equals("application/vnd.ms-excel")) {
-            throw new FileUploadException();
-        }
-
-        BufferedReader br;
-        List<String> list = new ArrayList<>();
-        String line;
-        InputStream is = file.getInputStream();
-
-        br = new BufferedReader(new InputStreamReader(is));
-        while ((line = br.readLine()) != null) {
-            list.add(line);
-        }
-        return list;
-    }
-
-    private ArrayList<AcademicYearDto> getOptionsForAcademicYear() {
-        Calendar calendar = Calendar.getInstance();
-        ArrayList<AcademicYearDto> listAcademicYearDtos = new ArrayList<>();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-
-        listAcademicYearDtos.add(new AcademicYearDto(year));
-        listAcademicYearDtos.add(new AcademicYearDto(year + 1));
-
-        if (month < 7) {
-            listAcademicYearDtos.add(0, new AcademicYearDto(year - 1));
-        } else {
-            listAcademicYearDtos.add(new AcademicYearDto(year + 2));
-        }
-        return listAcademicYearDtos;
-    }
-
 }
