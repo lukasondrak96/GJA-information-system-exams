@@ -10,7 +10,7 @@
 <div class="my-container center-class">
     <div class="row form-style">
         <form class="form-rooms" id="new_exam_2" autocomplete="off" th:action="@{/logged/exams/new_exam_2}"
-              th:object="${dto}" method="post" role="form">
+              th:object="${exam_runs_dto}" method="post" role="form">
             <h3 class="form-signin-heading">Vytvoření zkoušky - popis a vybrání termínů</h3>
 
             <div class="form-group room-form-cell">
@@ -31,48 +31,55 @@
                 <label>Akademický rok:</label>
                 <div class="update-placeholder">
                     <select form="new_exam_2" th:field="*{exam.academicYear}">
-                        <option th:value="${acadYear.toString()}"
-                                th:each="acadYear: *{academicYearDto}"
-                                th:text="${acadYear.toString()}"></option>
+                        <option th:each="acadYear: ${dto.academicYearDto}"
+                                th:value="${acadYear.toString()}"
+                                th:text="${acadYear.toString()}">
+
+                        </option>
                     </select>
                 </div>
             </div>
             <div class="form-group room-form-cell">
-                <span th:text="'Počet studentů na zkoušce: ' + ${dto.students.size()}"></span>
-                <input th:field="${dto.students}" th:type="hidden" th:value="${dto.students}">
-            </div>
-
-            <div class="form-group room-form-cell">
-                <label>Místnost:</label>
-                <div class="update-placeholder">
-                    <select form="new_exam_2" th:field="*{examRun.roomReference}">
-                        <option th:value="${room.idRoom}"
-                                th:each="room: *{roomsInDb}"
-                                th:text="${room.roomNumber} + ' (' + ${room.numberOfColumns * room.numberOfRows} + ')'"></option>
-                    </select>
+                <span th:text="'Počet studentů na zkoušce: ' + *{studentsLogins.size()}"></span>
+                <div>
+                    <th:block th:each="login, itemStat : *{studentsLogins}">
+                        <input th:field="*{studentsLogins[__${itemStat.index}__]}" th:type="hidden">
+                    </th:block>
                 </div>
             </div>
-            <div class="form-group room-form-cell">
-                <label>Datum zkoušky:</label>
-                <div class="update-placeholder">
-                    <input type="date" th:field="*{examRun.examDate}" class="form-control"/>
+            <div th:class="exam_run">
+                <div class="form-group room-form-cell">
+                    <label>Místnost:</label>
+                    <div class="update-placeholder">
+                        <select form="new_exam_2" th:field="*{examRuns[0].roomReference}">
+                            <option th:each="room: ${dto.roomsInDb}"
+                                    th:value="${room.idRoom}"
+                                    th:text="${room.roomNumber} + ' (' + ${room.numberOfColumns * room.numberOfRows} + ')'">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group room-form-cell">
+                    <label>Datum zkoušky:</label>
+                    <div class="update-placeholder">
+                        <input type="date" th:field="*{examRuns[0].examDate}" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group room-form-cell">
+                    <label>Začátek zkoušky:</label>
+                    <div class="update-placeholder">
+                        <input type="time" th:field="*{examRuns[0].startTime}" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group room-form-cell">
+                    <label>Konec zkoušky:</label>
+                    <div class="update-placeholder">
+                        <input type="time" th:field="*{examRuns[0].endTime}" class="form-control"/>
+                    </div>
                 </div>
             </div>
-            <div class="form-group room-form-cell">
-                <label>Začátek zkoušky:</label>
-                <div class="update-placeholder">
-                    <input type="time" th:field="*{examRun.startTime}" class="form-control"/>
-                </div>
-            </div>
-            <div class="form-group room-form-cell">
-                <label>Konec zkoušky:</label>
-                <div class="update-placeholder">
-                    <input type="time" th:field="*{examRun.endTime}" class="form-control"/>
-                </div>
-            </div>
-
             <div>
-                <button class="btn btn-primary col-md-4 mb-5 float-left">+ Přidat čas zkoušky</button>
+                <button type="button" class="btn btn-primary col-md-4 mb-5 float-left" onclick="addNextExamRun()">+ Přidat čas zkoušky</button>
             </div>
 
             <div class="form-group room-form-cell">
@@ -90,4 +97,27 @@
     </div>
 </div>
 </body>
+<script>
+    function addNextExamRun() {
+        console.log("test");
+        var deleteButton = document.createElement("button");
+        deleteButton.type="button";
+        deleteButton.value = "Odebrat čas zkoušky";
+        deleteButton.className = "removeExamRun btn btn-danger btn-block";
+
+        var examRunDiv = document.getElementById("exam_run");
+        examRunDiv.appendChild(deleteButton);
+
+        $(".exam_run")
+            .eq(0)
+            .clone()
+            .find("input").val("").end() // ***
+            .show()
+            .insertAfter(".exam_run:last");
+    }
+
+    // $('.all').on('click', ".removeExamRun", function() {
+    //     $(this).closest('.exam_run').remove();
+    // });
+</script>
 </html>
