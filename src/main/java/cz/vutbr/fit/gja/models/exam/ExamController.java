@@ -135,7 +135,12 @@ public class ExamController {
 
         for (String row : rows) {
             String[] splittedRowArray = row.split(",");
-            newStudents.add(new Student(splittedRowArray[loginPos - 1], splittedRowArray[namePos - 1]));
+            try {
+                newStudents.add(new Student(splittedRowArray[loginPos - 1], splittedRowArray[namePos - 1]));
+            } catch (IndexOutOfBoundsException ex) {
+                modelAndView.addObject("message", "Zadejte správné pozice loginu a jména.");
+                return modelAndView;
+            }
         }
 
         List<Student> studentsInDb = studentServiceDao.getAllStudentsFromDatabase();
