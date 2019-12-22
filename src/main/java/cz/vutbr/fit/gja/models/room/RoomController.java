@@ -224,9 +224,8 @@ public class RoomController {
             ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Tento uživatel neexistuje");
         }
         room.setTeacherReference(roomCreator);
-        roomServiceDao.saveRoomToDatabase(room);
+        Room roomReference = roomServiceDao.saveRoomToDatabase(room);
 
-        Room roomReference = roomServiceDao.getRoomByRoomNumber(room.getRoomNumber());
         blockServiceDao.createAndSaveBlocksForRoom(roomReference, blocks);
     }
 

@@ -35,8 +35,8 @@ public class RoomServiceDaoImpl implements RoomServiceDao {
     }
 
     @Override
-    public void saveRoomToDatabase(Room room) {
-        roomRepository.save(room);
+    public Room saveRoomToDatabase(Room room) {
+        return roomRepository.save(room);
     }
 
     @Override

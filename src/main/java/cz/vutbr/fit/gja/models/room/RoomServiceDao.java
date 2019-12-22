@@ -12,7 +12,7 @@ public interface RoomServiceDao {
     Room getRoomByRoomNumber(String roomNumber);
 
 
-    void saveRoomToDatabase(Room room);
+    Room saveRoomToDatabase(Room room);
 
     long deleteRoomById(int id) throws IllegalAccessError;
 
