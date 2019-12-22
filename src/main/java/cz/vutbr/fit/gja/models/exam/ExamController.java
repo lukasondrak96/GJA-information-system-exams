@@ -4,6 +4,7 @@ import cz.vutbr.fit.gja.common.CsvParser;
 import cz.vutbr.fit.gja.dto.AcademicYearDto;
 import cz.vutbr.fit.gja.dto.ExamsDto;
 import cz.vutbr.fit.gja.dto.NewExamSecondPartDto;
+import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRunServiceDaoImpl;
 import cz.vutbr.fit.gja.models.examRun.ExamRun;
 import cz.vutbr.fit.gja.models.examRun.ExamRunServiceDao;
 import cz.vutbr.fit.gja.models.room.Room;
@@ -43,6 +44,9 @@ public class ExamController {
 
     @Autowired
     TeacherServiceDaoImpl teacherServiceDao;
+
+    @Autowired
+    BlockOnExamRunServiceDaoImpl blockOnExamRunServiceDao;
 
     private String spacing;
 
@@ -129,7 +133,7 @@ public class ExamController {
             newStudents.add(new Student(splittedRowArray[loginPos - 1], splittedRowArray[namePos - 1]));
         }
 
-        ArrayList<Student> studentsInDb = (ArrayList<Student>) studentServiceDao.getAllStudentsFromDatabase();
+        List<Student> studentsInDb = studentServiceDao.getAllStudentsFromDatabase();
 
         for (Student adeptToNewStudent : newStudents) {
             boolean foundInDb = false;
@@ -145,11 +149,10 @@ public class ExamController {
         }
 
         this.spacing = spacing;
-        ArrayList<Room> rooms = new ArrayList<>(roomServiceDao.getAllRoomsFromDatabase());
+        List<Room> rooms = roomServiceDao.getAllRoomsFromDatabase();
 
-        NewExamSecondPartDto dto = new NewExamSecondPartDto(new ExamRun(), new Exam(), rooms, AcademicYearDto.getOptionsForAcademicYear(), newStudents.size());
+        NewExamSecondPartDto dto = new NewExamSecondPartDto(new ExamRun(), new Exam(), rooms, AcademicYearDto.getOptionsForAcademicYear(), newStudents);
         modelAndView.addObject("dto", dto);
-
         modelAndView.setViewName("pages/logged/new_exam_2");
         return modelAndView;
     }

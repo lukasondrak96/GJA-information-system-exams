@@ -38,7 +38,8 @@
                 </div>
             </div>
             <div class="form-group room-form-cell">
-                <span th:text="'Počet studentů na zkoušce: ' + ${dto.numberOfStudents}"></span>
+                <span th:text="'Počet studentů na zkoušce: ' + ${dto.students.size()}"></span>
+                <input th:field="${dto.students}" th:type="hidden" th:value="${dto.students}">
             </div>
 
             <div class="form-group room-form-cell">

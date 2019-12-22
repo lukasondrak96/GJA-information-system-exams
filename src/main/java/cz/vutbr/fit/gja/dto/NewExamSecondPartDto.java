@@ -3,25 +3,26 @@ package cz.vutbr.fit.gja.dto;
 import cz.vutbr.fit.gja.models.exam.Exam;
 import cz.vutbr.fit.gja.models.examRun.ExamRun;
 import cz.vutbr.fit.gja.models.room.Room;
+import cz.vutbr.fit.gja.models.student.Student;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class NewExamSecondPartDto {
     private ExamRun examRun;
     private Exam exam;
-    private ArrayList<Room> roomsInDb;
-    private ArrayList<AcademicYearDto> academicYearDto;
-    private int numberOfStudents;
+    private List<Room> roomsInDb;
+    private List<AcademicYearDto> academicYearDto;
+    private List<Student> students;
 
     public NewExamSecondPartDto() {
     }
 
-    public NewExamSecondPartDto(ExamRun examRun, Exam exam, ArrayList<Room> roomsInDb, ArrayList<AcademicYearDto> academicYearDto, int numberOfStudents) {
+    public NewExamSecondPartDto(ExamRun examRun, Exam exam, List<Room> roomsInDb, List<AcademicYearDto> academicYearDto, List<Student> students) {
         this.examRun = examRun;
         this.exam = exam;
         this.roomsInDb = roomsInDb;
         this.academicYearDto = academicYearDto;
-        this.numberOfStudents = numberOfStudents;
+        this.students = students;
     }
 
     public ExamRun getExamRun() {
@@ -40,27 +41,27 @@ public class NewExamSecondPartDto {
         this.exam = exam;
     }
 
-    public ArrayList<Room> getRoomsInDb() {
+    public List<Room> getRoomsInDb() {
         return roomsInDb;
     }
 
-    public void setRoomsInDb(ArrayList<Room> roomsInDb) {
+    public void setRoomsInDb(List<Room> roomsInDb) {
         this.roomsInDb = roomsInDb;
     }
 
-    public ArrayList<AcademicYearDto> getAcademicYearDto() {
+    public List<AcademicYearDto> getAcademicYearDto() {
         return academicYearDto;
     }
 
-    public void setAcademicYearDto(ArrayList<AcademicYearDto> academicYearDto) {
+    public void setAcademicYearDto(List<AcademicYearDto> academicYearDto) {
         this.academicYearDto = academicYearDto;
     }
 
-    public int getNumberOfStudents() {
-        return numberOfStudents;
+    public List<Student> getStudents() {
+        return students;
     }
 
-    public void setNumberOfStudents(int numberOfStudents) {
-        this.numberOfStudents = numberOfStudents;
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 }
