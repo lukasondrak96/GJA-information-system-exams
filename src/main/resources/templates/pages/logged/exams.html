@@ -9,7 +9,7 @@
 </div>
 <div class="container list-style">
     <div class="btn-new-exam">
-        <a class="btn btn-success col-lg-4" th:href="@{/logged/exams/new_exam_1}">Vytvořit novou zkoušku</a>
+        <a class="btn btn-success col-lg-4" th:href="@{/logged/exams/new_exam}">Vytvořit novou zkoušku</a>
     </div>
     <div th:each="dto : ${listOfExamsDto}">
         <div class="card exams-card" th:if="${dto.exam.examCreator.email == #authentication.name}">

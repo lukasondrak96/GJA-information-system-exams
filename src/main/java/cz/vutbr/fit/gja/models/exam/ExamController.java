@@ -69,18 +69,7 @@ public class ExamController {
         return modelAndView;
     }
 
-    private List<ExamsDto> fillExamsDtoList() {
-        List<ExamsDto> listDto = new ArrayList<>();
-        List<Exam> allExamsFromDatabase = examServiceDao.getAllExamsFromDatabase();
-        for (Exam exam : allExamsFromDatabase) {
-            List<ExamRun> examRuns = examRunServiceDao.getAllExamRunsByExam(exam);
-            listDto.add(new ExamsDto(exam, examRuns));
-        }
-        examRunServiceDao.getAllExamRunsFromDatabase();
-        return listDto;
-    }
-
-    @GetMapping("/logged/exams/new_exam_1")
+    @GetMapping("/logged/exams/new_exam")
     public ModelAndView getNewExamFirstPage() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("pages/logged/new_exam_1");
@@ -194,4 +183,16 @@ public class ExamController {
         modelAndView.setViewName("pages/exams");
         return modelAndView;
     }
+
+    private List<ExamsDto> fillExamsDtoList() {
+        List<ExamsDto> listDto = new ArrayList<>();
+        List<Exam> allExamsFromDatabase = examServiceDao.getAllExamsFromDatabase();
+        for (Exam exam : allExamsFromDatabase) {
+            List<ExamRun> examRuns = examRunServiceDao.getAllExamRunsByExam(exam);
+            listDto.add(new ExamsDto(exam, examRuns));
+        }
+        examRunServiceDao.getAllExamRunsFromDatabase();
+        return listDto;
+    }
+
 }
