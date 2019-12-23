@@ -26,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -134,6 +135,7 @@ public class ExamController {
             }
         }
 
+        this.students = new LinkedList<>();
         List<Student> studentsInDb = studentServiceDao.getAllStudentsFromDatabase();
         for (Student adeptToNewStudent : newStudents) {
             boolean foundInDb = false;
@@ -150,6 +152,7 @@ public class ExamController {
                 this.students.add(student);
             }
         }
+        Collections.sort(this.students);
         this.spacing = examServiceDao.setSpacingOfExam(spacing);
 
         List<Room> rooms = roomServiceDao.getAllRoomsFromDatabase();

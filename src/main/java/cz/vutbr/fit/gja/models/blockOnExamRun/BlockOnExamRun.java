@@ -20,6 +20,9 @@ public class BlockOnExamRun {
     @Column(name = "id_block_on_exam_run")
     private int idBlockOnExamRun;
 
+    @Column(name = "block_number")
+    private String blockNumber;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "exam_run_reference", referencedColumnName = "id_exam_run")
@@ -38,10 +41,19 @@ public class BlockOnExamRun {
     public BlockOnExamRun() {
     }
 
-    public BlockOnExamRun(ExamRun examRunReference, Block blockReference, Student studentReference) {
+    public BlockOnExamRun(String blockNumber, ExamRun examRunReference, Block blockReference, Student studentReference) {
+        this.blockNumber = blockNumber;
         this.examRunReference = examRunReference;
         this.blockReference = blockReference;
         this.studentReference = studentReference;
+    }
+
+    public String getBlockNumber() {
+        return blockNumber;
+    }
+
+    public void setBlockNumber(String blockNumber) {
+        this.blockNumber = blockNumber;
     }
 
     public int getIdBlockOnExamRun() {
