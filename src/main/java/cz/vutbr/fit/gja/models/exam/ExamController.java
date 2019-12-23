@@ -197,8 +197,12 @@ public class ExamController {
     }
 
     @GetMapping("/exams/{id}")
-    public ModelAndView getExam(@PathVariable(value = "id") String examId) {
+    public ModelAndView getExam(@PathVariable(value = "id") int examId) {
         ModelAndView modelAndView = new ModelAndView();
+        Exam exam = examServiceDao.getExam(examId);
+        if (exam == null) return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
+        ExamDto examDto = examServiceDao.getExamDto(exam);
+        modelAndView.addObject("exam_dto", examDto);
         modelAndView.setViewName("pages/seating");
         return modelAndView;
     }
