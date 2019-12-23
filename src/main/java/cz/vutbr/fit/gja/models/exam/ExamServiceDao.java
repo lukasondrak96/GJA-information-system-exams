@@ -1,5 +1,7 @@
 package cz.vutbr.fit.gja.models.exam;
 
+import cz.vutbr.fit.gja.dto.ExamDto;
+
 import java.util.List;
 
 public interface ExamServiceDao {
@@ -13,4 +15,6 @@ public interface ExamServiceDao {
     long deleteExam(int examId) throws IllegalAccessError;
 
     int setSpacingOfExam(String spacing);
+
+    ExamDto getExamDto(Exam exam);
 }

@@ -15,8 +15,8 @@
         <button class="btn btn-primary btn-search-login" type="submit">Vyhledat</button>
     </form>
     <div class="card exams-card" th:each="dto : ${listOfExamsDto}">
-        <a class="a-style">
-            <div >
+        <a class="a-style" th:href="@{/exams/{id}(id=${dto.exam.idExam})}">
+            <div>
                 <div class="card-header exams-card-header" th:text="${dto.exam.academicYear} + ' - ' + ${dto.exam.examName}"></div>
                 <div class="card-body" th:each="examRun : ${dto.list}">
                     <div class="font-weight-bold" th:text="${examRun.getRoomReference().getRoomNumber()}"></div>

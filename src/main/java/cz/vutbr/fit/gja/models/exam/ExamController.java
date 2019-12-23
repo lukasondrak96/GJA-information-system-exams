@@ -1,10 +1,8 @@
 package cz.vutbr.fit.gja.models.exam;
 
 import cz.vutbr.fit.gja.common.CsvParser;
-import cz.vutbr.fit.gja.dto.AcademicYearDto;
-import cz.vutbr.fit.gja.dto.ExamRunsDto;
-import cz.vutbr.fit.gja.dto.ExamsDto;
-import cz.vutbr.fit.gja.dto.NewExamSecondPartDto;
+import cz.vutbr.fit.gja.common.ModelAndViewSetter;
+import cz.vutbr.fit.gja.dto.*;
 import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRunServiceDaoImpl;
 import cz.vutbr.fit.gja.models.examRun.ExamRun;
 import cz.vutbr.fit.gja.models.examRun.ExamRunServiceDao;
@@ -19,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -186,6 +185,26 @@ public class ExamController {
             blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
         }
         modelAndView.setViewName("pages/exams");
+        return modelAndView;
+    }
+
+    @GetMapping("/exams/{id}")
+    public ModelAndView getExam(@PathVariable(value = "id") String examId) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("pages/seating");
+        return modelAndView;
+    }
+
+    @GetMapping("/logged/exams/{id}")
+    public ModelAndView getExamAsLogged(@PathVariable(value = "id") int examId) {
+        ModelAndView modelAndView = new ModelAndView();
+        Exam exam = examServiceDao.getExam(examId);
+        if(exam == null) {
+            return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
+        }
+        ExamDto examDto = examServiceDao.getExamDto(exam);
+        modelAndView.addObject("exam_dto", examDto);
+        modelAndView.setViewName("pages/logged/seating");
         return modelAndView;
     }
 

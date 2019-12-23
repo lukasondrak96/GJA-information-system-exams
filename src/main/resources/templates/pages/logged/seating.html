@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="cs" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head (${'Rozsazení na zkoušce'})">
+    Head from fragment
+</head>
+<body>
+<div th:replace="fragments/topnav :: navbar">
+    Menu
+</div>
+<div class="my-container center-class">
+    <div class="row form-style" th:object="${exam_dto}">
+        <h2 class="mb-4" th:text="${exam_dto.exam.getAcademicYear()} + ': ' + ${exam_dto.exam.getSubject()} + ' - ' + ${exam_dto.exam.getExamName()}"></h2>
+        <div th:each="exam_run : *{examRuns}">
+            <p th:text="${exam_run.date} + ' ' + ${exam_run.startTime} + ' - ' + ${exam_run.endTime}"></p>
+            <form autocomplete="off" class="form-rooms mt-4">
+                <div class="form-group room-diagram">
+                    <div th:replace="fragments/room_schema :: roomSchema(${exam_run.blocks.getRoomReference()}, ${exam_run.blocks.getIsSeatList()}, false)">
+                        <!-- Room schema -->
+                    </div>
+                    <p>test</p>
+                </div>
+            </form>
+            <div th:class="desk"></div>
+            <div>
+                <table class="my-table-room">
+                    <tr><td class="row-number institute-color"></td><td class="text-left">Katedra</td></tr>
+                    <tr><td class="row-number corridor-color"></td><td class="text-left">Ulička</td></tr>
+                    <tr><td class="row-number seat-color"></td><td class="text-left">Sedadlo</td></tr>
+                </table>
+            </div>
+        </div>
+<!--        <div th:if="${loggedUser}">-->
+        <div>
+            <div class="right-float" th:if="*{exam.examCreator.email == #authentication.name}">
+                <a class="btn btn-danger btn-block edit-room-form-cell"
+                   th:href="@{/logged/exams/{id}/delete(id=*{exam.idExam})}">Smazat</a>
+            </div>
+            <div class="text-left font-weight-bold">
+                <span>Vytvořil: </span>
+                <span th:text="*{exam.examCreator.getDegreesBeforeName() != null} ? *{exam.examCreator.getDegreesBeforeName()}"></span>
+                <span th:text="${exam_dto.exam.examCreator.getFirstName()} + ' ' + ${exam_dto.exam.examCreator.getLastName()}"></span>
+                <span th:text="*{exam.examCreator.getDegreesBehindName() != null} ? *{exam.examCreator.getDegreesBehindName()}"></span>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
