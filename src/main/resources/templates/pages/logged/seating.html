@@ -14,10 +14,31 @@
             <p th:text="${exam_run.date} + ' ' + ${exam_run.startTime} + ' - ' + ${exam_run.endTime}"></p>
             <form autocomplete="off" class="form-rooms mt-4">
                 <div class="form-group room-diagram">
-                    <div th:replace="fragments/room_schema :: roomSchema(${exam_run.blocks.getRoomReference()}, ${exam_run.blocks.getIsSeatList()}, false)">
-                        <!-- Room schema -->
+                    <div th:with="room=${exam_run.blocks.getRoomReference()}, isSeatList=${exam_run.blocks.getIsSeatList()}">
+                        <div th:each="i: ${#numbers.sequence(0, room.getNumberOfRows() - 1)}">
+                            <label class="row-number" th:text="${room.getNumberOfRows() - i}"></label>
+                            <div class="block-btn-wrapper"
+                                 th:each="j: ${#numbers.sequence(0, room.getNumberOfColumns() - 1)}">
+                                <input disabled
+                                       th:checked="${isSeatList[__${i}__][__${j}__]}"
+                                       th:field="${isSeatList[__${i}__][__${j}__]}"
+                                       th:id="${room.getNumberOfRows() - i} + '_' + ${j + 1}"
+                                       type="checkbox" />
+                                <label th:for="${room.getNumberOfRows() - i} + '_' + ${j + 1}">
+                                    <span th:text="${exam_run.seating[__${i}__][__${j}__].getBlockNumber()}">&nbsp;</span>
+                                </label>
+                            </div>
+                        </div>
+                        <script>
+                            var inputs = document.getElementsByTagName("input");
+                            for (var x = 0; x < inputs.length; x++) {
+                                var name = inputs[x].getAttribute("name");
+                                if (name.indexOf("_isSeatList") === 0) {
+                                    inputs[x].parentNode.removeChild(inputs[x]);
+                                }
+                            }
+                        </script>
                     </div>
-                    <p>test</p>
                 </div>
             </form>
             <div th:class="desk"></div>

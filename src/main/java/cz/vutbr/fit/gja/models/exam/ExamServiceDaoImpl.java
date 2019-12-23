@@ -4,6 +4,8 @@ import cz.vutbr.fit.gja.dto.BlocksDto;
 import cz.vutbr.fit.gja.dto.ExamDto;
 import cz.vutbr.fit.gja.dto.ExamRunForSeating;
 import cz.vutbr.fit.gja.models.block.BlockServiceDaoImpl;
+import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRun;
+import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRunServiceDaoImpl;
 import cz.vutbr.fit.gja.models.examRun.ExamRun;
 import cz.vutbr.fit.gja.models.examRun.ExamRunServiceDaoImpl;
 import cz.vutbr.fit.gja.models.room.Room;
@@ -30,6 +32,9 @@ public class ExamServiceDaoImpl implements ExamServiceDao {
 
     @Autowired
     RoomServiceDaoImpl roomServiceDao;
+
+    @Autowired
+    BlockOnExamRunServiceDaoImpl blockOnExamRunServiceDao;
 
     @Value("${app.upload.dir:${user.home}}")
     public String uploadDir;
@@ -83,7 +88,9 @@ public class ExamServiceDaoImpl implements ExamServiceDao {
         for (ExamRun examRun : examRuns) {
             Room room = roomServiceDao.getRoomByRoomNumber(examRun.getRoomReference().getRoomNumber());
             BlocksDto blocks = blockServiceDao.getAllBlocksOfRoomAsDto(room);
-            examRunsForSeating.add(new ExamRunForSeating(examRun.getExamDate(), examRun.getStartTime(), examRun.getEndTime(), blocks));
+            List<List<BlockOnExamRun>> seating = blockOnExamRunServiceDao.getSeating(examRun);
+
+            examRunsForSeating.add(new ExamRunForSeating(examRun.getExamDate(), examRun.getStartTime(), examRun.getEndTime(), blocks, seating));
         }
         examDto.setExamRuns(examRunsForSeating);
 

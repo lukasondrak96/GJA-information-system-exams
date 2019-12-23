@@ -58,6 +58,26 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
         }
     }
 
+    @Override
+    public List<List<BlockOnExamRun>> getSeating(ExamRun examRun) {
+        Room room = examRun.getRoomReference();
+        List<List<BlockOnExamRun>> seating = new ArrayList<>();
+
+        //prepare list
+        for (int i = 0; i < room.getNumberOfRows(); i++) {
+            List<BlockOnExamRun> seatingRow = new ArrayList<>();
+            for (int j = 0; j < room.getNumberOfColumns(); j++) {
+                seatingRow.add(new BlockOnExamRun());
+            }
+            seating.add(seatingRow);
+        }
+
+        for(BlockOnExamRun block : blockOnExamRunRepository.findAllByExamRunReference(examRun)) {
+            seating.get(room.getNumberOfRows() - block.getBlockReference().getRowNumber()).set(block.getBlockReference().getColumnNumber() - 1, block);
+        }
+        return seating;
+    }
+
     private int saveBlockOnExamRun(ExamRun examRun, LinkedList<Student> students, int spacing, List<List<Block>> blocksInRoom, int seatCounter, int spaceCounter, int i, int j) {
         BlockOnExamRun blockOnExamRun = new BlockOnExamRun();
         Block block = blocksInRoom.get(i).get(j);
