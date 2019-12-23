@@ -20,10 +20,9 @@
                     <div class="mb-2" th:each="examRun : ${dto.list}">
                         <div class="font-weight-bold" th:text="${examRun.getRoomReference().getRoomNumber()}"></div>
                         <div class="font-weight-bold"
-                             th:text="${examRun.examDate} + ': ' + ${examRun.startTime}+ ${examRun.endTime}"></div>
+                             th:text="${examRun.examDate} + ': ' + ${examRun.startTime} + ' - ' + ${examRun.endTime}"></div>
                     </div>
                     <div class="right-float">
-                        <a class="btn btn-primary col-lg-1 btn-rooms-z-index">Editovat</a>
                         <a class="btn btn-danger col-lg-1 btn-rooms-z-index">Smazat</a>
                     </div>
                     <div>
