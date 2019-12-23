@@ -89,7 +89,7 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
                 blockOnExamRun = new BlockOnExamRun("-", examRun, block, null);
             }
         } else {
-            blockOnExamRun = new BlockOnExamRun("&nbsp;", examRun, block, null);
+            blockOnExamRun = new BlockOnExamRun(" ", examRun, block, null);
         }
         blockOnExamRunRepository.save(blockOnExamRun);
         return seatCounter;
