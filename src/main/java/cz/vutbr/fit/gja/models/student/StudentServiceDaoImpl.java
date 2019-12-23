@@ -23,8 +23,8 @@ public class StudentServiceDaoImpl implements StudentServiceDao {
     }
 
     @Override
-    public void saveStudentToDatabase(Student student) {
-        studentRepository.save(student);
+    public Student saveStudentToDatabase(Student student) {
+        return studentRepository.save(student);
     }
 
     @Override

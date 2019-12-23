@@ -8,7 +8,7 @@ public interface StudentServiceDao {
 
     Student getStudentByLogin(String login);
 
-    void saveStudentToDatabase(Student student);
+    Student saveStudentToDatabase(Student student);
 
     long deleteStudent(String login) throws IllegalAccessError;
 }

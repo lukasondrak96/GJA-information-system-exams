@@ -140,11 +140,13 @@ public class ExamController {
             for (Student studentInDb : studentsInDb) {
                 if (studentInDb.getLogin().equals(login)) {
                     foundInDb = true;
+                    this.students.add(studentInDb);
                     break;
                 }
             }
             if (!foundInDb) {
-                studentServiceDao.saveStudentToDatabase(adeptToNewStudent);
+                Student student = studentServiceDao.saveStudentToDatabase(adeptToNewStudent);
+                this.students.add(student);
             }
         }
 
