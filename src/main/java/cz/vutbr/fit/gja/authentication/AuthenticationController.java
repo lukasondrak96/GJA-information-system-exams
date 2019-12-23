@@ -17,19 +17,12 @@ public class AuthenticationController {
     @Autowired
     TeacherServiceDao teacherServiceDao;
 
-    @GetMapping(value = "/error", produces = "text/html")
-    public ModelAndView errorHtml() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("pages/exams");
-        return modelAndView;
-    }
-
-    @GetMapping("/")
-    public ModelAndView root() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("pages/exams");
-        return modelAndView;
-    }
+//    @GetMapping("/")
+//    public ModelAndView root() {
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.setViewName("pages/logged/exams");
+//        return modelAndView;
+//    }
 
     @GetMapping(value = { "/login" })
     public ModelAndView login() {

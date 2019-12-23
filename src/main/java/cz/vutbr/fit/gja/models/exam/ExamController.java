@@ -55,6 +55,14 @@ public class ExamController {
 
     private static final String CSV_FILE = "application/vnd.ms-excel";
 
+    @GetMapping(value = "/error", produces = "text/html")
+    public ModelAndView errorHtml() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
+        modelAndView.setViewName("pages/logged/exams");
+        return modelAndView;
+    }
+
     @GetMapping("/exams")
     public ModelAndView getExams() {
         ModelAndView modelAndView = new ModelAndView();
