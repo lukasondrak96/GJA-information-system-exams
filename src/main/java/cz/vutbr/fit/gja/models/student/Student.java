@@ -1,14 +1,11 @@
 package cz.vutbr.fit.gja.models.student;
 
-import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRun;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Set;
 
 @Entity
 @Table(name = "student")
-public class Student {
+public class Student implements Comparable<Student>{
 
     @Id
     @SequenceGenerator(name = "StudentIdGenerator", sequenceName = "STUDENT_SEQUENCE", allocationSize = 1)
@@ -56,5 +53,13 @@ public class Student {
 
     public void setNameWithDegrees(String nameWithDegrees) {
         this.nameWithDegrees = nameWithDegrees;
+    }
+
+    @Override
+    public int compareTo(Student s) {
+        if (getLogin() == null || s.getLogin() == null) {
+            return 0;
+        }
+        return getLogin().compareTo(s.getLogin());
     }
 }

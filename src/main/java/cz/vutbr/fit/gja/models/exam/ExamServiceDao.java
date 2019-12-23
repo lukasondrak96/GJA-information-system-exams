@@ -12,5 +12,5 @@ public interface ExamServiceDao {
 
     long deleteExam(int examId) throws IllegalAccessError;
 
-    void setSpacingOfExam(Exam exam, String spacing);
+    int setSpacingOfExam(String spacing);
 }

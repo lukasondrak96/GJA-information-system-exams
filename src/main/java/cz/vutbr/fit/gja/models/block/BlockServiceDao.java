@@ -13,5 +13,7 @@ public interface BlockServiceDao {
 
     List<RoomAndNumberOfSeatsDto> getRoomAndNumberOfSeatsOfAllRooms();
 
-    BlocksDto getAllBlocksOfRoom(Room room);
+    BlocksDto getAllBlocksOfRoomAsDto(Room room);
+
+    List<Block> getAllBlocks(Room room);
 }

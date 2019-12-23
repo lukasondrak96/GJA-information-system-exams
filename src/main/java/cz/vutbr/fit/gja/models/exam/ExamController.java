@@ -26,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Controller
@@ -49,8 +50,8 @@ public class ExamController {
     @Autowired
     BlockOnExamRunServiceDaoImpl blockOnExamRunServiceDao;
 
-    private String spacing;
-    private List<Student> students = new ArrayList<>();
+    private int spacing;
+    private LinkedList<Student> students = new LinkedList<>();
 
     private static final String CSV_FILE = "application/vnd.ms-excel";
 
@@ -149,8 +150,8 @@ public class ExamController {
                 this.students.add(student);
             }
         }
+        this.spacing = examServiceDao.setSpacingOfExam(spacing);
 
-        this.spacing = spacing;
         List<Room> rooms = roomServiceDao.getAllRoomsFromDatabase();
 
         NewExamSecondPartDto dto = new NewExamSecondPartDto(rooms, AcademicYearDto.getOptionsForAcademicYear());
@@ -168,7 +169,7 @@ public class ExamController {
     public ModelAndView createNewRoomHandleFile(ExamRunsDto examRuns) {
         ModelAndView modelAndView = new ModelAndView();
         Exam exam = examRuns.getExam();
-        examServiceDao.setSpacingOfExam(exam, spacing);
+        exam.setSpacingBetweenStudents(this.spacing);
 
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Teacher roomCreator = teacherServiceDao.getTeacher(userEmail);
@@ -179,7 +180,7 @@ public class ExamController {
         for(ExamRun run : examRuns.getExamRuns()) {
             run.setExamReference(examFromDb);
             examRunServiceDao.saveExamRunToDatabase(run);
-            blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students);
+            blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
         }
         modelAndView.setViewName("pages/exams");
         return modelAndView;

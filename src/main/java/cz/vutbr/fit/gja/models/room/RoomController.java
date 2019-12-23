@@ -51,7 +51,7 @@ public class RoomController {
         if (room == null) {
             ModelAndViewSetter.errorPageWithMessage(modelAndView, "Místnost s číslem \"" + roomId + "\" neexistuje.");
         } else {
-            BlocksDto blocks = blockServiceDao.getAllBlocksOfRoom(room);
+            BlocksDto blocks = blockServiceDao.getAllBlocksOfRoomAsDto(room);
             modelAndView.addObject("all_blocks", blocks);
             modelAndView.setViewName("pages/room");
         }
@@ -65,7 +65,7 @@ public class RoomController {
         if (room == null) {
             ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Místnost s číslem \"" + roomNumber + "\" neexistuje.");
         } else {
-            BlocksDto blocks = blockServiceDao.getAllBlocksOfRoom(room);
+            BlocksDto blocks = blockServiceDao.getAllBlocksOfRoomAsDto(room);
             modelAndView.addObject("all_blocks", blocks);
             modelAndView.setViewName("pages/logged/room");
         }
@@ -157,7 +157,7 @@ public class RoomController {
         if (room == null) {
             return ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Místnost s číslem \"" + name + "\" neexistuje.");
         }
-        BlocksDto blocks = blockServiceDao.getAllBlocksOfRoom(room);
+        BlocksDto blocks = blockServiceDao.getAllBlocksOfRoomAsDto(room);
 
         modelAndView.addObject("room", room);
         modelAndView.addObject("all_blocks", blocks);

@@ -66,14 +66,20 @@ public class BlockServiceDaoImpl implements BlockServiceDao {
     }
 
     @Override
-    public BlocksDto getAllBlocksOfRoom(Room room) {
+    public BlocksDto getAllBlocksOfRoomAsDto(Room room) {
         BlocksDto blocksDto = new BlocksDto();
         blocksDto.createIsSeatListOfAisles(room);
 
-        List<Block> blockList = blockRepository.findByRoomReference(room);
+        List<Block> blockList = getAllBlocks(room);
         for (Block block : blockList) {
             blocksDto.getBlockRow(room.getNumberOfRows() - block.getRowNumber()).set(block.getColumnNumber() - 1, block.isSeat());
         }
         return blocksDto;
     }
+
+    @Override
+    public List<Block> getAllBlocks(Room room) {
+        return blockRepository.findByRoomReference(room);
+    }
+
 }

@@ -38,7 +38,7 @@ public class ExamServiceDaoImpl implements ExamServiceDao {
     }
 
     @Override
-    public void setSpacingOfExam(Exam exam, String spacing) {
+    public int setSpacingOfExam(String spacing) {
         int spacesBetweenStudents;
         switch (spacing) {
             default:
@@ -52,7 +52,7 @@ public class ExamServiceDaoImpl implements ExamServiceDao {
                 spacesBetweenStudents = 2;
                 break;
         }
-        exam.setSpacingBetweenStudents(spacesBetweenStudents);
+        return spacesBetweenStudents;
     }
 
 }
