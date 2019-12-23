@@ -50,6 +50,7 @@ public class ExamController {
     BlockOnExamRunServiceDaoImpl blockOnExamRunServiceDao;
 
     private String spacing;
+    private List<Student> students = new ArrayList<>();
 
     private static final String CSV_FILE = "application/vnd.ms-excel";
 
@@ -133,11 +134,9 @@ public class ExamController {
         }
 
         List<Student> studentsInDb = studentServiceDao.getAllStudentsFromDatabase();
-        List<String> studentsLogins = new ArrayList<>();
         for (Student adeptToNewStudent : newStudents) {
             boolean foundInDb = false;
             String login = adeptToNewStudent.getLogin();
-            studentsLogins.add(login);
             for (Student studentInDb : studentsInDb) {
                 if (studentInDb.getLogin().equals(login)) {
                     foundInDb = true;
@@ -156,7 +155,7 @@ public class ExamController {
         ArrayList<ExamRun> examRuns = new ArrayList<>();
         examRuns.add(new ExamRun());
 
-        ExamRunsDto examRunsDto = new ExamRunsDto(studentsLogins, examRuns, new Exam());
+        ExamRunsDto examRunsDto = new ExamRunsDto(this.students.size(), examRuns, new Exam());
         modelAndView.addObject("dto", dto);
         modelAndView.addObject("exam_runs_dto", examRunsDto);
         modelAndView.setViewName("pages/logged/new_exam_2");
@@ -178,7 +177,7 @@ public class ExamController {
         for(ExamRun run : examRuns.getExamRuns()) {
             run.setExamReference(examFromDb);
             examRunServiceDao.saveExamRunToDatabase(run);
-            blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, examRuns.getStudentsLogins());
+            blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students);
         }
         modelAndView.setViewName("pages/exams");
         return modelAndView;

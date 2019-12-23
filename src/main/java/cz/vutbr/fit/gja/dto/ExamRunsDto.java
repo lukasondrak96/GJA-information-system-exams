@@ -6,25 +6,25 @@ import cz.vutbr.fit.gja.models.examRun.ExamRun;
 import java.util.List;
 
 public class ExamRunsDto {
-    private List<String> studentsLogins;
+    private int numberOfStudents;
     private List<ExamRun> examRuns;
     private Exam exam;
 
     public ExamRunsDto() {
     }
 
-    public ExamRunsDto(List<String> studentsLogins, List<ExamRun> examRuns, Exam exam) {
-        this.studentsLogins = studentsLogins;
+    public ExamRunsDto(int numberOfStudents, List<ExamRun> examRuns, Exam exam) {
+        this.numberOfStudents = numberOfStudents;
         this.examRuns = examRuns;
         this.exam = exam;
     }
 
-    public List<String> getStudentsLogins() {
-        return studentsLogins;
+    public int getNumberOfStudents() {
+        return numberOfStudents;
     }
 
-    public void setStudentsLogins(List<String> studentsLogins) {
-        this.studentsLogins = studentsLogins;
+    public void setNumberOfStudents(int numberOfStudents) {
+        this.numberOfStudents = numberOfStudents;
     }
 
     public List<ExamRun> getExamRuns() {
