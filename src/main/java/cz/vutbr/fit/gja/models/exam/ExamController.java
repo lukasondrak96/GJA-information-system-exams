@@ -66,7 +66,26 @@ public class ExamController {
     @GetMapping("/exams")
     public ModelAndView getExams() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
+//        modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
+        modelAndView.setViewName("pages/exams");
+        return modelAndView;
+    }
+
+    @PostMapping("/exams")
+    public ModelAndView getLoginFromForm(@RequestParam String login) {
+        ModelAndView modelAndView = new ModelAndView();
+        List<Student> studentsInDb = studentServiceDao.getAllStudentsFromDatabase();
+        for (Student student : studentsInDb) {
+            if (student.getLogin().equals(login)) {
+                System.out.println("\nnasel jsem\n");
+                //TODO tady poslat na FE seznam mistnosti, kde student sedi
+                modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
+                modelAndView.setViewName("pages/exams");
+                return modelAndView;
+            }
+        }
+        System.out.println("\nnenasel jsem\n");
+        modelAndView.addObject("message", "Zadaný login neexistuje.");
         modelAndView.setViewName("pages/exams");
         return modelAndView;
     }
