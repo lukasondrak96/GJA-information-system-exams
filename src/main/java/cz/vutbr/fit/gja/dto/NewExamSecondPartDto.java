@@ -7,13 +7,15 @@ import java.util.List;
 public class NewExamSecondPartDto {
     private List<Room> roomsInDb;
     private List<AcademicYearDto> academicYearDto;
+    private List<Long> roomCapacitiesSeatsOnly;
 
     public NewExamSecondPartDto() {
     }
 
-    public NewExamSecondPartDto(List<Room> roomsInDb, List<AcademicYearDto> academicYearDto) {
+    public NewExamSecondPartDto(List<Room> roomsInDb, List<AcademicYearDto> academicYearDto, List<Long> roomCapacitiesSeatsOnly) {
         this.roomsInDb = roomsInDb;
         this.academicYearDto = academicYearDto;
+        this.roomCapacitiesSeatsOnly = roomCapacitiesSeatsOnly;
     }
 
     public List<Room> getRoomsInDb() {
@@ -30,5 +32,13 @@ public class NewExamSecondPartDto {
 
     public void setAcademicYearDto(List<AcademicYearDto> academicYearDto) {
         this.academicYearDto = academicYearDto;
+    }
+
+    public List<Long> getRoomCapacitiesSeatsOnly() {
+        return roomCapacitiesSeatsOnly;
+    }
+
+    public void setRoomCapacitiesSeatsOnly(List<Long> roomCapacitiesSeatsOnly) {
+        this.roomCapacitiesSeatsOnly = roomCapacitiesSeatsOnly;
     }
 }

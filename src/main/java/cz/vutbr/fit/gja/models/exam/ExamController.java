@@ -3,6 +3,7 @@ package cz.vutbr.fit.gja.models.exam;
 import cz.vutbr.fit.gja.common.CsvParser;
 import cz.vutbr.fit.gja.common.ModelAndViewSetter;
 import cz.vutbr.fit.gja.dto.*;
+import cz.vutbr.fit.gja.models.block.BlockServiceDao;
 import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRunServiceDaoImpl;
 import cz.vutbr.fit.gja.models.examRun.ExamRun;
 import cz.vutbr.fit.gja.models.examRun.ExamRunServiceDao;
@@ -49,6 +50,9 @@ public class ExamController {
 
     @Autowired
     BlockOnExamRunServiceDaoImpl blockOnExamRunServiceDao;
+
+    @Autowired
+    BlockServiceDao blockServiceDao;
 
     private int spacing;
     private LinkedList<Student> students = new LinkedList<>();
@@ -188,22 +192,23 @@ public class ExamController {
         this.spacing = examServiceDao.setSpacingOfExam(spacing);
 
         List<Room> rooms = roomServiceDao.getAllRoomsFromDatabase();
+        List<Long> numberOfSeatsInRooms = new ArrayList<>();
+        for (Room room: rooms) {
+            numberOfSeatsInRooms.add(blockServiceDao.getNumberOfSeats(room));
+        }
 
-        NewExamSecondPartDto dto = new NewExamSecondPartDto(rooms, AcademicYearDto.getOptionsForAcademicYear());
-        ArrayList<ExamRun> examRuns = new ArrayList<>();
-        examRuns.add(new ExamRun());
-
-        ExamRunsDto examRunsDto = new ExamRunsDto(this.students.size(), examRuns, new Exam());
-        modelAndView.addObject("dto", dto);
-        modelAndView.addObject("exam_runs_dto", examRunsDto);
+        NewExamSecondPartDto newExamSecondPartDto = new NewExamSecondPartDto(rooms, AcademicYearDto.getOptionsForAcademicYear(), numberOfSeatsInRooms);
+        ExamRunDto examRunDto = new ExamRunDto(this.students.size(), new ExamRun(), new Exam());
+        modelAndView.addObject("new_exam_second_part_dto", newExamSecondPartDto);
+        modelAndView.addObject("exam_run_dto", examRunDto);
         modelAndView.setViewName("pages/logged/new_exam_2");
         return modelAndView;
     }
 
     @PostMapping("/logged/exams/new_exam_2")
-    public ModelAndView createNewRoomHandleFile(ExamRunsDto examRuns) {
+    public ModelAndView createNewRoomHandleFile(ExamRunDto examRunDto) {
         ModelAndView modelAndView = new ModelAndView();
-        Exam exam = examRuns.getExam();
+        Exam exam = examRunDto.getExam();
         exam.setSpacingBetweenStudents(this.spacing);
 
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -212,11 +217,11 @@ public class ExamController {
 
         Exam examFromDb = examServiceDao.saveExamToDatabase(exam);
 
-        for(ExamRun run : examRuns.getExamRuns()) {
-            run.setExamReference(examFromDb);
-            examRunServiceDao.saveExamRunToDatabase(run);
-            int studentsWithSeat = blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
-        }
+        ExamRun run = examRunDto.getExamRun();
+        run.setExamReference(examFromDb);
+        examRunServiceDao.saveExamRunToDatabase(run);
+        int studentsWithSeat = blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
+
         //todo if studentsWithSeat != počet načtených studentů z csv souboru v new_exam, přesměruj na vytvoření dalšího runu
 
         modelAndView.setViewName("pages/exams");
@@ -238,7 +243,7 @@ public class ExamController {
     public ModelAndView getExamAsLogged(@PathVariable(value = "id") int examId) {
         ModelAndView modelAndView = new ModelAndView();
         Exam exam = examServiceDao.getExam(examId);
-        if(exam == null) {
+        if (exam == null) {
             return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
         }
         ExamDto examDto = examServiceDao.getExamDto(exam);

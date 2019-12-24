@@ -3,19 +3,17 @@ package cz.vutbr.fit.gja.dto;
 import cz.vutbr.fit.gja.models.exam.Exam;
 import cz.vutbr.fit.gja.models.examRun.ExamRun;
 
-import java.util.List;
-
-public class ExamRunsDto {
+public class ExamRunDto {
     private int numberOfStudents;
-    private List<ExamRun> examRuns;
+    private ExamRun examRun;
     private Exam exam;
 
-    public ExamRunsDto() {
+    public ExamRunDto() {
     }
 
-    public ExamRunsDto(int numberOfStudents, List<ExamRun> examRuns, Exam exam) {
+    public ExamRunDto(int numberOfStudents, ExamRun examRun, Exam exam) {
         this.numberOfStudents = numberOfStudents;
-        this.examRuns = examRuns;
+        this.examRun = examRun;
         this.exam = exam;
     }
 
@@ -27,12 +25,12 @@ public class ExamRunsDto {
         this.numberOfStudents = numberOfStudents;
     }
 
-    public List<ExamRun> getExamRuns() {
-        return examRuns;
+    public ExamRun getExamRun() {
+        return examRun;
     }
 
-    public void setExamRuns(List<ExamRun> examRuns) {
-        this.examRuns = examRuns;
+    public void setExamRun(ExamRun examRun) {
+        this.examRun = examRun;
     }
 
     public Exam getExam() {
