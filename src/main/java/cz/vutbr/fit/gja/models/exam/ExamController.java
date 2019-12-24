@@ -82,6 +82,12 @@ public class ExamController {
     @GetMapping("/logged/exams/new_exam")
     public ModelAndView getNewExamFirstPage() {
         ModelAndView modelAndView = new ModelAndView();
+        if (roomServiceDao.getAllRoomsFromDatabase().isEmpty()) {
+            modelAndView.setViewName("pages/logged/exams");
+            modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
+            modelAndView.addObject("message", "Nelze vytvořit zkoušku bez vytvořených místností.");
+            return modelAndView;
+        }
         modelAndView.setViewName("pages/logged/new_exam_1");
         return modelAndView;
     }

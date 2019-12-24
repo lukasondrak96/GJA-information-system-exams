@@ -11,6 +11,9 @@
     <div class="btn-new-exam">
         <a class="btn btn-success col-lg-4" th:href="@{/logged/exams/new_exam}">Vytvořit novou zkoušku</a>
     </div>
+    <div class="col-sm-12 alert alert-danger" th:if="${message != null}">
+        <span th:utext="${message}"></span>
+    </div>
     <div th:each="dto : ${listOfExamsDto}">
         <div class="card exams-card">
             <a class="stretched-link a-style" th:href="@{/logged/exams/{id}(id=${dto.exam.idExam})}">
