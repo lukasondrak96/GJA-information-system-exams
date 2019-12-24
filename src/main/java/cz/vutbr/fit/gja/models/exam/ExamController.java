@@ -215,8 +215,10 @@ public class ExamController {
         for(ExamRun run : examRuns.getExamRuns()) {
             run.setExamReference(examFromDb);
             examRunServiceDao.saveExamRunToDatabase(run);
-            blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
+            int studentsWithSeat = blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
         }
+        //todo if studentsWithSeat != počet načtených studentů z csv souboru v new_exam, přesměruj na vytvoření dalšího runu
+
         modelAndView.setViewName("pages/exams");
         return modelAndView;
     }

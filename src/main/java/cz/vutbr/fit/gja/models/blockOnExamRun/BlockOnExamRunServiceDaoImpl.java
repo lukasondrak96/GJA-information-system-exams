@@ -22,7 +22,7 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
     BlockOnExamRunRepository blockOnExamRunRepository;
 
     @Override
-    public void createAndSaveBlocksOnExamRun(ExamRun examRun, LinkedList<Student> students, int spacing) {
+    public int createAndSaveBlocksOnExamRun(ExamRun examRun, LinkedList<Student> students, int spacing) {
         Room room = examRun.getRoomReference();
         List<List<Block>> blocksInRoom = new ArrayList<>();
 
@@ -39,7 +39,7 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
             blocksInRoom.get(room.getNumberOfRows() - block.getRowNumber()).set(block.getColumnNumber() - 1, block);
         }
 
-        int seatCounter = 1;
+        int seatCounter = 0;
         boolean goRight = true;
         for (int i = blocksInRoom.size() - 1; i >= 0; i--) {
             ArrayList<Block> blocksInRow = (ArrayList<Block>) blocksInRoom.get(i);
@@ -47,6 +47,7 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
             seatCounter = saveBlocksInRowOnExamRun(examRun, students, spacing, blocksInRow, seatCounter, i, goRight);
             goRight = !goRight;
         }
+        return seatCounter;
     }
 
     @Override
@@ -72,7 +73,6 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
 
     private int saveBlocksInRowOnExamRun(ExamRun examRun, LinkedList<Student> students, int spacing, List<Block> blocksInRow, int seatCounter, int i, boolean goRight) {
         OccupiedSeats occupiedSeats = new OccupiedSeats(false, false, seatCounter);
-
         if (goRight) {
             for (int j = 0; j < blocksInRow.size(); j++) {
                 occupiedSeats = saveBlock(examRun, students, spacing, blocksInRow, occupiedSeats, i, j);
@@ -83,7 +83,6 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
             }
         }
         return occupiedSeats.seatCounter;
-
     }
 
     private OccupiedSeats saveBlock(ExamRun examRun, LinkedList<Student> students, int spacing, List<Block> blocksInRow, OccupiedSeats occupiedSeats, int i, int j) {
@@ -102,8 +101,8 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
             } else {
                 secondLastBlockIsOccupied = lastBlockIsOccupied;
                 lastBlockIsOccupied = true;
-                blockOnExamRun = new BlockOnExamRun(String.valueOf(occupiedSeats.seatCounter), examRun, block, students.removeFirst());
                 occupiedSeats.seatCounter++;
+                blockOnExamRun = new BlockOnExamRun(String.valueOf(occupiedSeats.seatCounter), examRun, block, students.removeFirst());
             }
         } else {
             blockOnExamRun = new BlockOnExamRun(" ", examRun, block, null);

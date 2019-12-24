@@ -10,7 +10,6 @@ import cz.vutbr.fit.gja.models.examRun.ExamRun;
 import cz.vutbr.fit.gja.models.examRun.ExamRunServiceDaoImpl;
 import cz.vutbr.fit.gja.models.room.Room;
 import cz.vutbr.fit.gja.models.room.RoomServiceDaoImpl;
-import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -56,8 +55,11 @@ public class ExamServiceDaoImpl implements ExamServiceDao {
 
     @Override
     public long deleteExam(int examId) throws IllegalAccessError {
-        //todo
-        throw new NotYetImplementedException();
+        Exam exam = examRepository.findByIdExam(examId);
+        if(exam == null) {
+            return 0;
+        }
+        return examRepository.deleteByIdExam(examId);
     }
 
     @Override

@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public interface BlockOnExamRunServiceDao {
-    void createAndSaveBlocksOnExamRun(ExamRun examRun, LinkedList<Student> students, int spacing);
+    int createAndSaveBlocksOnExamRun(ExamRun examRun, LinkedList<Student> students, int spacing);
 
     List<List<BlockOnExamRun>> getSeating(ExamRun examRun);
 }
