@@ -35,25 +35,16 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
             blocksInRoom.add(blocksInRoomRow);
         }
 
-        for(Block block : blockServiceDao.getAllBlocks(room)) {
+        for (Block block : blockServiceDao.getAllBlocks(room)) {
             blocksInRoom.get(room.getNumberOfRows() - block.getRowNumber()).set(block.getColumnNumber() - 1, block);
         }
 
         int seatCounter = 1;
         boolean goRight = true;
         for (int i = blocksInRoom.size() - 1; i >= 0; i--) {
-            int spaceCounter = 0;
-            if(goRight) {
-                for (int j = 0; j < blocksInRoom.get(i).size(); j++) {
-                    seatCounter = saveBlockOnExamRun(examRun, students, spacing, blocksInRoom, seatCounter, spaceCounter, i, j);
-                    spaceCounter++;
-                }
-            } else {
-                for (int j = blocksInRoom.get(i).size() - 1; j >= 0; j--) {
-                    seatCounter = saveBlockOnExamRun(examRun, students, spacing, blocksInRoom, seatCounter, spaceCounter, i, j);
-                    spaceCounter++;
-                }
-            }
+            ArrayList<Block> blocksInRow = (ArrayList<Block>) blocksInRoom.get(i);
+
+            seatCounter = saveBlocksInRowOnExamRun(examRun, students, spacing, blocksInRow, seatCounter, i, goRight);
             goRight = !goRight;
         }
     }
@@ -72,26 +63,67 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
             seating.add(seatingRow);
         }
 
-        for(BlockOnExamRun block : blockOnExamRunRepository.findAllByExamRunReference(examRun)) {
+        for (BlockOnExamRun block : blockOnExamRunRepository.findAllByExamRunReference(examRun)) {
             seating.get(room.getNumberOfRows() - block.getBlockReference().getRowNumber()).set(block.getBlockReference().getColumnNumber() - 1, block);
         }
         return seating;
     }
 
-    private int saveBlockOnExamRun(ExamRun examRun, LinkedList<Student> students, int spacing, List<List<Block>> blocksInRoom, int seatCounter, int spaceCounter, int i, int j) {
-        BlockOnExamRun blockOnExamRun = new BlockOnExamRun();
-        Block block = blocksInRoom.get(i).get(j);
-        if(block.isSeat()) {
-            if(((spaceCounter % (spacing + 1)) == 0) && !students.isEmpty()) {
-                blockOnExamRun = new BlockOnExamRun(String.valueOf(seatCounter), examRun, block, students.removeFirst());
-                seatCounter++;
-            } else {
-                blockOnExamRun = new BlockOnExamRun("-", examRun, block, null);
+
+    private int saveBlocksInRowOnExamRun(ExamRun examRun, LinkedList<Student> students, int spacing, List<Block> blocksInRow, int seatCounter, int i, boolean goRight) {
+        OccupiedSeats occupiedSeats = new OccupiedSeats(false, false, seatCounter);
+
+        if (goRight) {
+            for (int j = 0; j < blocksInRow.size(); j++) {
+                occupiedSeats = saveBlock(examRun, students, spacing, blocksInRow, occupiedSeats, i, j);
             }
         } else {
-            blockOnExamRun = new BlockOnExamRun(" ", examRun, block, null);
+            for (int j = blocksInRow.size() - 1; j >= 0; j--) {
+                occupiedSeats = saveBlock(examRun, students, spacing, blocksInRow, occupiedSeats, i, j);
+            }
+        }
+        return occupiedSeats.seatCounter;
+
+    }
+
+    private OccupiedSeats saveBlock(ExamRun examRun, LinkedList<Student> students, int spacing, List<Block> blocksInRow, OccupiedSeats occupiedSeats, int i, int j) {
+        BlockOnExamRun blockOnExamRun;
+        Block block = blocksInRow.get(j);
+        boolean lastBlockIsOccupied = occupiedSeats.lastOccupied;
+        boolean secondLastBlockIsOccupied = occupiedSeats.secondLastOccupied;
+
+
+        if (block.isSeat()) {
+            if (((lastBlockIsOccupied && spacing == 1) || ((secondLastBlockIsOccupied || lastBlockIsOccupied) && spacing == 2)) || students.isEmpty()) {
+                blockOnExamRun = new BlockOnExamRun("-", examRun, block, null);
+                secondLastBlockIsOccupied = lastBlockIsOccupied;
+                lastBlockIsOccupied = false;
+
+            } else {
+                secondLastBlockIsOccupied = lastBlockIsOccupied;
+                lastBlockIsOccupied = true;
+                blockOnExamRun = new BlockOnExamRun(String.valueOf(occupiedSeats.seatCounter), examRun, block, students.removeFirst());
+                occupiedSeats.seatCounter++;
+            }
+        } else {
+            blockOnExamRun = new BlockOnExamRun(" ", examRun, block, null);
+            secondLastBlockIsOccupied = lastBlockIsOccupied;
+            lastBlockIsOccupied = false;
         }
         blockOnExamRunRepository.save(blockOnExamRun);
-        return seatCounter;
+        return new OccupiedSeats(lastBlockIsOccupied, secondLastBlockIsOccupied, occupiedSeats.seatCounter);
     }
+
+    private class OccupiedSeats {
+        boolean lastOccupied;
+        boolean secondLastOccupied;
+        int seatCounter;
+
+        public OccupiedSeats(boolean lastOccupied, boolean secondLastOccupied, int seatCounter) {
+            this.lastOccupied = lastOccupied;
+            this.secondLastOccupied = secondLastOccupied;
+            this.seatCounter = seatCounter;
+        }
+    }
+
 }

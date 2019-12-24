@@ -17,27 +17,3 @@ INSERT INTO STUDENT (id_student, login, name_with_degrees) VALUES (STUDENT_SEQUE
 INSERT INTO STUDENT (id_student, login, name_with_degrees) VALUES (STUDENT_SEQUENCE.nextval, 'xchoch07','Bc. Tomáš Chocholatý');
 INSERT INTO STUDENT (id_student, login, name_with_degrees) VALUES (STUDENT_SEQUENCE.nextval, 'xlibal00','Bc. Tomáš Líbal');
 
-
-INSERT INTO ROOM (id_room, room_number, number_of_columns, number_of_rows, teacher_reference) VALUES (ROOM_SEQUENCE.nextval, 'E104', '15', '10', 'a@a');
-INSERT INTO ROOM (id_room, room_number, number_of_columns, number_of_rows, teacher_reference) VALUES (ROOM_SEQUENCE.nextval, 'D105', '10', '10', 'a@a');
-INSERT INTO ROOM (id_room, room_number, number_of_columns, number_of_rows, teacher_reference) VALUES (ROOM_SEQUENCE.nextval, 'E112', '20', '20', 'b@b');
-
--- boolean is stored as 1/0
-INSERT INTO BLOCK (id_block, seat, column_number, row_number, room_reference) VALUES (BLOCK_SEQUENCE.nextval, 1, 1, 1, 1);
-INSERT INTO BLOCK (id_block, seat, column_number, row_number, room_reference) VALUES (BLOCK_SEQUENCE.nextval, 1, 2, 2, 2);
-INSERT INTO BLOCK (id_block, seat, column_number, row_number, room_reference) VALUES (BLOCK_SEQUENCE.nextval, 1, 3, 2, 2);
-INSERT INTO BLOCK (id_block, seat, column_number, row_number, room_reference) VALUES (BLOCK_SEQUENCE.nextval, 1, 4, 2, 2);
-INSERT INTO BLOCK (id_block, seat, column_number, row_number, room_reference) VALUES (BLOCK_SEQUENCE.nextval, 0, 1, 4, 3);
-INSERT INTO BLOCK (id_block, seat, column_number, row_number, room_reference) VALUES (BLOCK_SEQUENCE.nextval, 0, 1, 5, 3);
---
--- INSERT INTO EXAM (id_exam, academic_year, exam_name, spacing_between_students, subject, id_exam_creator) VALUES (1, '2014/2015', 'IZU-semestralka', 2, 'IZU', 'a@a');
--- INSERT INTO EXAM (id_exam, academic_year, exam_name, spacing_between_students, subject, id_exam_creator) VALUES (2, '2019/2020', 'TIN-semestralka', 1, 'TIN', 'a@a');
--- INSERT INTO EXAM (id_exam, academic_year, exam_name, spacing_between_students, subject, id_exam_creator) VALUES (3, '2014/2015', 'IMA-semestralka', 0, 'IMA', 'b@b');
---
--- INSERT INTO EXAM_RUN (id_exam_run, end_time, start_time, id_exam, room_number) VALUES (1, '18:00', '15:00', 1, 'D105');
--- INSERT INTO EXAM_RUN (id_exam_run, end_time, start_time, id_exam, room_number) VALUES (2, '18:00', '15:00', 1, 'D105');
--- INSERT INTO EXAM_RUN (id_exam_run, end_time, start_time, id_exam, room_number) VALUES (3, '20:00', '18:00', 1, 'D105');
---
--- INSERT INTO BLOCK_ON_EXAM_RUN (id_block_on_exam_run, id_block, id_exam_run, login_of_student_in_block) VALUES (1, 1, 1, 'xondra49');
--- INSERT INTO BLOCK_ON_EXAM_RUN (id_block_on_exam_run, id_block, id_exam_run, login_of_student_in_block) VALUES (2, 2, 1, 'xnovak2b');
--- INSERT INTO BLOCK_ON_EXAM_RUN (id_block_on_exam_run, id_block, id_exam_run, login_of_student_in_block) VALUES (3, 1, 2, 'xchoch07');
