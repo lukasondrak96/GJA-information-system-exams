@@ -10,7 +10,17 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is used to parse csv file and create list of students from it
+ */
 public class CsvParser {
+    /**
+     * Parses csv file given on input and create list of students from it
+     * @param file Input CSV file
+     * @return list of students
+     * @throws FileUploadException File is not CSV file
+     * @throws IOException Error while reading CSV file
+     */
     public static List<String> getListOfCsvFile(MultipartFile file) throws FileUploadException, IOException {
         String type = file.getContentType();
         if (!type.equals("application/vnd.ms-excel")) {
