@@ -4,8 +4,18 @@ import cz.vutbr.fit.gja.models.exam.Exam;
 
 import java.util.List;
 
+/**
+ * This class represents one specific exam
+ */
 public class ExamDto {
+    /**
+     * List of exam runs of exam
+     */
     private List<ExamRunForSeating> examRuns;
+
+    /**
+     * Exam
+     */
     private Exam exam;
 
     public ExamDto() {
