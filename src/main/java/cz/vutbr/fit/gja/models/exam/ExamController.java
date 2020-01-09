@@ -24,11 +24,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.util.*;
 
 @Controller
 public class ExamController {
@@ -55,17 +56,12 @@ public class ExamController {
     BlockServiceDao blockServiceDao;
 
     private int spacing;
+    private int loginPos;
+    private int namePos;
+    private List<String> rows;
     private LinkedList<Student> students = new LinkedList<>();
 
     private static final String CSV_FILE = "application/vnd.ms-excel";
-
-//    @GetMapping(value = "/error", produces = "text/html")
-//    public ModelAndView errorHtml() {
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
-//        modelAndView.setViewName("pages/logged/exams");
-//        return modelAndView;
-//    }
 
     @GetMapping("/exams")
     public ModelAndView getExams() {
@@ -81,14 +77,12 @@ public class ExamController {
         List<Student> studentsInDb = studentServiceDao.getAllStudentsFromDatabase();
         for (Student student : studentsInDb) {
             if (student.getLogin().equals(login)) {
-                System.out.println("\nnasel jsem\n");
                 //TODO tady poslat na FE seznam mistnosti, kde student sedi
                 modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
                 modelAndView.setViewName("pages/exams");
                 return modelAndView;
             }
         }
-        System.out.println("\nnenasel jsem\n");
         modelAndView.addObject("message", "Zadaný login neexistuje.");
         modelAndView.setViewName("pages/exams");
         return modelAndView;
@@ -120,12 +114,9 @@ public class ExamController {
                                                 @RequestParam("spacing") String spacing,
                                                 @RequestParam("login_position") String loginPosition,
                                                 @RequestParam("name_position") String namePosition) {
-        List<String> rows;
-        List<Student> newStudents = new ArrayList<>();
-        int loginPos;
-        int namePos;
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("pages/logged/new_exam_1");
+
 
         try {
             loginPos = Integer.parseInt(loginPosition);
@@ -161,13 +152,31 @@ public class ExamController {
             return modelAndView;
         }
 
+        try {
+            modelAndView.addObject("new_exam_second_part_dto", createNewExamSecondPartDto(spacing));
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            modelAndView.addObject("message", "Zadejte správné pozice loginu a jména.");
+            return modelAndView;
+        }
+
+        modelAndView.addObject("exam_run_dto", createExamRunDto());
+        modelAndView.setViewName("pages/logged/new_exam_2");
+        return modelAndView;
+    }
+
+    private ExamRunDto createExamRunDto() {
+        return new ExamRunDto(this.students.size(), new ExamRun(), new Exam());
+    }
+
+    private NewExamSecondPartDto createNewExamSecondPartDto(String spacing) {
+        List<Student> newStudents = new ArrayList<>();
+
         for (String row : rows) {
             String[] splittedRowArray = row.split(",");
             try {
                 newStudents.add(new Student(splittedRowArray[loginPos - 1], splittedRowArray[namePos - 1]));
             } catch (IndexOutOfBoundsException ex) {
-                modelAndView.addObject("message", "Zadejte správné pozice loginu a jména.");
-                return modelAndView;
+                throw new ArrayIndexOutOfBoundsException();
             }
         }
 
@@ -193,22 +202,18 @@ public class ExamController {
 
         List<Room> rooms = roomServiceDao.getAllRoomsFromDatabase();
         List<Long> numberOfSeatsInRooms = new ArrayList<>();
-        for (Room room: rooms) {
+        for (Room room : rooms) {
             numberOfSeatsInRooms.add(blockServiceDao.getNumberOfSeats(room));
         }
 
-        NewExamSecondPartDto newExamSecondPartDto = new NewExamSecondPartDto(rooms, AcademicYearDto.getOptionsForAcademicYear(), numberOfSeatsInRooms);
-        ExamRunDto examRunDto = new ExamRunDto(this.students.size(), new ExamRun(), new Exam());
-        modelAndView.addObject("new_exam_second_part_dto", newExamSecondPartDto);
-        modelAndView.addObject("exam_run_dto", examRunDto);
-        modelAndView.setViewName("pages/logged/new_exam_2");
-        return modelAndView;
+        return new NewExamSecondPartDto(rooms, AcademicYearDto.getOptionsForAcademicYear(), numberOfSeatsInRooms);
     }
 
     @PostMapping("/logged/exams/new_exam_2")
-    public ModelAndView createNewRoomHandleFile(ExamRunDto examRunDto) {
+    public ModelAndView createNewRoomHandleFile(@Valid ExamRunDto examRunDto, @Valid NewExamSecondPartDto newExamSecondPartDto) throws ParseException {
         ModelAndView modelAndView = new ModelAndView();
         Exam exam = examRunDto.getExam();
+
         exam.setSpacingBetweenStudents(this.spacing);
 
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -219,6 +224,40 @@ public class ExamController {
 
         ExamRun run = examRunDto.getExamRun();
         run.setExamReference(examFromDb);
+
+        LocalTime start = LocalTime.parse(run.getStartTime());
+        LocalTime end = LocalTime.parse(run.getEndTime());
+        if(start.compareTo(end) >= 0) {
+            try {
+                modelAndView.addObject("new_exam_second_part_dto", createNewExamSecondPartDto(String.valueOf(spacing)));
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                modelAndView.addObject("message", "Zadejte správné pozice loginu a jména.");
+                return modelAndView;
+            }
+
+            modelAndView.addObject("message", "Počáteční čas zkoušky musí být dříve než koncový!");
+            modelAndView.addObject("exam_run_dto", createExamRunDto());
+            modelAndView.setViewName("pages/logged/new_exam_2");
+            return modelAndView;
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+
+        Date date = formatter.parse(run.getExamDate());
+        if (date.before(Calendar.getInstance().getTime())) {
+            try {
+                modelAndView.addObject("new_exam_second_part_dto", createNewExamSecondPartDto(String.valueOf(spacing)));
+            } catch (ArrayIndexOutOfBoundsException ex) {
+                modelAndView.addObject("message", "Zadejte správné pozice loginu a jména.");
+                return modelAndView;
+            }
+
+            modelAndView.addObject("message", "Lze vytvořit jen zkoušku do budoucnosti!");
+            modelAndView.addObject("exam_run_dto", createExamRunDto());
+            modelAndView.setViewName("pages/logged/new_exam_2");
+            return modelAndView;
+        }
+
+
         examRunServiceDao.saveExamRunToDatabase(run);
         int studentsWithSeat = blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
 
@@ -229,10 +268,14 @@ public class ExamController {
     }
 
     @GetMapping("/exams/{id}")
-    public ModelAndView getExam(@PathVariable(value = "id") int examId) {
+    public ModelAndView getExam(@PathVariable(value = "id") String examId) {
         ModelAndView modelAndView = new ModelAndView();
-        Exam exam = examServiceDao.getExam(examId);
-        if (exam == null) return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
+        Exam exam;
+        try {
+            exam = examServiceDao.getExam(Integer.parseInt(examId));
+        } catch (NumberFormatException e) {
+            return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
+        }
         ExamDto examDto = examServiceDao.getExamDto(exam);
         modelAndView.addObject("exam_dto", examDto);
         modelAndView.setViewName("pages/seating");
@@ -240,10 +283,12 @@ public class ExamController {
     }
 
     @GetMapping("/logged/exams/{id}")
-    public ModelAndView getExamAsLogged(@PathVariable(value = "id") int examId) {
+    public ModelAndView getExamAsLogged(@PathVariable(value = "id") String examId) {
         ModelAndView modelAndView = new ModelAndView();
-        Exam exam = examServiceDao.getExam(examId);
-        if (exam == null) {
+        Exam exam;
+        try {
+            exam = examServiceDao.getExam(Integer.parseInt(examId));
+        } catch (NumberFormatException e) {
             return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
         }
         ExamDto examDto = examServiceDao.getExamDto(exam);

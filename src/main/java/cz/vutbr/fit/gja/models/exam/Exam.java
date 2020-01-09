@@ -18,12 +18,15 @@ public class Exam {
     @Column(name = "id_exam")
     private int idExam;
 
+    @NotNull(message="Jméno je povinné")
     @Column(name = "exam_name")
     private String examName;
 
+    @NotNull(message="Akademický rok je povinný")
     @Column(name = "academic_year")
     private String academicYear;
 
+    @NotNull(message="Předmět je povinný")
     @Column(name = "subject")
     private String subject;
 

@@ -1,6 +1,5 @@
 package cz.vutbr.fit.gja.models.student;
 
-import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,11 +24,5 @@ public class StudentServiceDaoImpl implements StudentServiceDao {
     @Override
     public Student saveStudentToDatabase(Student student) {
         return studentRepository.save(student);
-    }
-
-    @Override
-    public long deleteStudent(String login) throws IllegalAccessError {
-        //todo
-        throw new NotYetImplementedException();
     }
 }
