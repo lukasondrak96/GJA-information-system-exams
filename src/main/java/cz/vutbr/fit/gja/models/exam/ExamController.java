@@ -310,7 +310,7 @@ public class ExamController {
         if (numberOfDeletedExams == 0) {
             ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Zkouška s číslem \"" + examId + "\" neexistuje.");
         } else {
-            modelAndView.setViewName("/pages/logged/exams");
+            modelAndView.setViewName("pages/logged/exams");
             modelAndView.addObject("successMessage", "Zkouška s číslem\"" + examId + "\" byla úspěšně odstraněna.");
             modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
         }
