@@ -6,23 +6,28 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "exam_run")
 public class ExamRun {
 
     @Id
+    @NotNull(message="Id exam runu je povinné")
     @SequenceGenerator(name = "ExamRunIdGenerator", sequenceName = "EXAM_RUN_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ExamRunIdGenerator")
     @Column(name = "id_exam_run")
     private int idExamRun;
 
+    @NotNull(message="Datum je povinné")
     @Column(name = "exam_date")
     private String examDate;
 
+    @NotNull(message="Začátek zkoušky je povinný")
     @Column(name = "start_time")
     private String startTime;
 
+    @NotNull(message="Konec zkoušky je povinný")
     @Column(name = "end_time")
     private String endTime;
 
