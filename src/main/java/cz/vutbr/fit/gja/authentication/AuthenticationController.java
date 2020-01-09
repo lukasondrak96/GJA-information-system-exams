@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
+
 import javax.validation.Valid;
 
 /**
@@ -53,9 +54,9 @@ public class AuthenticationController {
 
     /**
      * Prepares ModelAndView object of register page after send form
-     * @param teacher user features
-     * @param bindingResult - success or error information
-     * @param modelMap - model for adding a message to a page
+     * @param teacher Registered user
+     * @param bindingResult Success or error information
+     * @param modelMap Model for adding a message to a page
      * @return
      */
     @PostMapping(value="/register")
