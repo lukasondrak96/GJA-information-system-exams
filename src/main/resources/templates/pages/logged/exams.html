@@ -15,7 +15,7 @@
         <span th:utext="${message}"></span>
     </div>
     <div th:each="dto : ${listOfExamsDto}">
-        <div class="card exams-card">
+        <div class="card exams-card" th:if="${dto.exam.examCreator.email == #authentication.name}">
             <a class="stretched-link a-style" th:href="@{/logged/exams/{id}(id=${dto.exam.idExam})}">
                 <div class="card-header exams-card-header"
                      th:text=" ${dto.exam.subject} + '- ' + ${dto.exam.examName} + ' (' + ${dto.exam.academicYear} + ')' "></div>
@@ -36,6 +36,11 @@
                     </div>
                 </div>
             </a>
+        </div>
+    </div>
+    <div th:if="${listOfExamsDto.isEmpty()}">
+        <div class="alert alert-info new-room-form-success-message">
+            <span>Nebyla nalezena žádná Vaše zkouška</span>
         </div>
     </div>
 </div>

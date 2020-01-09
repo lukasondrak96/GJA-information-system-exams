@@ -41,6 +41,11 @@
             </div>
         </a>
     </div>
+    <div th:if="${roomHolders.isEmpty()}">
+        <div class="alert alert-info new-room-form-success-message">
+            <span>Nebyla nalezena žádná místnost</span>
+        </div>
+    </div>
 </div>
 </body>
 </html>
