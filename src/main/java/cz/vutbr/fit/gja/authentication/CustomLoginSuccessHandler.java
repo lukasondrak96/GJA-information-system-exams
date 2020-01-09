@@ -14,9 +14,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Class for success authentication
+ */
 @Configuration
 public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
 
+    /**
+     * processes authentication and redirect on page which show after login
+      * @param request httpRequest
+     * @param response httpRe
+     * @param authentication authentification information
+     * @throws IOException errors
+     */
     @Override
     protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException {
@@ -30,6 +40,11 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         redirectStrategy.sendRedirect(request, response, targetUrl);
     }
 
+    /**
+     * Controls authentication data and assign a role for logged user
+     * @param authentication - data of authentication
+     * @return valid url for logged user or error url
+     */
     protected String determineTargetUrl(Authentication authentication) {
         String url = "/login?error=true";
 
