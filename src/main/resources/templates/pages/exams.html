@@ -27,10 +27,8 @@
             </div>
         </a>
     </div>
-    <div th:if="${listOfExamsDto == null}">
-        <div class="alert alert-info new-room-form-success-message">
-            <span>Nebyla nalezena žádná zkouška</span>
-        </div>
+    <div class="alert alert-info new-room-form-success-message" th:if="${message != null}">
+        <span th:utext="${message}"></span>
     </div>
 </div>
 </body>

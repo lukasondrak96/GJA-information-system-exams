@@ -74,16 +74,15 @@ public class ExamController {
     @PostMapping("/exams")
     public ModelAndView getLoginFromForm(@RequestParam String login) {
         ModelAndView modelAndView = new ModelAndView();
-        List<Student> studentsInDb = studentServiceDao.getAllStudentsFromDatabase();
-        for (Student student : studentsInDb) {
-            if (student.getLogin().equals(login)) {
-                //TODO tady poslat na FE seznam mistnosti, kde student sedi
-                modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
-                modelAndView.setViewName("pages/exams");
-                return modelAndView;
-            }
+        Student student;
+        try {
+            student = studentServiceDao.getStudentByLogin(login);
+
+        } catch (NullPointerException e) {
+            modelAndView.addObject("message", "Zadaný login neexistuje.");
+            modelAndView.setViewName("pages/exams");
+            return modelAndView;
         }
-        modelAndView.addObject("message", "Zadaný login neexistuje.");
         modelAndView.setViewName("pages/exams");
         return modelAndView;
     }
