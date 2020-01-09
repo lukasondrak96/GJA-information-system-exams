@@ -4,9 +4,23 @@ import cz.vutbr.fit.gja.models.room.Room;
 
 import java.util.List;
 
+/**
+ * This class represents a second step in exam creation
+ */
 public class NewExamSecondPartDto {
+    /**
+     * List of all rooms in database
+     */
     private List<Room> roomsInDb;
+
+    /**
+     * List of academic years
+     */
     private List<AcademicYearDto> academicYearDto;
+
+    /**
+     * List of number of seats in the rooms
+     */
     private List<Long> roomCapacitiesSeatsOnly;
 
     public NewExamSecondPartDto() {

@@ -14,6 +14,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.sql.DataSource;
 
+/**
+ * Class for authorization configure
+ */
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -39,6 +43,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .dataSource(dataSource).passwordEncoder(bCryptPasswordEncoder);
     }
 
+    /**
+     * Sets permit to routes for user roles
+     * @param http http route
+     * @throws Exception error
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -69,6 +78,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .accessDeniedPage("/access-denied");
     }
 
+    /**
+     * Sets ignore prefix
+     * @param web spring class of WebSecurity
+     */
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");

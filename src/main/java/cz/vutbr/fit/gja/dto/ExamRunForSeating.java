@@ -4,11 +4,33 @@ import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRun;
 
 import java.util.List;
 
+/**
+ * This class represents one specific exam run
+ */
 public class ExamRunForSeating {
+    /**
+     * The date the exam run takes place
+     */
     private String date;
+
+    /**
+     * The time the exam run starts
+     */
     private String startTime;
+
+    /**
+     * The time the exam run ends
+     */
     private String endTime;
+
+    /**
+     * Blocks of room in which exam run takes place
+     */
     private BlocksDto blocks;
+
+    /**
+     * Seating plan
+     */
     private List<List<BlockOnExamRun>> seating;
 
     public ExamRunForSeating() {
