@@ -24,6 +24,10 @@ public class AuthenticationController {
 //        return modelAndView;
 //    }
 
+    /**
+     * Prepares ModelAndView object of login page for nor logged user
+     * @return ModelAndView object
+     */
     @GetMapping(value = { "/login" })
     public ModelAndView login() {
         ModelAndView modelAndView = new ModelAndView();
@@ -31,6 +35,10 @@ public class AuthenticationController {
         return modelAndView;
     }
 
+    /**
+     * Prepares ModelAndView object of register page nor not Logged user
+     * @return ModelAndView object
+     */
     @GetMapping(value = "/register")
     public ModelAndView register() {
         ModelAndView modelAndView = new ModelAndView();
@@ -40,8 +48,13 @@ public class AuthenticationController {
         return modelAndView;
     }
 
-
-
+    /**
+     * Prepare ModelAndView object of register page after send formular
+     * @param teacher user features
+     * @param bindingResult - success or error information
+     * @param modelMap - model for adding a message to a page
+     * @return
+     */
     @PostMapping(value="/register")
     public ModelAndView registerUser(@Valid Teacher teacher, BindingResult bindingResult, ModelMap modelMap) {
         ModelAndView modelAndView = new ModelAndView();
