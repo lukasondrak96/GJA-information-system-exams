@@ -2,9 +2,18 @@ package cz.vutbr.fit.gja.dto;
 
 import cz.vutbr.fit.gja.models.room.Room;
 
+/**
+ * This class is wrapping information about room to show on frontend
+ */
 public class RoomAndNumberOfSeatsDto {
-
+    /**
+     * One specific room
+     */
     private Room room;
+
+    /**
+     * Number of seats in the room
+     */
     private long numberOfSeats;
 
     public RoomAndNumberOfSeatsDto() {

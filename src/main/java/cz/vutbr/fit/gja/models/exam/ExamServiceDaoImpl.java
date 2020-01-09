@@ -7,6 +7,7 @@ import cz.vutbr.fit.gja.models.block.BlockServiceDaoImpl;
 import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRun;
 import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRunServiceDaoImpl;
 import cz.vutbr.fit.gja.models.examRun.ExamRun;
+import cz.vutbr.fit.gja.models.examRun.ExamRunRepository;
 import cz.vutbr.fit.gja.models.examRun.ExamRunServiceDaoImpl;
 import cz.vutbr.fit.gja.models.room.Room;
 import cz.vutbr.fit.gja.models.room.RoomServiceDaoImpl;
@@ -22,6 +23,9 @@ public class ExamServiceDaoImpl implements ExamServiceDao {
 
     @Autowired
     ExamRepository examRepository;
+
+    @Autowired
+    ExamRunRepository examRunRepository;
 
     @Autowired
     ExamRunServiceDaoImpl examRunServiceDao;
@@ -99,4 +103,9 @@ public class ExamServiceDaoImpl implements ExamServiceDao {
         return examDto;
     }
 
+    @Override
+    public boolean checkIfExamRunIsInRoom(Room room) {
+        List<ExamRun> examRunsOfRoom = examRunRepository.findAllByRoomReference(room);
+        return !examRunsOfRoom.isEmpty();
+    }
 }

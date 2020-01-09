@@ -297,6 +297,26 @@ public class ExamController {
         return modelAndView;
     }
 
+    @GetMapping("/logged/exams/{id}/delete")
+    public ModelAndView deleteExamAsLogged(@PathVariable(value = "id") int examId) {
+        ModelAndView modelAndView = new ModelAndView();
+        long numberOfDeletedExams = 0;
+        try {
+            numberOfDeletedExams = examServiceDao.deleteExam(examId);
+        } catch (IllegalAccessError e) {
+            return ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, e.getMessage());
+        }
+
+        if (numberOfDeletedExams == 0) {
+            ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Zkouška s číslem \"" + examId + "\" neexistuje.");
+        } else {
+            modelAndView.setViewName("pages/logged/exams");
+            modelAndView.addObject("successMessage", "Zkouška s číslem\"" + examId + "\" byla úspěšně odstraněna.");
+            modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
+        }
+        return modelAndView;
+    }
+
     private List<ExamsDto> fillExamsDtoList() {
         List<ExamsDto> listDto = new ArrayList<>();
         List<Exam> allExamsFromDatabase = examServiceDao.getAllExamsFromDatabase();

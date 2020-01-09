@@ -3,6 +3,7 @@ package cz.vutbr.fit.gja.models.room;
 import cz.vutbr.fit.gja.common.ModelAndViewSetter;
 import cz.vutbr.fit.gja.dto.BlocksDto;
 import cz.vutbr.fit.gja.models.block.BlockServiceDao;
+import cz.vutbr.fit.gja.models.exam.ExamServiceDao;
 import cz.vutbr.fit.gja.models.teacher.Teacher;
 import cz.vutbr.fit.gja.models.teacher.TeacherServiceDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class RoomController {
 
     @Autowired
     BlockServiceDao blockServiceDao;
+
+    @Autowired
+    ExamServiceDao examServiceDao;
 
     @Autowired
     TeacherServiceDaoImpl teacherServiceDao;
@@ -75,6 +79,11 @@ public class RoomController {
     @GetMapping("/logged/rooms/{id}/delete")
     public ModelAndView deleteRoomAsLogged(@PathVariable(value = "id") String roomNumber) {
         ModelAndView modelAndView = new ModelAndView();
+
+        if (examServiceDao.checkIfExamRunIsInRoom(roomServiceDao.getRoomByRoomNumber(roomNumber))) {
+           return ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Místnost " + roomNumber + " nelze smazat z důvodu konání zkoušky.");
+        }
+
         long numberOfDeletedRooms = 0;
         try {
             numberOfDeletedRooms = roomServiceDao.deleteRoomByRoomNumber(roomNumber);
@@ -154,6 +163,11 @@ public class RoomController {
     public ModelAndView getEditPage(@PathVariable(value = "id") String name) {
         ModelAndView modelAndView = new ModelAndView();
         Room room = roomServiceDao.getRoomByRoomNumber(name);
+
+        if (examServiceDao.checkIfExamRunIsInRoom(room)) {
+            return ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Místnost " + room.getRoomNumber() + " nelze smazat z důvodu konání zkoušky.");
+        }
+
         if (room == null) {
             return ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Místnost s číslem \"" + name + "\" neexistuje.");
         }

@@ -1,6 +1,7 @@
 package cz.vutbr.fit.gja.models.exam;
 
 import cz.vutbr.fit.gja.dto.ExamDto;
+import cz.vutbr.fit.gja.models.room.Room;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface ExamServiceDao {
     int setSpacingOfExam(String spacing);
 
     ExamDto getExamDto(Exam exam);
+
+    boolean checkIfExamRunIsInRoom(Room room);
 }

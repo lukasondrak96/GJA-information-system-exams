@@ -3,9 +3,23 @@ package cz.vutbr.fit.gja.dto;
 import cz.vutbr.fit.gja.models.exam.Exam;
 import cz.vutbr.fit.gja.models.examRun.ExamRun;
 
+/**
+ * This class is wrapping information about exam run to show on frontend
+ */
 public class ExamRunDto {
+    /**
+     * Number of students on exam
+     */
     private int numberOfStudents;
+
+    /**
+     * Exam Run which will be saved to database
+     */
     private ExamRun examRun;
+
+    /**
+     * Exam which will be saved to database
+     */
     private Exam exam;
 
     public ExamRunDto() {
