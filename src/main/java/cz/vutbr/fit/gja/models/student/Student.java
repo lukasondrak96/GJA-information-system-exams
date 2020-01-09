@@ -3,29 +3,44 @@ package cz.vutbr.fit.gja.models.student;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+/**
+ * This class represents entity of Students.
+ */
 @Entity
 @Table(name = "student")
-public class Student implements Comparable<Student>{
+public class Student implements Comparable<Student> {
 
+    /**
+     * ID of student
+     */
     @Id
     @SequenceGenerator(name = "StudentIdGenerator", sequenceName = "STUDENT_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "StudentIdGenerator")
     @Column(name = "id_student")
     private int idStudent;
 
-    @NotNull(message="Login je u studenta povinný")
+    /**
+     * Login of student
+     */
+    @NotNull(message = "Login je u studenta povinný")
     @Column(name = "login")
     private String login;
 
+    /**
+     * Name of Student (inc. degrees)
+     */
     @Column(name = "name_with_degrees")
     private String nameWithDegrees;
-
-//    @OneToMany(mappedBy = "student")
-//    private Set<BlockOnExamRun> runsOfStudent;
 
     public Student() {
     }
 
+    /**
+     * Creates new Student
+     *
+     * @param login           login of student
+     * @param nameWithDegrees name of student
+     */
     public Student(@NotNull(message = "Login je u studenta povinný") String login, String nameWithDegrees) {
         this.login = login;
         this.nameWithDegrees = nameWithDegrees;
@@ -55,6 +70,12 @@ public class Student implements Comparable<Student>{
         this.nameWithDegrees = nameWithDegrees;
     }
 
+    /**
+     * Compares logins of students
+     *
+     * @param s student
+     * @return 0 if any is null, otherwise uses classic compareTo()
+     */
     @Override
     public int compareTo(Student s) {
         if (getLogin() == null || s.getLogin() == null) {
