@@ -41,7 +41,7 @@ public class AcademicYearDto {
         listAcademicYearDtos.add(new AcademicYearDto(year));
         listAcademicYearDtos.add(new AcademicYearDto(year + 1));
 
-        if (month < 7) {
+        if (month < 9) {
             listAcademicYearDtos.add(0, new AcademicYearDto(year - 1));
         } else {
             listAcademicYearDtos.add(new AcademicYearDto(year + 2));
