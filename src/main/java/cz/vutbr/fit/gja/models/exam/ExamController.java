@@ -193,7 +193,7 @@ public class ExamController {
 
         List<Room> rooms = roomServiceDao.getAllRoomsFromDatabase();
         List<Long> numberOfSeatsInRooms = new ArrayList<>();
-        for (Room room: rooms) {
+        for (Room room : rooms) {
             numberOfSeatsInRooms.add(blockServiceDao.getNumberOfSeats(room));
         }
 
@@ -229,10 +229,14 @@ public class ExamController {
     }
 
     @GetMapping("/exams/{id}")
-    public ModelAndView getExam(@PathVariable(value = "id") int examId) {
+    public ModelAndView getExam(@PathVariable(value = "id") String examId) {
         ModelAndView modelAndView = new ModelAndView();
-        Exam exam = examServiceDao.getExam(examId);
-        if (exam == null) return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
+        Exam exam;
+        try {
+            exam = examServiceDao.getExam(Integer.parseInt(examId));
+        } catch (NumberFormatException e) {
+            return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
+        }
         ExamDto examDto = examServiceDao.getExamDto(exam);
         modelAndView.addObject("exam_dto", examDto);
         modelAndView.setViewName("pages/seating");
