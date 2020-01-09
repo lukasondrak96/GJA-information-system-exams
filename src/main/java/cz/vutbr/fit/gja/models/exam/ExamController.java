@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -106,57 +105,50 @@ public class ExamController {
             return modelAndView;
         }
         modelAndView.setViewName("pages/logged/new_exam_1");
+
+        NewRunFirstPartDto newRunFirstPartDto = new NewRunFirstPartDto(null, "no_space", 1, 2);
+        modelAndView.addObject("formValues",  newRunFirstPartDto);
         return modelAndView;
     }
 
     @PostMapping("/logged/exams/new_exam_1")
-    public ModelAndView createNewRoomHandleFile(@RequestParam("file") MultipartFile file,
-                                                @RequestParam("spacing") String spacing,
-                                                @RequestParam("login_position") String loginPosition,
-                                                @RequestParam("name_position") String namePosition) {
+    public ModelAndView createNewRoomHandleFile(NewRunFirstPartDto formValues) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("pages/logged/new_exam_1");
 
-
         try {
-            loginPos = Integer.parseInt(loginPosition);
+            loginPos = formValues.getLoginPosition();
             if (loginPos < 1)
                 throw new NumberFormatException();
         } catch (NumberFormatException e) {
-            modelAndView.addObject("message", "Pozice loginu v souboru musí být celé kladné číslo.");
-            return modelAndView;
+            return setModelAndView(modelAndView, "Pozice loginu v souboru musí být celé kladné číslo.", formValues);
         }
 
         try {
-            namePos = Integer.parseInt(namePosition);
+            namePos = formValues.getNamePosition();
             if (namePos < 1)
                 throw new NumberFormatException();
         } catch (NumberFormatException e) {
-            modelAndView.addObject("message", "Pozice jména v souboru musí být celé kladné číslo.");
-            return modelAndView;
+            return setModelAndView(modelAndView, "Pozice jména v souboru musí být celé kladné číslo.", formValues);
         }
 
         try {
-            rows = CsvParser.getListOfCsvFile(file);
+            rows = CsvParser.getListOfCsvFile(formValues.getFile());
         } catch (FileUploadException e) {
-            modelAndView.addObject("message", "Prosím vyberte soubor ve formátu csv!");
-            return modelAndView;
+            return setModelAndView(modelAndView, "Prosím vyberte soubor ve formátu csv!", formValues);
 
         } catch (IOException e) {
-            modelAndView.addObject("message", "Při čtení souboru došlo k chybě.");
-            return modelAndView;
+            return setModelAndView(modelAndView, "Při čtení souboru došlo k chybě.", formValues);
         }
 
         if (loginPos == namePos) {
-            modelAndView.addObject("message", "Pozice jména v souboru nesmí být stejná jako pozice loginu.");
-            return modelAndView;
+            return setModelAndView(modelAndView, "Pozice jména v souboru nesmí být stejná jako pozice loginu.", formValues);
         }
 
         try {
-            modelAndView.addObject("new_exam_second_part_dto", createNewExamSecondPartDto(spacing));
+            modelAndView.addObject("new_exam_second_part_dto", createNewExamSecondPartDto(formValues.getSpacing()));
         } catch (ArrayIndexOutOfBoundsException ex) {
-            modelAndView.addObject("message", "Zadejte správné pozice loginu a jména.");
-            return modelAndView;
+            return setModelAndView(modelAndView, "Zadejte správné pozice loginu a jména.", formValues);
         }
 
         modelAndView.addObject("exam_run_dto", createExamRunDto());
@@ -258,15 +250,6 @@ public class ExamController {
         return modelAndView;
     }
 
-    private NewRunDto createNewRunDto(Exam exam, int studentsWithoutPlace) {
-        List<Room> rooms = roomServiceDao.getAllRoomsFromDatabase();
-        List<Long> numberOfSeatsInRooms = new ArrayList<>();
-        for (Room room : rooms) {
-            numberOfSeatsInRooms.add(blockServiceDao.getNumberOfSeats(room));
-        }
-        return new NewRunDto(new ExamRun(), exam, rooms, numberOfSeatsInRooms, studentsWithoutPlace);
-    }
-
     @GetMapping("/exams/{id}")
     public ModelAndView getExam(@PathVariable(value = "id") String examId) {
         ModelAndView modelAndView = new ModelAndView();
@@ -315,6 +298,22 @@ public class ExamController {
             modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
         }
         return modelAndView;
+    }
+
+    private ModelAndView setModelAndView(ModelAndView modelAndView, String message, NewRunFirstPartDto formValues) {
+        formValues.setFile(null);
+        modelAndView.addObject("message", message);
+        modelAndView.addObject("formValues", formValues);
+        return modelAndView;
+    }
+
+    private NewRunDto createNewRunDto(Exam exam, int studentsWithoutPlace) {
+        List<Room> rooms = roomServiceDao.getAllRoomsFromDatabase();
+        List<Long> numberOfSeatsInRooms = new ArrayList<>();
+        for (Room room : rooms) {
+            numberOfSeatsInRooms.add(blockServiceDao.getNumberOfSeats(room));
+        }
+        return new NewRunDto(new ExamRun(), exam, rooms, numberOfSeatsInRooms, studentsWithoutPlace);
     }
 
     private List<ExamsDto> fillExamsDtoList() {
