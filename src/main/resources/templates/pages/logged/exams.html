@@ -26,7 +26,7 @@
                              th:text="${examRun.examDate} + ': ' + ${examRun.startTime} + '-' + ${examRun.endTime}"></div>
                     </div>
                     <div class="right-float">
-                        <a class="btn btn-danger col-lg-1 btn-rooms-z-index">Smazat</a>
+                        <a class="btn btn-danger col-lg-1 btn-rooms-z-index" th:href="@{/logged/exams/{id}/delete(id=${dto.exam.idExam})}">Smazat</a>
                     </div>
                     <div>
                         <span>Vytvořil: </span>
