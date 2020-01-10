@@ -79,7 +79,7 @@ public class ExamController {
             modelAndView.setViewName("pages/exams");
             return modelAndView;
         }
-
+        blockOnExamRunServiceDao.getAllStudentExams("xlogin00");
         modelAndView.setViewName("pages/exams");
         return modelAndView;
     }

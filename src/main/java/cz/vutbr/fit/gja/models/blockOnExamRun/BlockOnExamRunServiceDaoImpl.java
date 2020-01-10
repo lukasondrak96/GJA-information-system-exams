@@ -1,5 +1,6 @@
 package cz.vutbr.fit.gja.models.blockOnExamRun;
 
+import cz.vutbr.fit.gja.dto.StudentExamPlaceDto;
 import cz.vutbr.fit.gja.models.block.Block;
 import cz.vutbr.fit.gja.models.block.BlockServiceDaoImpl;
 import cz.vutbr.fit.gja.models.examRun.ExamRun;
@@ -73,6 +74,12 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
             seating.get(room.getNumberOfRows() - block.getBlockReference().getRowNumber()).set(block.getBlockReference().getColumnNumber() - 1, block);
         }
         return seating;
+    }
+
+    @Override
+    public List<StudentExamPlaceDto> getAllStudentExams(String login) {
+        System.out.println(blockOnExamRunRepository.getAllStudentExams(login));
+        return null;
     }
 
 

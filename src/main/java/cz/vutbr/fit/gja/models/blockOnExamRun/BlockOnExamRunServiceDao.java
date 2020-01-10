@@ -1,5 +1,6 @@
 package cz.vutbr.fit.gja.models.blockOnExamRun;
 
+import cz.vutbr.fit.gja.dto.StudentExamPlaceDto;
 import cz.vutbr.fit.gja.models.examRun.ExamRun;
 import cz.vutbr.fit.gja.models.student.Student;
 
@@ -10,4 +11,6 @@ public interface BlockOnExamRunServiceDao {
     int createAndSaveBlocksOnExamRun(ExamRun examRun, LinkedList<Student> students, int spacing);
 
     List<List<BlockOnExamRun>> getSeating(ExamRun examRun);
+
+    List<StudentExamPlaceDto> getAllStudentExams(String login);
 }
