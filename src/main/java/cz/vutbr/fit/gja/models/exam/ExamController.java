@@ -164,34 +164,14 @@ public class ExamController {
         LocalTime start = LocalTime.parse(run.getStartTime());
         LocalTime end = LocalTime.parse(run.getEndTime());
         if(start.compareTo(end) >= 0) {
-            try {
-                modelAndView.addObject("new_exam_second_part_dto", createNewExamSecondPartDto(String.valueOf(spacing)));
-            } catch (ArrayIndexOutOfBoundsException ex) {
-                modelAndView.addObject("message", "Zadejte správné pozice loginu a jména.");
-                return modelAndView;
-            }
-
-            modelAndView.addObject("message", "Počáteční čas zkoušky musí být dříve než koncový!");
-            modelAndView.addObject("exam_run_dto", examRunDto);
-            modelAndView.setViewName("pages/logged/new_exam_2");
-            return modelAndView;
+            return showFormAgainWithErrorMessage(modelAndView, examRunDto, "Počáteční čas zkoušky musí být dříve než koncový!");
         }
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
         // exam cannot take place in past
         Date date = formatter.parse(run.getExamDate());
         if (date.before(Calendar.getInstance().getTime())) {
-            try {
-                modelAndView.addObject("new_exam_second_part_dto", createNewExamSecondPartDto(String.valueOf(spacing)));
-            } catch (ArrayIndexOutOfBoundsException ex) {
-                modelAndView.addObject("message", "Zadejte správné pozice loginu a jména.");
-                return modelAndView;
-            }
-
-            modelAndView.addObject("message", "Zkoušku nelze vytvořit v minulosti!");
-            modelAndView.addObject("exam_run_dto", examRunDto);
-            modelAndView.setViewName("pages/logged/new_exam_2");
-            return modelAndView;
+            return showFormAgainWithErrorMessage(modelAndView, examRunDto, "Zkoušku nelze vytvořit v minulosti!");
         }
 
         // exam must take place in selected academic year
@@ -200,19 +180,8 @@ public class ExamController {
         String examMonth = run.getExamDate().split("-")[1];
 
         if(!((examYear.equals(yearParts[0]) && Integer.parseInt(examMonth) >= 9 ) || (examYear.equals(yearParts[1]) && Integer.parseInt(examMonth) < 9 ))) {
-            try {
-                modelAndView.addObject("new_exam_second_part_dto", createNewExamSecondPartDto(String.valueOf(spacing)));
-            } catch (ArrayIndexOutOfBoundsException ex) {
-                modelAndView.addObject("message", "Zadejte správné pozice loginu a jména.");
-                return modelAndView;
-            }
-
-            modelAndView.addObject("message", "Datum zkoušky musí odpovídat akademickému roku!");
-            modelAndView.addObject("exam_run_dto", examRunDto);
-            modelAndView.setViewName("pages/logged/new_exam_2");
-            return modelAndView;
+            return showFormAgainWithErrorMessage(modelAndView, examRunDto, "Datum zkoušky musí odpovídat akademickému roku!");
         }
-
 
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Teacher roomCreator = teacherServiceDao.getTeacher(userEmail);
@@ -249,32 +218,12 @@ public class ExamController {
 
     @GetMapping("/exams/{id}")
     public ModelAndView getExam(@PathVariable(value = "id") String examId) {
-        ModelAndView modelAndView = new ModelAndView();
-        Exam exam;
-        try {
-            exam = examServiceDao.getExam(Integer.parseInt(examId));
-        } catch (NumberFormatException e) {
-            return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
-        }
-        ExamDto examDto = examServiceDao.getExamDto(exam);
-        modelAndView.addObject("exam_dto", examDto);
-        modelAndView.setViewName("pages/seating");
-        return modelAndView;
+        return returnExamsPage(examId, false);
     }
 
     @GetMapping("/logged/exams/{id}")
     public ModelAndView getExamAsLogged(@PathVariable(value = "id") String examId) {
-        ModelAndView modelAndView = new ModelAndView();
-        Exam exam;
-        try {
-            exam = examServiceDao.getExam(Integer.parseInt(examId));
-        } catch (NumberFormatException e) {
-            return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
-        }
-        ExamDto examDto = examServiceDao.getExamDto(exam);
-        modelAndView.addObject("exam_dto", examDto);
-        modelAndView.setViewName("pages/logged/seating");
-        return modelAndView;
+        return returnExamsPage(examId, true);
     }
 
     @GetMapping("/logged/exams/{id}/delete")
@@ -293,6 +242,38 @@ public class ExamController {
             modelAndView.setViewName("pages/logged/exams");
             modelAndView.addObject("successMessage", "Zkouška s číslem\"" + examId + "\" byla úspěšně odstraněna.");
             modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
+        }
+        return modelAndView;
+    }
+
+    private ModelAndView showFormAgainWithErrorMessage(ModelAndView modelAndView, ExamRunDto examRunDto, String message) {
+        try {
+            modelAndView.addObject("new_exam_second_part_dto", createNewExamSecondPartDto(String.valueOf(spacing)));
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            modelAndView.addObject("message", "Zadejte správné pozice loginu a jména.");
+            return modelAndView;
+        }
+
+        modelAndView.addObject("message", message);
+        modelAndView.addObject("exam_run_dto", examRunDto);
+        modelAndView.setViewName("pages/logged/new_exam_2");
+        return modelAndView;
+    }
+
+    private ModelAndView returnExamsPage(String examId, boolean logged) {
+        ModelAndView modelAndView = new ModelAndView();
+        Exam exam;
+        try {
+            exam = examServiceDao.getExam(Integer.parseInt(examId));
+        } catch (NumberFormatException e) {
+            return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
+        }
+        ExamDto examDto = examServiceDao.getExamDto(exam);
+        modelAndView.addObject("exam_dto", examDto);
+        if(logged) {
+            modelAndView.setViewName("pages/logged/seating");
+        } else {
+            modelAndView.setViewName("pages/seating");
         }
         return modelAndView;
     }
@@ -369,6 +350,4 @@ public class ExamController {
 
         return new NewExamSecondPartDto(rooms, AcademicYearDto.getOptionsForAcademicYear(), numberOfSeatsInRooms);
     }
-
-
 }
