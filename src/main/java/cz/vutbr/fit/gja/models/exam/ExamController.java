@@ -65,7 +65,6 @@ public class ExamController {
     @GetMapping("/exams")
     public ModelAndView getExams() {
         ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
         modelAndView.setViewName("pages/exams");
         return modelAndView;
     }
@@ -79,7 +78,12 @@ public class ExamController {
             modelAndView.setViewName("pages/exams");
             return modelAndView;
         }
-        blockOnExamRunServiceDao.getAllStudentExams("xlogin00");
+        List<StudentExamPlaceDto> studentExams = blockOnExamRunServiceDao.getAllStudentExams(login);
+        if(studentExams.isEmpty()) {
+            modelAndView.addObject("message", "Student s tímto loginem se nevyskytuje na žádné zkoušce");
+        } else {
+            modelAndView.addObject("listOfExamsDto", studentExams);
+        }
         modelAndView.setViewName("pages/exams");
         return modelAndView;
     }
@@ -222,12 +226,23 @@ public class ExamController {
 
     @GetMapping("/exams/{id}")
     public ModelAndView getExam(@PathVariable(value = "id") String examId) {
-        return returnExamsPage(examId, false);
+        ModelAndView modelAndView = new ModelAndView();
+        Exam exam;
+        try {
+            exam = examServiceDao.getExam(Integer.parseInt(examId));
+        } catch (NumberFormatException e) {
+            return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
+        }
+        ExamDto examDto = examServiceDao.getExamDto(exam);
+        modelAndView.addObject("exam_dto", examDto);
+        modelAndView.setViewName("pages/seating");
+
+        return modelAndView;
     }
 
     @GetMapping("/logged/exams/{id}")
     public ModelAndView getExamAsLogged(@PathVariable(value = "id") String examId) {
-        return returnExamsPage(examId, true);
+        return returnExamPage(examId, true);
     }
 
     @GetMapping("/logged/exams/{id}/delete")
@@ -264,7 +279,7 @@ public class ExamController {
         return modelAndView;
     }
 
-    private ModelAndView returnExamsPage(String examId, boolean logged) {
+    private ModelAndView returnExamPage(String examId, boolean logged) {
         ModelAndView modelAndView = new ModelAndView();
         Exam exam;
         try {
@@ -274,11 +289,8 @@ public class ExamController {
         }
         ExamDto examDto = examServiceDao.getExamDto(exam);
         modelAndView.addObject("exam_dto", examDto);
-        if(logged) {
-            modelAndView.setViewName("pages/logged/seating");
-        } else {
-            modelAndView.setViewName("pages/seating");
-        }
+        modelAndView.setViewName("pages/logged/seating");
+
         return modelAndView;
     }
 

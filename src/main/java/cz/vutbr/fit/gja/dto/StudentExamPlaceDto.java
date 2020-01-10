@@ -1,27 +1,30 @@
 package cz.vutbr.fit.gja.dto;
 
+import cz.vutbr.fit.gja.models.examRun.ExamRun;
+
 /**
- * This class represents exam that the student will take with additional information about room and exam run
+ * This class represents exam that the student will take with additional information about exam run
  */
 public class StudentExamPlaceDto extends StudentExamDto {
     /**
-     * Room in which exam takes place
-     */
-    private long roomId;
-
-    /**
      * Exam run which student attends
      */
-    private long examRunId;
+    private ExamRun examRun;
 
-    public StudentExamPlaceDto(long roomId, long examRunId) {
-        this.roomId = roomId;
-        this.examRunId = examRunId;
+    public StudentExamPlaceDto(ExamRun examRun) {
+        this.examRun = examRun;
     }
 
-    public StudentExamPlaceDto(String subject, String examName, String academicYear, String roomNumber, String examDate, String startTime, String endTime, long roomId, long examRunId) {
+    public StudentExamPlaceDto(String subject, String examName, String academicYear, String roomNumber, String examDate, String startTime, String endTime, ExamRun examRun) {
         super(subject, examName, academicYear, roomNumber, examDate, startTime, endTime);
-        this.roomId = roomId;
-        this.examRunId = examRunId;
+        this.examRun = examRun;
+    }
+
+    public ExamRun getExamRun() {
+        return examRun;
+    }
+
+    public void setExamRun(ExamRun examRun) {
+        this.examRun = examRun;
     }
 }
