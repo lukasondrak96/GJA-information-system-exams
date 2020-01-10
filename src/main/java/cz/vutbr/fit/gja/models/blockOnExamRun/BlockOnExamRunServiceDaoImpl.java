@@ -41,10 +41,15 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
 
         int seatCounter = 0;
         boolean goRight = true;
+        boolean firstFlag = true;
+        OccupiedSeats occupiedSeats = new OccupiedSeats(false, false, seatCounter, false, new ArrayList<>());
         for (int i = blocksInRoom.size() - 1; i >= 0; i--) {
             ArrayList<Block> blocksInRow = (ArrayList<Block>) blocksInRoom.get(i);
-
-            seatCounter = saveBlocksInRowOnExamRun(examRun, students, spacing, blocksInRow, seatCounter, i, goRight);
+            occupiedSeats = saveBlocksInRowOnExamRun(examRun, students, spacing, blocksInRow, seatCounter, i, goRight, firstFlag, occupiedSeats.patternForSeat, occupiedSeats);
+            seatCounter = occupiedSeats.seatCounter;
+            if(firstFlag){
+                firstFlag = false;
+            }
             goRight = !goRight;
         }
         return seatCounter;
@@ -71,8 +76,12 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
     }
 
 
-    private int saveBlocksInRowOnExamRun(ExamRun examRun, LinkedList<Student> students, int spacing, List<Block> blocksInRow, int seatCounter, int i, boolean goRight) {
-        OccupiedSeats occupiedSeats = new OccupiedSeats(false, false, seatCounter);
+    private OccupiedSeats saveBlocksInRowOnExamRun(ExamRun examRun, LinkedList<Student> students, int spacing, List<Block> blocksInRow, int seatCounter, int i, boolean goRight, boolean firstFlag, ArrayList<Integer> patternForSeat, OccupiedSeats oldOccupiedSeats) {
+        OccupiedSeats occupiedSeats = new OccupiedSeats(false, false, seatCounter, false, new ArrayList<>());
+        occupiedSeats.patternForSeat = oldOccupiedSeats.patternForSeat;
+        if(firstFlag){
+            occupiedSeats.firstFlag = true;
+        }
         if (goRight) {
             for (int j = 0; j < blocksInRow.size(); j++) {
                 occupiedSeats = saveBlock(examRun, students, spacing, blocksInRow, occupiedSeats, i, j);
@@ -82,7 +91,7 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
                 occupiedSeats = saveBlock(examRun, students, spacing, blocksInRow, occupiedSeats, i, j);
             }
         }
-        return occupiedSeats.seatCounter;
+        return occupiedSeats;
     }
 
     private OccupiedSeats saveBlock(ExamRun examRun, LinkedList<Student> students, int spacing, List<Block> blocksInRow, OccupiedSeats occupiedSeats, int i, int j) {
@@ -90,38 +99,61 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
         Block block = blocksInRow.get(j);
         boolean lastBlockIsOccupied = occupiedSeats.lastOccupied;
         boolean secondLastBlockIsOccupied = occupiedSeats.secondLastOccupied;
+        boolean firstFlag = occupiedSeats.firstFlag;
+        ArrayList<Integer> patternForSeat = occupiedSeats.patternForSeat;
 
+        if(firstFlag) {
+            if (block.isSeat()) {
+                if (((lastBlockIsOccupied && spacing == 1) || ((secondLastBlockIsOccupied || lastBlockIsOccupied) && spacing == 2)) || students.isEmpty()) {
+                    blockOnExamRun = new BlockOnExamRun("-", examRun, block, null);
+                    secondLastBlockIsOccupied = lastBlockIsOccupied;
+                    lastBlockIsOccupied = false;
 
-        if (block.isSeat()) {
-            if (((lastBlockIsOccupied && spacing == 1) || ((secondLastBlockIsOccupied || lastBlockIsOccupied) && spacing == 2)) || students.isEmpty()) {
-                blockOnExamRun = new BlockOnExamRun("-", examRun, block, null);
+                } else {
+                    secondLastBlockIsOccupied = lastBlockIsOccupied;
+                    lastBlockIsOccupied = true;
+                    occupiedSeats.seatCounter++;
+                    blockOnExamRun = new BlockOnExamRun(String.valueOf(occupiedSeats.seatCounter), examRun, block, students.removeFirst());
+                    if (firstFlag) {
+                        patternForSeat.add(j);
+                    }
+                }
+            } else {
+                blockOnExamRun = new BlockOnExamRun(" ", examRun, block, null);
                 secondLastBlockIsOccupied = lastBlockIsOccupied;
                 lastBlockIsOccupied = false;
-
-            } else {
-                secondLastBlockIsOccupied = lastBlockIsOccupied;
-                lastBlockIsOccupied = true;
-                occupiedSeats.seatCounter++;
-                blockOnExamRun = new BlockOnExamRun(String.valueOf(occupiedSeats.seatCounter), examRun, block, students.removeFirst());
             }
-        } else {
-            blockOnExamRun = new BlockOnExamRun(" ", examRun, block, null);
-            secondLastBlockIsOccupied = lastBlockIsOccupied;
-            lastBlockIsOccupied = false;
+        }else{
+            if (block.isSeat()) {
+                if (patternForSeat.contains(j) && !students.isEmpty()) {
+                    occupiedSeats.seatCounter++;
+                    blockOnExamRun = new BlockOnExamRun(String.valueOf(occupiedSeats.seatCounter), examRun, block, students.removeFirst());
+                }else{
+                    blockOnExamRun = new BlockOnExamRun("-", examRun, block, null);
+                }
+            }else{
+                blockOnExamRun = new BlockOnExamRun(" ", examRun, block, null);
+                secondLastBlockIsOccupied = lastBlockIsOccupied;
+                lastBlockIsOccupied = false;
+            }
         }
         blockOnExamRunRepository.save(blockOnExamRun);
-        return new OccupiedSeats(lastBlockIsOccupied, secondLastBlockIsOccupied, occupiedSeats.seatCounter);
+        return new OccupiedSeats(lastBlockIsOccupied, secondLastBlockIsOccupied, occupiedSeats.seatCounter, firstFlag, patternForSeat);
     }
 
     private class OccupiedSeats {
         boolean lastOccupied;
         boolean secondLastOccupied;
         int seatCounter;
+        boolean firstFlag;
+        ArrayList<Integer> patternForSeat;
 
-        public OccupiedSeats(boolean lastOccupied, boolean secondLastOccupied, int seatCounter) {
+        public OccupiedSeats(boolean lastOccupied, boolean secondLastOccupied, int seatCounter, boolean firstFlag, ArrayList<Integer> patternForSeat) {
             this.lastOccupied = lastOccupied;
             this.secondLastOccupied = secondLastOccupied;
             this.seatCounter = seatCounter;
+            this.firstFlag = firstFlag;
+            this.patternForSeat = patternForSeat;
         }
     }
 
