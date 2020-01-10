@@ -14,11 +14,11 @@
 <!--                <li class="nav-item active">-->
                     <div sec:authorize="isAuthenticated()">
 <!--                        This is path for logged user-->
-                        <a class="nav-link" th:href="@{/logged/exams}">Rozsazení</a>
+                        <a class="nav-link" th:href="@{/logged/exams}">Zkoušky</a>
                     </div>
                     <div sec:authorize="isAnonymous()">
 <!--                        This is path for normal user-->
-                        <a class="nav-link" th:href="@{/exams}">Rozsazení</a>
+                        <a class="nav-link" th:href="@{/exams}">Zkoušky</a>
                     </div>
                 </li>
                 <li class="nav-item">

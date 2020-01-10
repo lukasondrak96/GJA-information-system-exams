@@ -4,17 +4,39 @@ import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRun;
 
 import java.util.List;
 
-public class ExamRunForSeating {
+/**
+ * This class represents one specific exam run
+ */
+public class ExamRunForSeatingDto {
+    /**
+     * The date the exam run takes place
+     */
     private String date;
+
+    /**
+     * The time the exam run starts
+     */
     private String startTime;
+
+    /**
+     * The time the exam run ends
+     */
     private String endTime;
+
+    /**
+     * Blocks of room in which exam run takes place
+     */
     private BlocksDto blocks;
+
+    /**
+     * Seating plan
+     */
     private List<List<BlockOnExamRun>> seating;
 
-    public ExamRunForSeating() {
+    public ExamRunForSeatingDto() {
     }
 
-    public ExamRunForSeating(String date, String startTime, String endTime, BlocksDto blocks, List<List<BlockOnExamRun>> seating) {
+    public ExamRunForSeatingDto(String date, String startTime, String endTime, BlocksDto blocks, List<List<BlockOnExamRun>> seating) {
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;

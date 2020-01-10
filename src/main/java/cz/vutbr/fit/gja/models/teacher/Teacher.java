@@ -9,21 +9,21 @@ import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 /**
- * This class represents entity of Teacher
+ * This class represents the entity of teacher
  */
 @Entity
 @Table(name = "teacher")
 public class Teacher {
 
     /**
-     * First name of Teacher
+     * Teacher first name
      */
     @NotNull(message="Prosím vyplňte jméno")
     @Column(name = "first_name")
     private String firstName;
 
     /**
-     * Last name of Teacher
+     * Teacher last name
      */
     @NotNull(message="Prosím vyplňte příjmení")
     @Column(name = "last_name")
@@ -42,7 +42,7 @@ public class Teacher {
     private String degreesBehindName;
 
     /**
-     * Email of Teacher
+     * Teacher email
      */
     @Id
     @Length(min=1, message="Prosím vyplňte emailovou adresu")
@@ -51,26 +51,26 @@ public class Teacher {
     private String email;
 
     /**
-     * Password of Teacher
+     * Teacher passwor
      */
     @Length(min=5, message="Heslo musí mít minimálně 5 znaků")
     @Column(name = "password")
     private String password;
 
     /**
-     * Repeated password of Teacher
+     * Repeated teacher password
      */
     @Transient
     private String repeatPassword;
 
     /**
-     * Status of Teacher
+     * Teacher status
      */
     @Column(name = "status")
     private String status;
 
     /**
-     * Role of Teacher
+     * Teacher role
      */
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "teacher_has_role", joinColumns = @JoinColumn(name = "email"), inverseJoinColumns = @JoinColumn(name = "id_role"))
@@ -80,17 +80,17 @@ public class Teacher {
     }
 
     /**
-     * Creates new Teacher
+     * Creates a new Teacher
      *
-     * @param firstName first name of Teacher
-     * @param lastName last name of Teacher
-     * @param degreesBeforeName degrees before name
-     * @param degreesBehindName degrees behind name
-     * @param email email of Teacher
-     * @param password password of Teacher
-     * @param repeatPassword repeated password
-     * @param status status of Teacher
-     * @param roles role of Teacher
+     * @param firstName Teacher first name
+     * @param lastName Teacher last name
+     * @param degreesBeforeName Degrees before name
+     * @param degreesBehindName Degrees behind name
+     * @param email Teacher email
+     * @param password Teacher password
+     * @param repeatPassword repeated teacher password
+     * @param status Teacher status
+     * @param roles Teacher role
      */
     public Teacher(@NotNull(message = "Prosím vyplňte jméno") String firstName,
                    @NotNull(message = "Prosím vyplňte příjmení") String lastName,

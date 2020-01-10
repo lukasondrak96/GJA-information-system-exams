@@ -5,8 +5,18 @@ import cz.vutbr.fit.gja.models.examRun.ExamRun;
 
 import java.util.List;
 
+/**
+ * This class is wrapping information about exam to show on frontend
+ */
 public class ExamsDto {
+    /**
+     * Exam
+     */
     private Exam exam;
+
+    /**
+     * List of exams runs
+     */
     private List<ExamRun> list;
 
     public ExamsDto(Exam exam, List<ExamRun> list) {

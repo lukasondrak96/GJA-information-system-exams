@@ -21,11 +21,11 @@ import java.util.List;
 public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
 
     /**
-     * processes authentication and redirect on page which show after login
-      * @param request httpRequest
-     * @param response httpRe
-     * @param authentication authentification information
-     * @throws IOException errors
+     * Processes authentication and redirect on page which show after login
+     * @param request HttpRequest
+     * @param response HttpResponse
+     * @param authentication Authentication information
+     * @throws IOException Errors
      */
     @Override
     protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
@@ -42,8 +42,8 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     /**
      * Controls authentication data and assign a role for logged user
-     * @param authentication - data of authentication
-     * @return valid url for logged user or error url
+     * @param authentication Data of authentication
+     * @return Valid url for logged user or error url
      */
     protected String determineTargetUrl(Authentication authentication) {
         String url = "/login?error=true";
