@@ -4,14 +4,14 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 /**
- * This class represents entity of Students.
+ * This class represents the entity of student
  */
 @Entity
 @Table(name = "student")
 public class Student implements Comparable<Student> {
 
     /**
-     * ID of student
+     * Student ID
      */
     @Id
     @SequenceGenerator(name = "StudentIdGenerator", sequenceName = "STUDENT_SEQUENCE", allocationSize = 1)
@@ -20,14 +20,14 @@ public class Student implements Comparable<Student> {
     private int idStudent;
 
     /**
-     * Login of student
+     * Student login
      */
     @NotNull(message = "Login je u studenta povinný")
     @Column(name = "login")
     private String login;
 
     /**
-     * Name of Student (inc. degrees)
+     * Student name (inc. degrees)
      */
     @Column(name = "name_with_degrees")
     private String nameWithDegrees;
@@ -36,10 +36,10 @@ public class Student implements Comparable<Student> {
     }
 
     /**
-     * Creates new Student
+     * Creates a new Student
      *
-     * @param login           login of student
-     * @param nameWithDegrees name of student
+     * @param login Login of student
+     * @param nameWithDegrees Name of student
      */
     public Student(@NotNull(message = "Login je u studenta povinný") String login, String nameWithDegrees) {
         this.login = login;
@@ -71,9 +71,9 @@ public class Student implements Comparable<Student> {
     }
 
     /**
-     * Compares logins of students
+     * Compares login of students
      *
-     * @param s student
+     * @param s Student
      * @return 0 if any is null, otherwise uses classic compareTo()
      */
     @Override
