@@ -167,9 +167,9 @@ public class ExamController {
         if(start.compareTo(end) >= 0) {
             return showFormAgainWithErrorMessage(modelAndView, examRunDto, "Počáteční čas zkoušky musí být dříve než koncový!");
         }
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
         // exam cannot take place in past
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = formatter.parse(run.getExamDate());
         if (date.before(Calendar.getInstance().getTime())) {
             return showFormAgainWithErrorMessage(modelAndView, examRunDto, "Zkoušku nelze vytvořit v minulosti!");
@@ -188,21 +188,17 @@ public class ExamController {
             return showFormAgainWithErrorMessage(modelAndView, examRunDto, "V tento čas už v této místnosti probíhá jiná zkouška");
         }
 
+
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Teacher roomCreator = teacherServiceDao.getTeacher(userEmail);
         exam.setExamCreator(roomCreator);
-
         Exam examFromDb = examServiceDao.saveExamToDatabase(exam);
-
         run.setExamReference(examFromDb);
-
         examRunServiceDao.saveExamRunToDatabase(run);
+
         int studentsWithSeat = blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
 
-        /*
-        * Too many students, user needs to do another exam run.
-        */
-        // todo
+        // Too many students, user needs to do another exam run
         if(studentsWithSeat < rows.size()) {
             ModelAndView newExamModelAndView = new ModelAndView();
             newExamModelAndView.setViewName("pages/logged/new_run");
@@ -230,16 +226,7 @@ public class ExamController {
         Exam exam = examRunDto.getExam();
 
 
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Teacher roomCreator = teacherServiceDao.getTeacher(userEmail);
-        exam.setExamCreator(roomCreator);
-
-        Exam examFromDb = examServiceDao.saveExamToDatabase(exam);
-
-        run.setExamReference(examFromDb);
-
-        examRunServiceDao.saveExamRunToDatabase(run);
-        int studentsWithSeat = blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
+        int studentsWithSeat = saveExamRunToDb(run, exam);
 
 
         /*
@@ -260,6 +247,19 @@ public class ExamController {
         }
 
         return modelAndView;
+    }
+
+    private int saveExamRunToDb(ExamRun run, Exam exam) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Teacher roomCreator = teacherServiceDao.getTeacher(userEmail);
+        exam.setExamCreator(roomCreator);
+
+        Exam examFromDb = examServiceDao.saveExamToDatabase(exam);
+
+        run.setExamReference(examFromDb);
+
+        examRunServiceDao.saveExamRunToDatabase(run);
+        return blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
     }
 
     @GetMapping("/exams/{id}")
