@@ -5,7 +5,7 @@ import cz.vutbr.fit.gja.models.room.Room;
 import java.util.List;
 
 /**
- * This class represents a second step in exam creation
+ * This class is wrapping information for second part of new run form
  */
 public class NewExamSecondPartDto {
     /**

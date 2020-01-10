@@ -2,7 +2,7 @@ package cz.vutbr.fit.gja.models.exam;
 
 import cz.vutbr.fit.gja.dto.BlocksDto;
 import cz.vutbr.fit.gja.dto.ExamDto;
-import cz.vutbr.fit.gja.dto.ExamRunForSeating;
+import cz.vutbr.fit.gja.dto.ExamRunForSeatingDto;
 import cz.vutbr.fit.gja.models.block.BlockServiceDaoImpl;
 import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRun;
 import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRunServiceDaoImpl;
@@ -90,13 +90,13 @@ public class ExamServiceDaoImpl implements ExamServiceDao {
         examDto.setExam(exam);
 
         List<ExamRun> examRuns = examRunServiceDao.getAllExamRunsByExam(exam);
-        List<ExamRunForSeating> examRunsForSeating = new ArrayList<>();
+        List<ExamRunForSeatingDto> examRunsForSeating = new ArrayList<>();
         for (ExamRun examRun : examRuns) {
             Room room = roomServiceDao.getRoomByRoomNumber(examRun.getRoomReference().getRoomNumber());
             BlocksDto blocks = blockServiceDao.getAllBlocksOfRoomAsDto(room);
             List<List<BlockOnExamRun>> seating = blockOnExamRunServiceDao.getSeating(examRun);
 
-            examRunsForSeating.add(new ExamRunForSeating(examRun.getExamDate(), examRun.getStartTime(), examRun.getEndTime(), blocks, seating));
+            examRunsForSeating.add(new ExamRunForSeatingDto(examRun.getExamDate(), examRun.getStartTime(), examRun.getEndTime(), blocks, seating));
         }
         examDto.setExamRuns(examRunsForSeating);
 

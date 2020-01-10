@@ -9,24 +9,21 @@ public interface StudentServiceDao {
 
     /**
      * Gets all students from database
-     *
-     * @return list of students from database
+     * @return List of students from database
      */
     List<Student> getAllStudentsFromDatabase();
 
     /**
      * Gets specific student from database based on login
-     *
      * @param login login of student
      * @return Student from database
      */
     Student getStudentByLogin(String login);
 
     /**
-     * Saves specific student to database
-     *
-     * @param student student
-     * @return specific Student
+     * Saves student to database
+     * @param student Student to save
+     * @return Saved student
      */
     Student saveStudentToDatabase(Student student);
 
