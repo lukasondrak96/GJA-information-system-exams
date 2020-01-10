@@ -19,4 +19,5 @@ public interface ExamRunServiceDao {
 
     List<ExamRun> getAllExamRunsByRoomReference(Room room);
 
+    long getNumberOfExamRunsInCollision(Room room, String examDate, String startTime, String endTime);
 }
