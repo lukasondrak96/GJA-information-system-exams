@@ -160,7 +160,7 @@ public class ExamController {
         exam.setSpacingBetweenStudents(this.spacing);
         ExamRun run = examRunDto.getExamRun();
 
-        //Ošetření, že je poč. čas dřív než koncový
+        // exam start must be earlier than exam end
         LocalTime start = LocalTime.parse(run.getStartTime());
         LocalTime end = LocalTime.parse(run.getEndTime());
         if(start.compareTo(end) >= 0) {
@@ -172,13 +172,13 @@ public class ExamController {
             }
 
             modelAndView.addObject("message", "Počáteční čas zkoušky musí být dříve než koncový!");
-            modelAndView.addObject("exam_run_dto", createExamRunDto());
+            modelAndView.addObject("exam_run_dto", examRunDto);
             modelAndView.setViewName("pages/logged/new_exam_2");
             return modelAndView;
         }
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-        //Ošetření, že není zkouška v budoucnosti
+        // exam cannot take place in past
         Date date = formatter.parse(run.getExamDate());
         if (date.before(Calendar.getInstance().getTime())) {
             try {
@@ -189,12 +189,12 @@ public class ExamController {
             }
 
             modelAndView.addObject("message", "Zkoušku nelze vytvořit v minulosti!");
-            modelAndView.addObject("exam_run_dto", createExamRunDto());
+            modelAndView.addObject("exam_run_dto", examRunDto);
             modelAndView.setViewName("pages/logged/new_exam_2");
             return modelAndView;
         }
 
-        //Ošetření, že je datum v tomto akademickém roce
+        // exam must take place in selected academic year
         String[] yearParts = exam.getAcademicYear().split("/");
         String examYear = run.getExamDate().split("-")[0];
         String examMonth = run.getExamDate().split("-")[1];
@@ -208,7 +208,7 @@ public class ExamController {
             }
 
             modelAndView.addObject("message", "Datum zkoušky musí odpovídat akademickému roku!");
-            modelAndView.addObject("exam_run_dto", createExamRunDto());
+            modelAndView.addObject("exam_run_dto", examRunDto);
             modelAndView.setViewName("pages/logged/new_exam_2");
             return modelAndView;
         }
