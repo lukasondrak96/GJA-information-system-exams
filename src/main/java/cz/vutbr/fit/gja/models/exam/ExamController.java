@@ -183,6 +183,10 @@ public class ExamController {
             return showFormAgainWithErrorMessage(modelAndView, examRunDto, "Datum zkoušky musí odpovídat akademickému roku!");
         }
 
+        if(examRunServiceDao.getNumberOfExamRunsInCollision(run.getRoomReference(), run.getExamDate(), run.getStartTime(), run.getEndTime()) > 0) {
+            return showFormAgainWithErrorMessage(modelAndView, examRunDto, "V tento čas už v této místnosti probíhá jiná zkouška");
+        }
+
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Teacher roomCreator = teacherServiceDao.getTeacher(userEmail);
         exam.setExamCreator(roomCreator);

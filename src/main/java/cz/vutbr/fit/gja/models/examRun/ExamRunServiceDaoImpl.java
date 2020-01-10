@@ -6,6 +6,7 @@ import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -46,6 +47,11 @@ public class ExamRunServiceDaoImpl implements ExamRunServiceDao {
     @Override
     public List<ExamRun> getAllExamRunsByRoomReference(Room room) {
         return examRunRepository.findAllByRoomReference(room);
+    }
+
+    @Override
+    public long getNumberOfExamRunsInCollision(Room room, String examDate, String startTime, String endTime) {
+        return examRunRepository.findExamRunsInCollision(room, examDate, startTime, endTime).size();
     }
 
 }
