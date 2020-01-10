@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * This class represents one specific exam run
  */
-public class ExamRunForSeating {
+public class ExamRunForSeatingDto {
     /**
      * The date the exam run takes place
      */
@@ -33,10 +33,10 @@ public class ExamRunForSeating {
      */
     private List<List<BlockOnExamRun>> seating;
 
-    public ExamRunForSeating() {
+    public ExamRunForSeatingDto() {
     }
 
-    public ExamRunForSeating(String date, String startTime, String endTime, BlocksDto blocks, List<List<BlockOnExamRun>> seating) {
+    public ExamRunForSeatingDto(String date, String startTime, String endTime, BlocksDto blocks, List<List<BlockOnExamRun>> seating) {
         this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;

@@ -7,11 +7,33 @@ import cz.vutbr.fit.gja.models.room.Room;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is wrapping information from new run form
+ */
 public class NewRunDto {
+    /**
+     * Exam Run
+     */
     private ExamRun examRun;
+
+    /**
+     * Exam
+     */
     private Exam exam;
+
+    /**
+     * List of rooms
+     */
     private List<Room> roomsInDb;
+
+    /**
+     * List of number of seats in rooms
+     */
     private List<Long> numberOfSeatsInRooms;
+
+    /**
+     * Number of students without place
+     */
     private int studentsWithoutPlace;
 
     public NewRunDto(ExamRun examRun, Exam exam, List<Room> roomsInDb, List<Long> numberOfSeatsInRooms, int studentsWithoutPlace) {

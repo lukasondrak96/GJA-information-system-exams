@@ -2,16 +2,34 @@ package cz.vutbr.fit.gja.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class NewRunFirstPartDto {
+/**
+ * This class is wrapping information from first part of new exam form
+ */
+public class NewExamFirstPartDto {
+    /**
+     * CSV file
+     */
     private MultipartFile file;
+
+    /**
+     * Spacing between students
+     */
     private String spacing;
+
+    /**
+     * Number of column in CSV file which contains student login
+     */
     private int loginPosition;
+
+    /**
+     * Number of column in CSV file which contains student names (titles etc.)
+     */
     private int namePosition;
 
-    public NewRunFirstPartDto() {
+    public NewExamFirstPartDto() {
     }
 
-    public NewRunFirstPartDto(MultipartFile file, String spacing, int loginPosition, int namePosition) {
+    public NewExamFirstPartDto(MultipartFile file, String spacing, int loginPosition, int namePosition) {
         this.file = file;
         this.spacing = spacing;
         this.loginPosition = loginPosition;

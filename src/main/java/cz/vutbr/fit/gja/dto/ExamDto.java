@@ -11,7 +11,7 @@ public class ExamDto {
     /**
      * List of exam runs of exam
      */
-    private List<ExamRunForSeating> examRuns;
+    private List<ExamRunForSeatingDto> examRuns;
 
     /**
      * Exam
@@ -21,16 +21,16 @@ public class ExamDto {
     public ExamDto() {
     }
 
-    public ExamDto(List<ExamRunForSeating> examRuns, Exam exam) {
+    public ExamDto(List<ExamRunForSeatingDto> examRuns, Exam exam) {
         this.examRuns = examRuns;
         this.exam = exam;
     }
 
-    public List<ExamRunForSeating> getExamRuns() {
+    public List<ExamRunForSeatingDto> getExamRuns() {
         return examRuns;
     }
 
-    public void setExamRuns(List<ExamRunForSeating> examRuns) {
+    public void setExamRuns(List<ExamRunForSeatingDto> examRuns) {
         this.examRuns = examRuns;
     }
 

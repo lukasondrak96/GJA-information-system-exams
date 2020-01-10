@@ -10,12 +10,12 @@ import java.util.List;
  */
 public class ExamsDto {
     /**
-     * Exam run
+     * Exam
      */
     private Exam exam;
 
     /**
-     * List of exams run
+     * List of exams runs
      */
     private List<ExamRun> list;
 

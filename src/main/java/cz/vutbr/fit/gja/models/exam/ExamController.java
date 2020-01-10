@@ -103,13 +103,13 @@ public class ExamController {
         }
         modelAndView.setViewName("pages/logged/new_exam_1");
 
-        NewRunFirstPartDto newRunFirstPartDto = new NewRunFirstPartDto(null, "no_space", 1, 2);
-        modelAndView.addObject("formValues",  newRunFirstPartDto);
+        NewExamFirstPartDto newExamFirstPartDto = new NewExamFirstPartDto(null, "no_space", 1, 2);
+        modelAndView.addObject("formValues", newExamFirstPartDto);
         return modelAndView;
     }
 
     @PostMapping("/logged/exams/new_exam_1")
-    public ModelAndView createNewRoomHandleFile(NewRunFirstPartDto formValues) {
+    public ModelAndView createNewRoomHandleFile(NewExamFirstPartDto formValues) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("pages/logged/new_exam_1");
 
@@ -297,7 +297,7 @@ public class ExamController {
         return modelAndView;
     }
 
-    private ModelAndView setModelAndView(ModelAndView modelAndView, String message, NewRunFirstPartDto formValues) {
+    private ModelAndView setModelAndView(ModelAndView modelAndView, String message, NewExamFirstPartDto formValues) {
         formValues.setFile(null);
         modelAndView.addObject("message", message);
         modelAndView.addObject("formValues", formValues);

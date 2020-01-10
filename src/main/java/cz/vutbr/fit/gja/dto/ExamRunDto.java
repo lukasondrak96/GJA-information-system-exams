@@ -4,7 +4,7 @@ import cz.vutbr.fit.gja.models.exam.Exam;
 import cz.vutbr.fit.gja.models.examRun.ExamRun;
 
 /**
- * This class is wrapping information about exam run to show on frontend
+ * This class is wrapping information from second part of new run form
  */
 public class ExamRunDto {
     /**
