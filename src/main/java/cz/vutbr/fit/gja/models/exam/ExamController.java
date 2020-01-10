@@ -62,6 +62,7 @@ public class ExamController {
     private LinkedList<Student> students = new LinkedList<>();
 
     private static final String CSV_FILE = "application/vnd.ms-excel";
+    private int studentsWithoutSeat;
 
     @GetMapping("/exams")
     public ModelAndView getExams() {
@@ -110,10 +111,10 @@ public class ExamController {
     }
 
     @PostMapping("/logged/exams/new_exam_1")
-    public ModelAndView createNewRoomHandleFile(@RequestParam("file") MultipartFile file,
-                                                @RequestParam("spacing") String spacing,
-                                                @RequestParam("login_position") String loginPosition,
-                                                @RequestParam("name_position") String namePosition) {
+    public ModelAndView createNewExamFirstPart(@RequestParam("file") MultipartFile file,
+                                               @RequestParam("spacing") String spacing,
+                                               @RequestParam("login_position") String loginPosition,
+                                               @RequestParam("name_position") String namePosition) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("pages/logged/new_exam_1");
 
@@ -165,7 +166,7 @@ public class ExamController {
     }
 
     @PostMapping("/logged/exams/new_exam_2")
-    public ModelAndView createNewRoomHandleFile(@Valid ExamRunDto examRunDto, @Valid NewExamSecondPartDto newExamSecondPartDto) throws ParseException {
+    public ModelAndView createNewExamSecondPart(@Valid ExamRunDto examRunDto, @Valid NewExamSecondPartDto newExamSecondPartDto) throws ParseException {
         ModelAndView modelAndView = new ModelAndView();
         Exam exam = examRunDto.getExam();
         exam.setSpacingBetweenStudents(this.spacing);
@@ -244,6 +245,7 @@ public class ExamController {
             ModelAndView newExamModelAndView = new ModelAndView();
             newExamModelAndView.setViewName("pages/logged/new_run");
 
+            studentsWithoutSeat = rows.size() - studentsWithSeat;
             newExamModelAndView.addObject("new_run_dto", createNewRunDto(exam, rows.size() - studentsWithSeat));
             ExamRunDto newRun = new ExamRunDto();
             newRun.setExamRun(new ExamRun());
@@ -258,14 +260,47 @@ public class ExamController {
         return modelAndView;
     }
 
-    private NewRunDto createNewRunDto(Exam exam, int studentsWithoutPlace) {
-        List<Room> rooms = roomServiceDao.getAllRoomsFromDatabase();
-        List<Long> numberOfSeatsInRooms = new ArrayList<>();
-        for (Room room : rooms) {
-            numberOfSeatsInRooms.add(blockServiceDao.getNumberOfSeats(room));
+
+    @PostMapping("/logged/exams/new_run")
+    public ModelAndView createNewExamRunOfExam(ExamRunDto examRunDto) {
+        //todo
+        ModelAndView modelAndView = new ModelAndView();
+        ExamRun run = examRunDto.getExamRun();
+        Exam exam = examRunDto.getExam();
+
+
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Teacher roomCreator = teacherServiceDao.getTeacher(userEmail);
+        exam.setExamCreator(roomCreator);
+
+        Exam examFromDb = examServiceDao.saveExamToDatabase(exam);
+
+        run.setExamReference(examFromDb);
+
+        examRunServiceDao.saveExamRunToDatabase(run);
+        int studentsWithSeat = blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
+
+
+        /*
+         * Too many students, user needs to do another exam run.
+         */
+        // todo
+        if(studentsWithSeat < rows.size()) {
+            ModelAndView newExamModelAndView = new ModelAndView();
+            newExamModelAndView.setViewName("pages/logged/new_run");
+            studentsWithoutSeat -= studentsWithSeat;
+            newExamModelAndView.addObject("new_run_dto", createNewRunDto(exam, studentsWithoutSeat - studentsWithSeat));
+            ExamRunDto newRun = new ExamRunDto();
+            newRun.setExamRun(new ExamRun());
+            newRun.setExam(exam);
+            newRun.setNumberOfStudents(0);
+            newExamModelAndView.addObject("form_new_exam_run_dto", newRun);
+            return newExamModelAndView;
         }
-        return new NewRunDto(new ExamRun(), exam, rooms, numberOfSeatsInRooms, studentsWithoutPlace);
+
+        return modelAndView;
     }
+
 
     @GetMapping("/exams/{id}")
     public ModelAndView getExam(@PathVariable(value = "id") String examId) {
@@ -374,5 +409,12 @@ public class ExamController {
         return new NewExamSecondPartDto(rooms, AcademicYearDto.getOptionsForAcademicYear(), numberOfSeatsInRooms);
     }
 
-
+    private NewRunDto createNewRunDto(Exam exam, int studentsWithoutPlace) {
+        List<Room> rooms = roomServiceDao.getAllRoomsFromDatabase();
+        List<Long> numberOfSeatsInRooms = new ArrayList<>();
+        for (Room room : rooms) {
+            numberOfSeatsInRooms.add(blockServiceDao.getNumberOfSeats(room));
+        }
+        return new NewRunDto(new ExamRun(), exam, rooms, numberOfSeatsInRooms, studentsWithoutPlace);
+    }
 }
