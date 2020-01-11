@@ -7,7 +7,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
+/**
+ * This class encapsulates all methods for the BlockOnExamRun entity that communicates with the database
+ */
 @Repository
 public interface BlockOnExamRunRepository extends JpaRepository<BlockOnExamRun, Integer> {
     List<BlockOnExamRun> findAllByExamRunReference(ExamRun examRun);

@@ -1,8 +1,13 @@
 package cz.vutbr.fit.gja.models.exam;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * This class encapsulates all methods for the Exam entity that communicates with the database
+ */
+@Repository
 public interface ExamRepository extends JpaRepository<Exam, Integer> {
 
     Exam findByIdExam(int id);
