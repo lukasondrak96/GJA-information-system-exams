@@ -10,8 +10,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 public interface ExamRepository extends JpaRepository<Exam, Integer> {
 
+    /**
+     * Gets exam by given ID
+     * @param id Exam ID
+     * @return Exam
+     */
     Exam findByIdExam(int id);
 
+    /**
+     * Deletes exam identified by given ID
+     * @param id Exam ID
+     * @return Number of deleted exams
+     */
     @Transactional
     Long deleteByIdExam(int id);
 
