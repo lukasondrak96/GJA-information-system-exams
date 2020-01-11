@@ -78,7 +78,7 @@ public class ExamController {
                 for (ExamRun run : studentExams) {
                     String date = run.getExamDate();
                     String[] split = date.split("-");
-                    date = split[2] + ". " + split[1] + ". " + split[0];
+                    date = split[2] + "." + split[1] + "." + split[0];
                     run.setExamDate(date);
                 }
             }
@@ -247,7 +247,7 @@ public class ExamController {
             for (ExamRunForSeatingDto run : examDto.getExamRuns()) {
                 String date = run.getDate();
                 String[] split = date.split("-");
-                date = split[2] + ". " + split[1] + ". " + split[0];
+                date = split[2] + "." + split[1] + "." + split[0];
                 run.setDate(date);
             }
 //        // todo remove unnecessary exam runs
@@ -283,7 +283,7 @@ public class ExamController {
         for (ExamRunForSeatingDto run : examDto.getExamRuns()) {
             String date = run.getDate();
             String[] split = date.split("-");
-            date = split[2] + ". " + split[1] + ". " + split[0];
+            date = split[2] + "." + split[1] + "." + split[0];
             run.setDate(date);
         }
 
@@ -351,7 +351,7 @@ public class ExamController {
             for (ExamRun run : examRuns) {
                 String date = run.getExamDate();
                 String[] split = date.split("-");
-                date = split[2] + ". " + split[1] + ". " + split[0];
+                date = split[2] + "." + split[1] + "." + split[0];
                 run.setExamDate(date);
             }
             listDto.add(new ExamsDto(exam, examRuns));
