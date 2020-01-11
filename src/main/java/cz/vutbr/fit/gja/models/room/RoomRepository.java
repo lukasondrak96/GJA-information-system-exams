@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 /**
  * This class encapsulates all methods for the Room entity that communicates with the database
@@ -40,4 +41,10 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
      */
     @Transactional
     Long deleteByRoomNumber(String roomNumber);
+
+    /**
+     * Gets all rooms from database ordered by room number
+     * @return Ordered rooms
+     */
+    List<Room> findAllByOrderByRoomNumberAsc();
 }

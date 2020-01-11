@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * This class encapsulates all methods for the Exam entity that communicates with the database
  */
@@ -25,4 +27,9 @@ public interface ExamRepository extends JpaRepository<Exam, Integer> {
     @Transactional
     Long deleteByIdExam(int id);
 
+    /**
+     * Gets all exams from database and order them by academic year and exam name
+     * @return Ordered exams from database
+     */
+    List<Exam> findAllByOrderByAcademicYearAscExamNameAsc();
 }

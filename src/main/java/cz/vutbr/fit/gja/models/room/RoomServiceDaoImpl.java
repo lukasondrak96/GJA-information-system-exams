@@ -30,7 +30,7 @@ public class RoomServiceDaoImpl implements RoomServiceDao {
 
     @Override
     public List<Room> getAllRoomsFromDatabase() {
-        return roomRepository.findAll();
+        return roomRepository.findAllByOrderByRoomNumberAsc();
     }
 
     @Override
