@@ -157,11 +157,10 @@ public class ExamController {
 
         try {
             rows = CsvParser.getListOfCsvFile(formValues.getFile());
-        } catch (FileUploadException e) {
-            return setModelAndView(modelAndView, "Prosím vyberte soubor ve formátu csv!", formValues);
-
         } catch (IOException e) {
             return setModelAndView(modelAndView, "Při čtení souboru došlo k chybě.", formValues);
+        } catch (Exception e) {
+            return setModelAndView(modelAndView, "Prosím vyberte soubor ve formátu csv!", formValues);
         }
 
         if (loginPos == namePos) {
