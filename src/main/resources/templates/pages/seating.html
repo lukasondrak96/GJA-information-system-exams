@@ -27,7 +27,8 @@
                                        th:id="${room.getNumberOfRows() - i} + '_' + ${j + 1}"
                                        type="checkbox"/>
                                 <label th:for="${room.getNumberOfRows() - i} + '_' + ${j + 1}">
-                                    <span th:text="${exam_run.seating[__${i}__][__${j}__].getBlockNumber()}" style="vertical-align: top;">&nbsp;</span>
+                                    <span th:text="${exam_run.seating[__${i}__][__${j}__].getBlockNumber()}"
+                                          th:id="${student_login == exam_run.seating[__${i}__][__${j}__].studentReference.login ? 'student-seat-color' : ''}">&nbsp;</span>
                                 </label>
                             </div>
                         </div>
@@ -49,6 +50,7 @@
                     <tr><td class="row-number institute-color"></td><td class="text-left">Katedra</td></tr>
                     <tr><td class="row-number corridor-color"></td><td class="text-left">Ulička</td></tr>
                     <tr><td class="row-number seat-color"></td><td class="text-left">Sedadlo</td></tr>
+                    <tr th:if="${student_login != null}"><td class="row-number student-seat-color"></td><td class="text-left" th:text="${student_login}">Sedadlo</td></tr>
                 </table>
             </div>
         </div>

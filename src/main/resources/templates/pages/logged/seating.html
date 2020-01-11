@@ -25,7 +25,7 @@
                                        th:id="${room.getNumberOfRows() - i} + '_' + ${j + 1}"
                                        type="checkbox" />
                                 <label th:for="${room.getNumberOfRows() - i} + '_' + ${j + 1}">
-                                    <span th:text="${exam_run.seating[__${i}__][__${j}__].getBlockNumber()}" style="vertical-align: top;">&nbsp;</span>
+                                    <span th:text="${exam_run.seating[__${i}__][__${j}__].getBlockNumber()}">&nbsp;</span>
                                 </label>
                             </div>
                         </div>

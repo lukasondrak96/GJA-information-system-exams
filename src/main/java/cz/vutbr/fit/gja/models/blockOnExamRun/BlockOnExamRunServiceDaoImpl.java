@@ -1,17 +1,13 @@
 package cz.vutbr.fit.gja.models.blockOnExamRun;
 
-import cz.vutbr.fit.gja.dto.StudentExamPlaceDto;
 import cz.vutbr.fit.gja.models.block.Block;
 import cz.vutbr.fit.gja.models.block.BlockServiceDaoImpl;
 import cz.vutbr.fit.gja.models.examRun.ExamRun;
-import cz.vutbr.fit.gja.models.examRun.ExamRunServiceDaoImpl;
 import cz.vutbr.fit.gja.models.room.Room;
-import cz.vutbr.fit.gja.models.room.RoomServiceDaoImpl;
 import cz.vutbr.fit.gja.models.student.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,12 +20,6 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
 
     @Autowired
     BlockOnExamRunRepository blockOnExamRunRepository;
-
-    @Autowired
-    RoomServiceDaoImpl roomServiceDao;
-
-    @Autowired
-    ExamRunServiceDaoImpl examRunServiceDao;
 
     @Override
     public int createAndSaveBlocksOnExamRun(ExamRun examRun, LinkedList<Student> students, int spacing) {
@@ -86,28 +76,8 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
     }
 
     @Override
-    public List<StudentExamPlaceDto> getAllStudentExams(String login) {
-        List<StudentExamPlaceDto> examPlaceDtoList = new ArrayList<>();
-        List<Object[]> objects = blockOnExamRunRepository.getAllStudentExams(login);
-        for (Object[] object: objects) {
-            examPlaceDtoList.add(convertObjectToStudentExamPlaceDto(object));
-        }
-        return examPlaceDtoList;
-    }
-
-    private StudentExamPlaceDto convertObjectToStudentExamPlaceDto(Object[] object) {
-        BigDecimal examRunId = (BigDecimal) object[7];
-
-        return new StudentExamPlaceDto(
-                (String) object[0],
-                (String) object[1],
-                (String) object[2],
-                (String) object[3],
-                (String) object[4],
-                (String) object[5],
-                (String) object[6],
-                examRunServiceDao.getExamRun(examRunId.intValue())
-        );
+    public List<ExamRun> getAllStudentExams(String login) {
+        return blockOnExamRunRepository.getAllStudentExams(login);
     }
 
     private OccupiedSeats saveBlocksInRowOnExamRun(ExamRun examRun, LinkedList<Student> students, int spacing, List<Block> blocksInRow, int seatCounter, int i, boolean goRight, boolean firstFlag, ArrayList<Integer> patternForSeat, OccupiedSeats oldOccupiedSeats) {

@@ -78,12 +78,13 @@ public class ExamController {
             modelAndView.setViewName("pages/exams");
             return modelAndView;
         }
-        List<StudentExamPlaceDto> studentExams = blockOnExamRunServiceDao.getAllStudentExams(login);
+        List<ExamRun> studentExams = blockOnExamRunServiceDao.getAllStudentExams(login);
         if(studentExams.isEmpty()) {
             modelAndView.addObject("message", "Student s tímto loginem se nevyskytuje na žádné zkoušce");
         } else {
-            modelAndView.addObject("listOfExamsDto", studentExams);
+            modelAndView.addObject("listOfExams", studentExams);
         }
+        modelAndView.addObject("student_login", login);
         modelAndView.setViewName("pages/exams");
         return modelAndView;
     }
@@ -225,7 +226,7 @@ public class ExamController {
     }
 
     @GetMapping("/exams/{id}")
-    public ModelAndView getExam(@PathVariable(value = "id") String examId) {
+    public ModelAndView getExam(@PathVariable(value = "id") String examId, @RequestParam(required = false, name = "login") String login) {
         ModelAndView modelAndView = new ModelAndView();
         Exam exam;
         try {
@@ -234,6 +235,25 @@ public class ExamController {
             return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
         }
         ExamDto examDto = examServiceDao.getExamDto(exam);
+        if(login != null) {
+            Student student = studentServiceDao.getStudentByLogin(login);
+            if (student == null) {
+                return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Student s loginem '" + login + "' neexistuje");
+            }
+//        // todo remove unnecessary exam runs
+//        List<ExamRunForSeatingDto> examRuns = examDto.getExamRuns();
+//        for(ExamRunForSeatingDto examRunForSeatingDto: examRuns) {
+//            List<List<BlockOnExamRun>> seating = examRunForSeatingDto.getSeating();
+//            for (List<BlockOnExamRun> seating_row : seating) {
+//                // check if student is in row
+//                if(seating_row.stream().anyMatch(o -> o.getStudentReference().getLogin().equals(student.getLogin()))) {
+//                    break;
+//                }
+//            }
+//        }
+        }
+
+        modelAndView.addObject("student_login", login);
         modelAndView.addObject("exam_dto", examDto);
         modelAndView.setViewName("pages/seating");
 
@@ -242,7 +262,19 @@ public class ExamController {
 
     @GetMapping("/logged/exams/{id}")
     public ModelAndView getExamAsLogged(@PathVariable(value = "id") String examId) {
-        return returnExamPage(examId, true);
+        ModelAndView modelAndView = new ModelAndView();
+        Exam exam;
+        try {
+            exam = examServiceDao.getExam(Integer.parseInt(examId));
+        } catch (NumberFormatException e) {
+            return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
+        }
+        ExamDto examDto = examServiceDao.getExamDto(exam);
+
+        modelAndView.addObject("exam_dto", examDto);
+        modelAndView.setViewName("pages/logged/seating");
+
+        return modelAndView;
     }
 
     @GetMapping("/logged/exams/{id}/delete")
@@ -276,21 +308,6 @@ public class ExamController {
         modelAndView.addObject("message", message);
         modelAndView.addObject("exam_run_dto", examRunDto);
         modelAndView.setViewName("pages/logged/new_exam_2");
-        return modelAndView;
-    }
-
-    private ModelAndView returnExamPage(String examId, boolean logged) {
-        ModelAndView modelAndView = new ModelAndView();
-        Exam exam;
-        try {
-            exam = examServiceDao.getExam(Integer.parseInt(examId));
-        } catch (NumberFormatException e) {
-            return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
-        }
-        ExamDto examDto = examServiceDao.getExamDto(exam);
-        modelAndView.addObject("exam_dto", examDto);
-        modelAndView.setViewName("pages/logged/seating");
-
         return modelAndView;
     }
 
