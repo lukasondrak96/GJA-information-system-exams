@@ -18,7 +18,7 @@
         <div class="card exams-card" th:if="${dto.exam.examCreator.email == #authentication.name}">
             <a class="stretched-link a-style" th:href="@{/logged/exams/{id}(id=${dto.exam.idExam})}">
                 <div class="card-header exams-card-header"
-                     th:text=" ${dto.exam.subject} + '- ' + ${dto.exam.examName} + ' (' + ${dto.exam.academicYear} + ')' "></div>
+                     th:text=" ${dto.exam.subject} + ' - ' + ${dto.exam.examName} + ' (' + ${dto.exam.academicYear} + ')' "></div>
                 <div class="card-body">
                     <div class="mb-2" th:each="examRun : ${dto.list}">
                         <div class="font-weight-bold" th:text="${examRun.getRoomReference().getRoomNumber()}"></div>
