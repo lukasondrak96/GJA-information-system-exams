@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Repository class of Student
+ * This class encapsulates all methods for the Student entity that communicates with the database
  */
 @Repository
 public interface StudentRepository extends JpaRepository<Student, String> {
