@@ -30,6 +30,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.*;
 
+/**
+ * This class encapsulates all methods that handle incoming exam requests and send responses
+ */
 @Controller
 public class ExamController {
 
@@ -61,28 +64,43 @@ public class ExamController {
     private LinkedList<Student> students = new LinkedList<>();
     private int studentsWithoutSeat;
 
+    /**
+     * Shows all students exams for normal user
+     * @param login Login of the searched student
+     * @return /exams page with all students exams
+     */
     @GetMapping("/exams")
-    public ModelAndView getExams() {
+    public ModelAndView getExams(@RequestParam(required = false, name = "login") String login) {
         ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
-        modelAndView.setViewName("pages/exams");
-        return modelAndView;
-    }
-
-    @PostMapping("/exams")
-    public ModelAndView getLoginFromForm(@RequestParam String login) {
-        ModelAndView modelAndView = new ModelAndView();
-        Student student = studentServiceDao.getStudentByLogin(login);
-        if (student == null) {
-            modelAndView.addObject("message", "Zadaný login neexistuje.");
-            modelAndView.setViewName("pages/exams");
-            return modelAndView;
+        if(login != null) {
+            Student student = studentServiceDao.getStudentByLogin(login);
+            if (student == null) {
+                modelAndView.addObject("message", "Zadaný login neexistuje.");
+                modelAndView.setViewName("pages/exams");
+                return modelAndView;
+            }
+            List<ExamRun> studentExams = blockOnExamRunServiceDao.getAllStudentExams(login);
+            if (studentExams.isEmpty()) {
+                modelAndView.addObject("message", "Student s tímto loginem se nevyskytuje na žádné zkoušce");
+            } else {
+                modelAndView.addObject("listOfExams", studentExams);
+                for (ExamRun run : studentExams) {
+                    String date = run.getExamDate();
+                    String[] split = date.split("-");
+                    date = split[2] + "." + split[1] + "." + split[0];
+                    run.setExamDate(date);
+                }
+            }
+            modelAndView.addObject("student_login", login);
         }
-
         modelAndView.setViewName("pages/exams");
         return modelAndView;
     }
 
+    /**
+     * Shows all exams created by logged user
+     * @return /login/exams page with all exams created by logged user
+     */
     @GetMapping(value = "/logged/exams")
     public ModelAndView getExamsAsLogged() {
         ModelAndView modelAndView = new ModelAndView();
@@ -91,6 +109,10 @@ public class ExamController {
         return modelAndView;
     }
 
+    /**
+     * Shows form for new exam creation
+     * @return /logged/new_exam_1 page with form to add CSV file with students
+     */
     @GetMapping("/logged/exams/new_exam")
     public ModelAndView getNewExamFirstPage() {
         ModelAndView modelAndView = new ModelAndView();
@@ -107,6 +129,11 @@ public class ExamController {
         return modelAndView;
     }
 
+    /**
+     * Gets and processes the request from form
+     * @param formValues Information from form
+     * @return /logged/new_exam_2 page to set rest of information about exam
+     */
     @PostMapping("/logged/exams/new_exam_1")
     public ModelAndView createNewRoomHandleFile(NewExamFirstPartDto formValues) {
         ModelAndView modelAndView = new ModelAndView();
@@ -152,8 +179,14 @@ public class ExamController {
         return modelAndView;
     }
 
+    /**
+     * Gets and processes the request from form
+     * @param examRunDto Information from form
+     * @return /logged/exams page with all exams created by logged user
+     * @throws ParseException Exception while parsing CSV file
+     */
     @PostMapping("/logged/exams/new_exam_2")
-    public ModelAndView createNewExamSecondPart(@Valid ExamRunDto examRunDto, @Valid NewExamSecondPartDto newExamSecondPartDto) {
+    public ModelAndView createNewRoomHandleFile(@Valid ExamRunDto examRunDto) throws ParseException {
         ModelAndView modelAndView = new ModelAndView();
         Exam exam = examRunDto.getExam();
         exam.setSpacingBetweenStudents(this.spacing);
@@ -279,16 +312,80 @@ public class ExamController {
         return modelAndView;
     }
 
+    /**
+     * Shows one specific exam for normal user
+     * @param examId ID of exam to be shown
+     * @param login Login of the searched student
+     * @return /seating page with seating plan and information about exam
+     */
     @GetMapping("/exams/{id}")
-    public ModelAndView getExam(@PathVariable(value = "id") String examId) {
-        return returnExamsPage(examId, false);
+    public ModelAndView getExam(@PathVariable(value = "id") String examId, @RequestParam(required = false, name = "login") String login) {
+        ModelAndView modelAndView = new ModelAndView();
+        Exam exam;
+        try {
+            exam = examServiceDao.getExam(Integer.parseInt(examId));
+        } catch (NumberFormatException e) {
+            exam = null;
+        }
+
+        if(exam == null) {
+            return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
+        }
+
+        ExamDto examDto = examServiceDao.getExamDto(exam);
+        if(login != null) {
+            Student student = studentServiceDao.getStudentByLogin(login);
+            if (student == null) {
+                return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Student s loginem '" + login + "' neexistuje");
+            }
+            for (ExamRunForSeatingDto run : examDto.getExamRuns()) {
+                String date = run.getDate();
+                String[] split = date.split("-");
+                date = split[2] + "." + split[1] + "." + split[0];
+                run.setDate(date);
+            }
+        }
+
+        modelAndView.addObject("student_login", login);
+        modelAndView.addObject("exam_dto", examDto);
+        modelAndView.setViewName("pages/seating");
+
+        return modelAndView;
     }
 
+    /**
+     * Shows one specific exam for logged user
+     * @param examId ID of exam to be shown
+     * @return /logged/seating page with seating plan and information about exam
+     */
     @GetMapping("/logged/exams/{id}")
     public ModelAndView getExamAsLogged(@PathVariable(value = "id") String examId) {
-        return returnExamsPage(examId, true);
+        ModelAndView modelAndView = new ModelAndView();
+        Exam exam;
+        try {
+            exam = examServiceDao.getExam(Integer.parseInt(examId));
+        } catch (NumberFormatException e) {
+            return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
+        }
+        ExamDto examDto = examServiceDao.getExamDto(exam);
+        for (ExamRunForSeatingDto run : examDto.getExamRuns()) {
+            String date = run.getDate();
+            String[] split = date.split("-");
+            date = split[2] + "." + split[1] + "." + split[0];
+            run.setDate(date);
+        }
+
+        modelAndView.addObject("exam_dto", examDto);
+        modelAndView.setViewName("pages/logged/seating");
+
+        return modelAndView;
     }
 
+    /**
+     * Deletes one specific exam
+     * @param examId ID of exam to be deleted
+     * @return /logged/exams page with all exams created by logged user
+     */
     @GetMapping("/logged/exams/{id}/delete")
     public ModelAndView deleteExamAsLogged(@PathVariable(value = "id") int examId) {
         ModelAndView modelAndView = new ModelAndView();
@@ -364,6 +461,12 @@ public class ExamController {
         List<Exam> allExamsFromDatabase = examServiceDao.getAllExamsFromDatabase();
         for (Exam exam : allExamsFromDatabase) {
             List<ExamRun> examRuns = examRunServiceDao.getAllExamRunsByExam(exam);
+            for (ExamRun run : examRuns) {
+                String date = run.getExamDate();
+                String[] split = date.split("-");
+                date = split[2] + "." + split[1] + "." + split[0];
+                run.setExamDate(date);
+            }
             listDto.add(new ExamsDto(exam, examRuns));
         }
         examRunServiceDao.getAllExamRunsFromDatabase();

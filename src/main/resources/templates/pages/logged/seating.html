@@ -19,13 +19,14 @@
                             <label class="row-number" th:text="${room.getNumberOfRows() - i}"></label>
                             <div class="block-btn-wrapper"
                                  th:each="j: ${#numbers.sequence(0, room.getNumberOfColumns() - 1)}">
-                                <span th:class="tooltiptext" th:text="${exam_run.seating[__${i}__][__${j}__].studentReference != null}? ${exam_run.seating[__${i}__][__${j}__].studentReference.login}"></span>
+                                <span th:if="${exam_run.seating[__${i}__][__${j}__].studentReference != null}"
+                                      th:class="tooltiptext" th:text="${exam_run.seating[__${i}__][__${j}__].studentReference.login}"></span>
                                 <input disabled
                                        th:checked="${isSeatList[__${i}__][__${j}__]}"
                                        th:id="${room.getNumberOfRows() - i} + '_' + ${j + 1}"
                                        type="checkbox" />
                                 <label th:for="${room.getNumberOfRows() - i} + '_' + ${j + 1}">
-                                    <span th:text="${exam_run.seating[__${i}__][__${j}__].getBlockNumber()}" style="vertical-align: top;">&nbsp;</span>
+                                    <span th:text="${exam_run.seating[__${i}__][__${j}__].getBlockNumber()}">&nbsp;</span>
                                 </label>
                             </div>
                         </div>

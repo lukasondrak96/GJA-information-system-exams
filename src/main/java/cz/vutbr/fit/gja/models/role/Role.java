@@ -19,14 +19,14 @@ public class Role {
     private int idRole;
 
     /**
-     * Type of roll
+     * Type of role
      */
     @NotNull
     @Column(name = "role_name")
     private String roleName;
 
     /**
-     * Type of roll for system check
+     * Type of role for system check
      */
     @Column(name = "role_desc")
     private String roleDesc;

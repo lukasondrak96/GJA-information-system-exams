@@ -18,6 +18,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
+/**
+ * This class encapsulates all methods that handle incoming room requests and send responses
+ */
 @Controller
 public class RoomController {
     @Autowired
@@ -32,6 +35,10 @@ public class RoomController {
     @Autowired
     TeacherServiceDaoImpl teacherServiceDao;
 
+    /**
+     * Shows all rooms for normal user
+     * @return /rooms page with all rooms
+     */
     @GetMapping("/rooms")
     public ModelAndView getRooms() {
         ModelAndView modelAndView = new ModelAndView();
@@ -40,6 +47,10 @@ public class RoomController {
         return modelAndView;
     }
 
+    /**
+     * Shows all rooms for logged user
+     * @return /logged/rooms page with all rooms
+     */
     @GetMapping("/logged/rooms")
     public ModelAndView getRoomsAsLogged() {
         ModelAndView modelAndView = new ModelAndView();
@@ -48,6 +59,10 @@ public class RoomController {
         return modelAndView;
     }
 
+    /**
+     * Shows one specific room for normal user
+     * @return /room page with information about one specific room
+     */
     @GetMapping("/rooms/{id}")
     public ModelAndView getRoom(@PathVariable(value = "id") String roomId) {
         ModelAndView modelAndView = new ModelAndView();
@@ -62,6 +77,10 @@ public class RoomController {
         return modelAndView;
     }
 
+    /**
+     * Shows one specific room for logged user
+     * @return /logged/room page with information about one specific room
+     */
     @GetMapping("/logged/rooms/{id}")
     public ModelAndView getRoomAsLogged(@PathVariable(value = "id") String roomNumber) {
         ModelAndView modelAndView = new ModelAndView();
@@ -76,6 +95,10 @@ public class RoomController {
         return modelAndView;
     }
 
+    /**
+     * Deletes one specific room
+     * @return /logged/rooms page with message about deletion result
+     */
     @GetMapping("/logged/rooms/{id}/delete")
     public ModelAndView deleteRoomAsLogged(@PathVariable(value = "id") String roomNumber) {
         ModelAndView modelAndView = new ModelAndView();
@@ -101,6 +124,10 @@ public class RoomController {
         return modelAndView;
     }
 
+    /**
+     * Shows form for new room creation
+     * @return /logged/new_room page with form to set number of rows and columns of room
+     */
     @GetMapping("/logged/rooms/new_room")
     public ModelAndView getNewRoomPage() {
         ModelAndView modelAndView = new ModelAndView();
@@ -109,6 +136,10 @@ public class RoomController {
         return modelAndView;
     }
 
+    /**
+     * Gets and processes the request for generating room structure
+     * @return /logged/new_room page with second form to define room structure
+     */
     @PostMapping("/logged/rooms/new_room")
     public ModelAndView generateRoom(Room room, BindingResult bindingResult, ModelMap modelMap) {
         ModelAndView modelAndView = new ModelAndView();
@@ -130,6 +161,10 @@ public class RoomController {
         return modelAndView;
     }
 
+    /**
+     * Gets and processes the request for new room creation
+     * @return /logged/rooms page with list of all rooms in database
+     */
     @PostMapping("/logged/rooms/new_room/create")
     public ModelAndView createNewRoom(@Valid BlocksDto blocks, BindingResult bindingResult, ModelMap modelMap) {
         ModelAndView modelAndView = new ModelAndView();
@@ -159,6 +194,10 @@ public class RoomController {
         return modelAndView;
     }
 
+    /**
+     * Shows form for room editing
+     * @return /logged/edit_room page with form to edit number of rows and columns of room and redefine room structure
+     */
     @GetMapping("/logged/rooms/{id}/edit")
     public ModelAndView getEditPage(@PathVariable(value = "id") String name) {
         ModelAndView modelAndView = new ModelAndView();
@@ -179,6 +218,10 @@ public class RoomController {
         return modelAndView;
     }
 
+    /**
+     * Gets and processes the request for changing room size
+     * @return /logged/edit_room page with form to edit number of rows and columns of room and redefine room structure
+     */
     @PostMapping("/logged/rooms/{id}/edit")
     public ModelAndView editRoom(@PathVariable(value = "id") String name, Room room, BindingResult bindingResult, ModelMap modelMap) {
         ModelAndView modelAndView = new ModelAndView();
@@ -205,6 +248,10 @@ public class RoomController {
         return modelAndView;
     }
 
+    /**
+     * Gets and processes the request for room editing
+     * @return /logged/rooms page with list of all rooms in database
+     */
     @PostMapping("/logged/rooms/{id}/edit/update")
     public ModelAndView updateRoom(@PathVariable(value = "id") String name, @Valid BlocksDto blocks, BindingResult bindingResult, ModelMap modelMap) {
         ModelAndView modelAndView = new ModelAndView();

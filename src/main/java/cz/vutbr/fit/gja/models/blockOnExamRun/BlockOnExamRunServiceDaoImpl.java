@@ -75,6 +75,10 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
         return seating;
     }
 
+    @Override
+    public List<ExamRun> getAllStudentExams(String login) {
+        return blockOnExamRunRepository.getAllStudentExams(login);
+    }
 
     private OccupiedSeats saveBlocksInRowOnExamRun(ExamRun examRun, LinkedList<Student> students, int spacing, List<Block> blocksInRow, int seatCounter, int i, boolean goRight, boolean firstFlag, ArrayList<Integer> patternForSeat, OccupiedSeats oldOccupiedSeats) {
         OccupiedSeats occupiedSeats = new OccupiedSeats(false, false, seatCounter, false, new ArrayList<>());

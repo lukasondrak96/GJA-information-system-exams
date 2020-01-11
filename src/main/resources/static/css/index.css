@@ -60,6 +60,7 @@ body {
 .block-btn-wrapper input[type="checkbox"] + label {
     margin: 0;
     user-select: none;
+    vertical-align: top;
 }
 
 .block-btn-wrapper input[type="checkbox"] + label span {
@@ -180,6 +181,10 @@ body {
 
 .seat-color {
     background-color: #A9A9A9;
+}
+
+.student-seat-color, #student-seat-color {
+    background-color: #00FF2B;
 }
 
 .my-table-room {
