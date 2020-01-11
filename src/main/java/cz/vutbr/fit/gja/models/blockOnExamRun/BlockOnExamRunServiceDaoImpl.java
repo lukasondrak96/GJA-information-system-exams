@@ -22,7 +22,7 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
     BlockOnExamRunRepository blockOnExamRunRepository;
 
     @Override
-    public int createAndSaveBlocksOnExamRun(ExamRun examRun, LinkedList<Student> students, int spacing) {
+    public LinkedList<Student> createAndSaveBlocksOnExamRun(ExamRun examRun, LinkedList<Student> students, int spacing) {
         Room room = examRun.getRoomReference();
         List<List<Block>> blocksInRoom = new ArrayList<>();
 
@@ -52,7 +52,7 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
             }
             goRight = !goRight;
         }
-        return seatCounter;
+        return students;
     }
 
     @Override

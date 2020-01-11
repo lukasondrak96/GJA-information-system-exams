@@ -59,8 +59,6 @@ public class ExamController {
     private int namePos;
     private List<String> rows;
     private LinkedList<Student> students = new LinkedList<>();
-
-    private static final String CSV_FILE = "application/vnd.ms-excel";
     private int studentsWithoutSeat;
 
     @GetMapping("/exams")
@@ -155,7 +153,7 @@ public class ExamController {
     }
 
     @PostMapping("/logged/exams/new_exam_2")
-    public ModelAndView createNewExamSecondPart(@Valid ExamRunDto examRunDto, @Valid NewExamSecondPartDto newExamSecondPartDto) throws ParseException {
+    public ModelAndView createNewExamSecondPart(@Valid ExamRunDto examRunDto, @Valid NewExamSecondPartDto newExamSecondPartDto) {
         ModelAndView modelAndView = new ModelAndView();
         Exam exam = examRunDto.getExam();
         exam.setSpacingBetweenStudents(this.spacing);
@@ -170,8 +168,12 @@ public class ExamController {
 
         // exam cannot take place in past
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = formatter.parse(run.getExamDate());
-        if (date.before(Calendar.getInstance().getTime())) {
+        Date date = null;
+        try {
+            date = formatter.parse(run.getExamDate());
+        } catch (ParseException e) {
+            return showFormAgainWithErrorMessage(modelAndView, examRunDto, "Parsování se nezdařilo, zkuste znovu!");
+        }        if (date.before(Calendar.getInstance().getTime())) {
             return showFormAgainWithErrorMessage(modelAndView, examRunDto, "Zkoušku nelze vytvořit v minulosti!");
         }
 
@@ -196,21 +198,18 @@ public class ExamController {
         run.setExamReference(examFromDb);
         examRunServiceDao.saveExamRunToDatabase(run);
 
-        int studentsWithSeat = blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
+        this.students = blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
 
-        // Too many students, user needs to do another exam run
-        if(studentsWithSeat < rows.size()) {
-            ModelAndView newExamModelAndView = new ModelAndView();
-            newExamModelAndView.setViewName("pages/logged/new_run");
+        // Too many students, user should add another exam run
+        if(this.students.size() != 0) {
+            ModelAndView newRunModelAndView = new ModelAndView();
+            newRunModelAndView.setViewName("pages/logged/new_run");
 
-            studentsWithoutSeat = rows.size() - studentsWithSeat;
-            newExamModelAndView.addObject("new_run_dto", createNewRunDto(exam, rows.size() - studentsWithSeat));
-            ExamRunDto newRun = new ExamRunDto();
-            newRun.setExamRun(new ExamRun());
-            newRun.setExam(exam);
-            newRun.setNumberOfStudents(0);
-            newExamModelAndView.addObject("form_new_exam_run_dto", newRun);
-            return newExamModelAndView;
+            ExamRunDto newRun = new ExamRunDto(new ExamRun(), exam, this.students.size());
+            newRun.getExamRun().setExamReference(exam);
+            newRun = addRoomsInfoToExamRunDto(newRun);
+            newRunModelAndView.addObject("form_new_exam_run_dto", newRun);
+            return newRunModelAndView;
         }
 
         modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
@@ -219,47 +218,65 @@ public class ExamController {
     }
 
     @PostMapping("/logged/exams/new_run")
-    public ModelAndView createNewExamRunOfExam(ExamRunDto examRunDto) {
-        //todo
+    public ModelAndView createNewExamRunOfExam(@Valid ExamRunDto examRunDto) {
         ModelAndView modelAndView = new ModelAndView();
-        ExamRun run = examRunDto.getExamRun();
         Exam exam = examRunDto.getExam();
+        ExamRun run = examRunDto.getExamRun();
 
-
-        int studentsWithSeat = saveExamRunToDb(run, exam);
-
-
-        /*
-         * Too many students, user needs to do another exam run.
-         */
-        // todo
-        if(studentsWithSeat < rows.size()) {
-            ModelAndView newExamModelAndView = new ModelAndView();
-            newExamModelAndView.setViewName("pages/logged/new_run");
-            studentsWithoutSeat -= studentsWithSeat;
-            newExamModelAndView.addObject("new_run_dto", createNewRunDto(exam, studentsWithoutSeat - studentsWithSeat));
-            ExamRunDto newRun = new ExamRunDto();
-            newRun.setExamRun(new ExamRun());
-            newRun.setExam(exam);
-            newRun.setNumberOfStudents(0);
-            newExamModelAndView.addObject("form_new_exam_run_dto", newRun);
-            return newExamModelAndView;
+        //handle
+        // exam start must be earlier than exam end
+        LocalTime start = LocalTime.parse(run.getStartTime());
+        LocalTime end = LocalTime.parse(run.getEndTime());
+        if(start.compareTo(end) >= 0) {
+            return showNewRunFormAgainWithErrorMessage(modelAndView, examRunDto, "Počáteční čas zkoušky musí být dříve než koncový!");
         }
 
-        return modelAndView;
-    }
+        // exam cannot take place in past
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = formatter.parse(run.getExamDate());
+        } catch (ParseException e) {
+            return showNewRunFormAgainWithErrorMessage(modelAndView, examRunDto, "Parsování se nezdařilo, zkuste znovu!");
+        }
+        if (date.before(Calendar.getInstance().getTime())) {
+            return showNewRunFormAgainWithErrorMessage(modelAndView, examRunDto, "Zkoušku nelze vytvořit v minulosti!");
+        }
 
-    private int saveExamRunToDb(ExamRun run, Exam exam) {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Teacher roomCreator = teacherServiceDao.getTeacher(userEmail);
-        exam.setExamCreator(roomCreator);
+        // exam must take place in selected academic year
+        String[] yearParts = exam.getAcademicYear().split("/");
+        String examYear = run.getExamDate().split("-")[0];
+        String examMonth = run.getExamDate().split("-")[1];
 
-        Exam examFromDb = examServiceDao.saveExamToDatabase(exam);
+        if(!((examYear.equals(yearParts[0]) && Integer.parseInt(examMonth) >= 9 ) || (examYear.equals(yearParts[1]) && Integer.parseInt(examMonth) < 9 ))) {
+            return showNewRunFormAgainWithErrorMessage(modelAndView, examRunDto, "Datum zkoušky musí odpovídat akademickému roku!");
+        }
 
-        run.setExamReference(examFromDb);
+        if(examRunServiceDao.getNumberOfExamRunsInCollision(run.getRoomReference(), run.getExamDate(), run.getStartTime(), run.getEndTime()) > 0) {
+            return showNewRunFormAgainWithErrorMessage(modelAndView, examRunDto, "V tento čas už v této místnosti probíhá jiná zkouška");
+        }
 
+        run.setExamReference(exam);
         examRunServiceDao.saveExamRunToDatabase(run);
-        return blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
+
+        this.students = blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
+
+        // Too many students, user should add another exam run
+        if(this.students.size() != 0) {
+            ModelAndView newRunModelAndView = new ModelAndView();
+            newRunModelAndView.setViewName("pages/logged/new_run");
+
+            ExamRunDto newRun = new ExamRunDto(new ExamRun(), exam, this.students.size());
+            newRun.getExamRun().setExamReference(exam);
+            newRun = addRoomsInfoToExamRunDto(newRun);
+            newRunModelAndView.addObject("form_new_exam_run_dto", newRun);
+            return newRunModelAndView;
+        }
+
+
+        modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
+        modelAndView.setViewName("pages/logged/exams");
+        return modelAndView;
     }
 
     @GetMapping("/exams/{id}")
@@ -299,10 +316,21 @@ public class ExamController {
             modelAndView.addObject("message", "Zadejte správné pozice loginu a jména.");
             return modelAndView;
         }
+        examRunDto = addRoomsInfoToExamRunDto(examRunDto);
+        examRunDto.setStudentsWithoutPlace(this.students.size());
 
         modelAndView.addObject("message", message);
         modelAndView.addObject("exam_run_dto", examRunDto);
         modelAndView.setViewName("pages/logged/new_exam_2");
+        return modelAndView;
+    }
+
+    private ModelAndView showNewRunFormAgainWithErrorMessage(ModelAndView modelAndView, ExamRunDto examRunDto, String message) {
+        examRunDto = addRoomsInfoToExamRunDto(examRunDto);
+
+        modelAndView.addObject("message", message);
+        modelAndView.addObject("form_new_exam_run_dto", examRunDto);
+        modelAndView.setViewName("pages/logged/new_run");
         return modelAndView;
     }
 
@@ -344,7 +372,7 @@ public class ExamController {
 
 
     private ExamRunDto createExamRunDto() {
-        return new ExamRunDto(this.students.size(), new ExamRun(), new Exam());
+        return new ExamRunDto(new ExamRun(), new Exam(), this.students.size());
     }
 
     private NewExamSecondPartDto createNewExamSecondPartDto(String spacing) {
@@ -388,12 +416,14 @@ public class ExamController {
         return new NewExamSecondPartDto(rooms, AcademicYearDto.getOptionsForAcademicYear(), numberOfSeatsInRooms);
     }
 
-    private NewRunDto createNewRunDto(Exam exam, int studentsWithoutPlace) {
+    private ExamRunDto addRoomsInfoToExamRunDto(ExamRunDto dto) {
         List<Room> rooms = roomServiceDao.getAllRoomsFromDatabase();
         List<Long> numberOfSeatsInRooms = new ArrayList<>();
         for (Room room : rooms) {
             numberOfSeatsInRooms.add(blockServiceDao.getNumberOfSeats(room));
         }
-        return new NewRunDto(new ExamRun(), exam, rooms, numberOfSeatsInRooms, studentsWithoutPlace);
+        dto.setRooms(rooms);
+        dto.setNumberOfSeatsInRooms(numberOfSeatsInRooms);
+        return dto;
     }
 }

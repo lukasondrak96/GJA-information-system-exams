@@ -14,6 +14,12 @@ import java.util.List;
  * This class is used to parse csv file and create list of students from it
  */
 public class CsvParser {
+
+    /**
+     * format of csv file
+     */
+    private static final String CSV_FILE = "application/vnd.ms-excel";
+
     /**
      * Parses csv file given on input and create list of students from it
      * @param file Input CSV file
@@ -23,7 +29,7 @@ public class CsvParser {
      */
     public static List<String> getListOfCsvFile(MultipartFile file) throws FileUploadException, IOException {
         String type = file.getContentType();
-        if (!type.equals("application/vnd.ms-excel")) {
+        if (!type.equals(CSV_FILE)) {
             throw new FileUploadException();
         }
 

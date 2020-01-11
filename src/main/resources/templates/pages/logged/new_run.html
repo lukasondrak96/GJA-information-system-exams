@@ -14,16 +14,16 @@
             <h3 class="form-signin-heading">Vytvořit nový běh zkoušky</h3>
 
             <div class="form-group room-form-cell">
-                <span th:text="'Počet studentů bez místa: ' + ${new_run_dto.studentsWithoutPlace}"></span>
+                <span th:text="'Počet studentů bez místa: ' + *{studentsWithoutPlace}"></span>
             </div>
 
             <div class="form-group room-form-cell">
                 <label>Místnost:</label>
                 <div class="update-placeholder">
                     <select form="new_run" th:field="*{examRun.roomReference}">
-                        <option th:each="room, iterStat: ${new_run_dto.roomsInDb}"
+                        <option th:each="room, iterStat: ${form_new_exam_run_dto.rooms}"
                                 th:value="${room.idRoom}"
-                                th:text="${room.roomNumber} + ' (' + ${new_run_dto.numberOfSeatsInRooms[iterStat.index]} + ')'">
+                                th:text="${room.roomNumber} + ' (' + ${form_new_exam_run_dto.numberOfSeatsInRooms[iterStat.index]} + ')'">
                         </option>
                     </select>
                 </div>
@@ -31,19 +31,19 @@
             <div class="form-group room-form-cell">
                 <label>Datum zkoušky:</label>
                 <div class="update-placeholder">
-                    <input type="date" th:field="*{examRun.examDate}" class="form-control"/>
+                    <input type="date" required th:field="*{examRun.examDate}" class="form-control"/>
                 </div>
             </div>
             <div class="form-group room-form-cell">
                 <label>Začátek zkoušky:</label>
                 <div class="update-placeholder">
-                    <input type="time" th:field="*{examRun.startTime}" class="form-control"/>
+                    <input type="time" required th:field="*{examRun.startTime}" class="form-control"/>
                 </div>
             </div>
             <div class="form-group room-form-cell">
                 <label>Konec zkoušky:</label>
                 <div class="update-placeholder">
-                    <input type="time" th:field="*{examRun.endTime}" class="form-control"/>
+                    <input type="time" required th:field="*{examRun.endTime}" class="form-control"/>
                 </div>
             </div>
 
@@ -58,6 +58,8 @@
             <div class="col-sm-12 alert alert-danger" th:if="${message != null}">
                 <span th:utext="${message}"></span>
             </div>
+            <input type="hidden" th:field="*{studentsWithoutPlace}">
+            <input type="hidden" th:field="*{exam}">
         </form>
     </div>
 </div>

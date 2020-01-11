@@ -31,17 +31,11 @@ public class NewRunDto {
      */
     private List<Long> numberOfSeatsInRooms;
 
-    /**
-     * Number of students without place
-     */
-    private int studentsWithoutPlace;
-
-    public NewRunDto(ExamRun examRun, Exam exam, List<Room> roomsInDb, List<Long> numberOfSeatsInRooms, int studentsWithoutPlace) {
+    public NewRunDto(ExamRun examRun, Exam exam, List<Room> roomsInDb, List<Long> numberOfSeatsInRooms) {
         this.examRun = examRun;
         this.exam = exam;
         this.roomsInDb = roomsInDb;
         this.numberOfSeatsInRooms = numberOfSeatsInRooms;
-        this.studentsWithoutPlace = studentsWithoutPlace;
     }
 
     public ExamRun getExamRun() {
@@ -74,13 +68,5 @@ public class NewRunDto {
 
     public void setNumberOfSeatsInRooms(ArrayList<Long> numberOfSeatsInRooms) {
         this.numberOfSeatsInRooms = numberOfSeatsInRooms;
-    }
-
-    public int getStudentsWithoutPlace() {
-        return studentsWithoutPlace;
-    }
-
-    public void setStudentsWithoutPlace(int studentsWithoutPlace) {
-        this.studentsWithoutPlace = studentsWithoutPlace;
     }
 }
