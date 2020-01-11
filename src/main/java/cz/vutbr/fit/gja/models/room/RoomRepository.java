@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 
 /**
- * Repository class of Room
+ * This class encapsulates all methods for the Room entity that communicates with the database
  */
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Integer> {

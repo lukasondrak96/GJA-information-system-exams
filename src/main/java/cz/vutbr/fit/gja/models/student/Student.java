@@ -38,8 +38,8 @@ public class Student implements Comparable<Student> {
     /**
      * Creates a new Student
      *
-     * @param login Login of student
-     * @param nameWithDegrees Name of student
+     * @param login Student login
+     * @param nameWithDegrees Student name (inc. degrees)
      */
     public Student(@NotNull(message = "Login je u studenta povinný") String login, String nameWithDegrees) {
         this.login = login;
