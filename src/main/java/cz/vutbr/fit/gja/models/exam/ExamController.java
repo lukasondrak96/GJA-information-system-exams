@@ -75,6 +75,12 @@ public class ExamController {
                 modelAndView.addObject("message", "Student s tímto loginem se nevyskytuje na žádné zkoušce");
             } else {
                 modelAndView.addObject("listOfExams", studentExams);
+                for (ExamRun run : studentExams) {
+                    String date = run.getExamDate();
+                    String[] split = date.split("-");
+                    date = split[2] + ". " + split[1] + ". " + split[0];
+                    run.setExamDate(date);
+                }
             }
             modelAndView.addObject("student_login", login);
         }
@@ -238,6 +244,12 @@ public class ExamController {
             if (student == null) {
                 return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Student s loginem '" + login + "' neexistuje");
             }
+            for (ExamRunForSeatingDto run : examDto.getExamRuns()) {
+                String date = run.getDate();
+                String[] split = date.split("-");
+                date = split[2] + ". " + split[1] + ". " + split[0];
+                run.setDate(date);
+            }
 //        // todo remove unnecessary exam runs
 //        List<ExamRunForSeatingDto> examRuns = examDto.getExamRuns();
 //        for(ExamRunForSeatingDto examRunForSeatingDto: examRuns) {
@@ -268,6 +280,12 @@ public class ExamController {
             return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
         }
         ExamDto examDto = examServiceDao.getExamDto(exam);
+        for (ExamRunForSeatingDto run : examDto.getExamRuns()) {
+            String date = run.getDate();
+            String[] split = date.split("-");
+            date = split[2] + ". " + split[1] + ". " + split[0];
+            run.setDate(date);
+        }
 
         modelAndView.addObject("exam_dto", examDto);
         modelAndView.setViewName("pages/logged/seating");
@@ -330,6 +348,12 @@ public class ExamController {
         List<Exam> allExamsFromDatabase = examServiceDao.getAllExamsFromDatabase();
         for (Exam exam : allExamsFromDatabase) {
             List<ExamRun> examRuns = examRunServiceDao.getAllExamRunsByExam(exam);
+            for (ExamRun run : examRuns) {
+                String date = run.getExamDate();
+                String[] split = date.split("-");
+                date = split[2] + ". " + split[1] + ". " + split[0];
+                run.setExamDate(date);
+            }
             listDto.add(new ExamsDto(exam, examRuns));
         }
         examRunServiceDao.getAllExamRunsFromDatabase();
