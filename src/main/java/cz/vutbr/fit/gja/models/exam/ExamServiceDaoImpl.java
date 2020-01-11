@@ -44,7 +44,7 @@ public class ExamServiceDaoImpl implements ExamServiceDao {
 
     @Override
     public List<Exam> getAllExamsFromDatabase() {
-        return examRepository.findAll();
+        return examRepository.findAllByOrderByAcademicYearAscExamNameAsc();
     }
 
     @Override

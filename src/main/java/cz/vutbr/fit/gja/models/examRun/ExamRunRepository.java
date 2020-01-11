@@ -26,7 +26,7 @@ public interface ExamRunRepository extends JpaRepository<ExamRun, Integer> {
      * @param exam Exam
      * @return All exam runs of the exam
      */
-    List<ExamRun> findAllByExamReference(Exam exam);
+    List<ExamRun> findAllByExamReferenceOrderByExamDateAscStartTimeAscEndTimeAsc(Exam exam);
 
     /**
      * Gets all exam runs which take place in given room

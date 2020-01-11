@@ -399,7 +399,6 @@ public class ExamController {
             }
             listDto.add(new ExamsDto(exam, examRuns));
         }
-        examRunServiceDao.getAllExamRunsFromDatabase();
         return listDto;
     }
 

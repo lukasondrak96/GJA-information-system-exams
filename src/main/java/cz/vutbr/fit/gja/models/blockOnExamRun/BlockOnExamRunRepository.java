@@ -24,6 +24,6 @@ public interface BlockOnExamRunRepository extends JpaRepository<BlockOnExamRun, 
      * @param studentLogin Login of searched student
      * @return Exam runs in which the student is present
      */
-    @Query("select er from BlockOnExamRun b join b.examRunReference er join b.studentReference s where s.login = ?1")
+    @Query("select er from BlockOnExamRun b join b.examRunReference er join b.studentReference s where s.login = ?1 order by er.examDate asc, er.startTime asc")
     List<ExamRun> getAllStudentExams(String studentLogin);
 }

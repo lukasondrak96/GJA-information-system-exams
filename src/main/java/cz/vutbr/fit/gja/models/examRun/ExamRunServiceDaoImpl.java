@@ -41,7 +41,7 @@ public class ExamRunServiceDaoImpl implements ExamRunServiceDao {
 
     @Override
     public List<ExamRun> getAllExamRunsByExam(Exam exam) {
-        return examRunRepository.findAllByExamReference(exam);
+        return examRunRepository.findAllByExamReferenceOrderByExamDateAscStartTimeAscEndTimeAsc(exam);
     }
 
     @Override
