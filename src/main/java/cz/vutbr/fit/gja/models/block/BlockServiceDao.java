@@ -6,6 +6,9 @@ import cz.vutbr.fit.gja.models.room.Room;
 
 import java.util.List;
 
+/**
+ * This class encapsulates all methods for the Block entity
+ */
 public interface BlockServiceDao {
     /**
      * Saves blocks to database

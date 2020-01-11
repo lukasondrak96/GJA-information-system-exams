@@ -18,6 +18,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 
+/**
+ * This class encapsulates all methods that handle incoming room requests and send responses
+ */
 @Controller
 public class RoomController {
     @Autowired

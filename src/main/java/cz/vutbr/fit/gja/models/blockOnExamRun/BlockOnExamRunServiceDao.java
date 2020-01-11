@@ -6,6 +6,9 @@ import cz.vutbr.fit.gja.models.student.Student;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * This class encapsulates all methods for the BlockOnExamRun entity
+ */
 public interface BlockOnExamRunServiceDao {
     /**
      * Creates seating plan on exam run
