@@ -63,28 +63,23 @@ public class ExamController {
     private static final String CSV_FILE = "application/vnd.ms-excel";
 
     @GetMapping("/exams")
-    public ModelAndView getExams() {
+    public ModelAndView getExams(@RequestParam(required = false, name = "login") String login) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("pages/exams");
-        return modelAndView;
-    }
-
-    @PostMapping("/exams")
-    public ModelAndView getLoginFromForm(@RequestParam String login) {
-        ModelAndView modelAndView = new ModelAndView();
-        Student student = studentServiceDao.getStudentByLogin(login);
-        if (student == null) {
-            modelAndView.addObject("message", "Zadaný login neexistuje.");
-            modelAndView.setViewName("pages/exams");
-            return modelAndView;
+        if(login != null) {
+            Student student = studentServiceDao.getStudentByLogin(login);
+            if (student == null) {
+                modelAndView.addObject("message", "Zadaný login neexistuje.");
+                modelAndView.setViewName("pages/exams");
+                return modelAndView;
+            }
+            List<ExamRun> studentExams = blockOnExamRunServiceDao.getAllStudentExams(login);
+            if (studentExams.isEmpty()) {
+                modelAndView.addObject("message", "Student s tímto loginem se nevyskytuje na žádné zkoušce");
+            } else {
+                modelAndView.addObject("listOfExams", studentExams);
+            }
+            modelAndView.addObject("student_login", login);
         }
-        List<ExamRun> studentExams = blockOnExamRunServiceDao.getAllStudentExams(login);
-        if(studentExams.isEmpty()) {
-            modelAndView.addObject("message", "Student s tímto loginem se nevyskytuje na žádné zkoušce");
-        } else {
-            modelAndView.addObject("listOfExams", studentExams);
-        }
-        modelAndView.addObject("student_login", login);
         modelAndView.setViewName("pages/exams");
         return modelAndView;
     }
