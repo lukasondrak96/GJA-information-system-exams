@@ -21,7 +21,8 @@
                 <div class="card-header exams-card-header" th:text="${exam.examReference.academicYear} + ' - ' + ${exam.examReference.examName}"></div>
                 <div class="card-body">
                     <div class="font-weight-bold" th:text="${exam.roomReference.roomNumber}"></div>
-                    <div class="font-weight-bold" th:text="${exam.examDate} + ': ' + ${exam.startTime} + ' - ' + ${exam.endTime}"></div>
+                    <div class="font-weight-bold" th:text="${exam.examDate}"></div>
+                    <div class="font-weight-bold" th:text="${exam.startTime} + ' - ' + ${exam.endTime}"></div>
                 </div>
             </div>
         </a>
