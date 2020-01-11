@@ -20,14 +20,17 @@
                             <label class="row-number" th:text="${room.getNumberOfRows() - i}"></label>
                             <div class="block-btn-wrapper"
                                  th:each="j: ${#numbers.sequence(0, room.getNumberOfColumns() - 1)}">
-<!--                                <span th:class="tooltiptext"-->
-<!--                                      th:text="${exam_run.seating[__${i}__][__${j}__].studentReference != null}? ${exam_run.seating[__${i}__][__${j}__].studentReference.login}"></span>-->
+<!--/*                                <span th:class="tooltiptext" */-->
+<!--/*                                      th:text="${exam_run.seating[__${i}__][__${j}__].studentReference != null}? ${exam_run.seating[__${i}__][__${j}__].studentReference.login}"></span>*/-->
                                 <input disabled
                                        th:checked="${isSeatList[__${i}__][__${j}__]}"
                                        th:id="${room.getNumberOfRows() - i} + '_' + ${j + 1}"
                                        type="checkbox"/>
                                 <label th:for="${room.getNumberOfRows() - i} + '_' + ${j + 1}">
-                                    <span th:text="${exam_run.seating[__${i}__][__${j}__].getBlockNumber()}"
+                                    <span th:if="${exam_run.seating[__${i}__][__${j}__].studentReference == null}"
+                                          th:text="${exam_run.seating[__${i}__][__${j}__].getBlockNumber()}">&nbsp;</span>
+                                    <span th:if="${exam_run.seating[__${i}__][__${j}__].studentReference != null}"
+                                          th:text="${exam_run.seating[__${i}__][__${j}__].getBlockNumber()}"
                                           th:id="${student_login == exam_run.seating[__${i}__][__${j}__].studentReference.login ? 'student-seat-color' : ''}">&nbsp;</span>
                                 </label>
                             </div>

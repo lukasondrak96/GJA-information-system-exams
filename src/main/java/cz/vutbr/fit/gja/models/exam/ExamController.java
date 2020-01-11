@@ -60,8 +60,6 @@ public class ExamController {
     private List<String> rows;
     private LinkedList<Student> students = new LinkedList<>();
 
-    private static final String CSV_FILE = "application/vnd.ms-excel";
-
     @GetMapping("/exams")
     public ModelAndView getExams(@RequestParam(required = false, name = "login") String login) {
         ModelAndView modelAndView = new ModelAndView();
@@ -227,8 +225,13 @@ public class ExamController {
         try {
             exam = examServiceDao.getExam(Integer.parseInt(examId));
         } catch (NumberFormatException e) {
+            exam = null;
+        }
+
+        if(exam == null) {
             return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
         }
+
         ExamDto examDto = examServiceDao.getExamDto(exam);
         if(login != null) {
             Student student = studentServiceDao.getStudentByLogin(login);
