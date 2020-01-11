@@ -182,10 +182,9 @@ public class ExamController {
      * Gets and processes the request from form
      * @param examRunDto Information from form
      * @return /logged/exams page with all exams created by logged user
-     * @throws ParseException Exception while parsing CSV file
      */
     @PostMapping("/logged/exams/new_exam_2")
-    public ModelAndView createNewRoomHandleFile(@Valid ExamRunDto examRunDto) throws ParseException {
+    public ModelAndView createNewRoomHandleFile(@Valid ExamRunDto examRunDto) {
         ModelAndView modelAndView = new ModelAndView();
         Exam exam = examRunDto.getExam();
         exam.setSpacingBetweenStudents(this.spacing);
@@ -249,6 +248,11 @@ public class ExamController {
         return modelAndView;
     }
 
+    /**
+     * Gets and processes the request from form which creates new exam run
+     * @param examRunDto information from form
+     * @return /logged/exams page with all exams created by logged user
+     */
     @PostMapping("/logged/exams/new_run")
     public ModelAndView createNewExamRunOfExam(@Valid ExamRunDto examRunDto) {
         ModelAndView modelAndView = new ModelAndView();
