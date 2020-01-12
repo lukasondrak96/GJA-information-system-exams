@@ -237,20 +237,16 @@ public class ExamController {
         Exam examFromDb = examServiceDao.saveExamToDatabase(exam);
         run.setExamReference(examFromDb);
         examRunServiceDao.saveExamRunToDatabase(run);
+        BlockOnExamRunServiceDaoImpl.seatCounter = 0;
+        return saveBlocksOnRunAndReturnCorrectViewWithModel(modelAndView, exam, run, examFromDb);
+    }
 
+    private ModelAndView saveBlocksOnRunAndReturnCorrectViewWithModel(ModelAndView modelAndView, Exam exam, ExamRun run, Exam examFromDb) {
         this.students = blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
 
         // Too many students, user should add another exam run
-        if(this.students.size() != 0) {
-            ModelAndView newRunModelAndView = new ModelAndView();
-            newRunModelAndView.setViewName("pages/logged/new_run");
-
-            ExamRunDto newRun = new ExamRunDto(new ExamRun(), exam, this.students.size());
-            newRun.getExamRun().setExamReference(exam);
-            newRun = addRoomsInfoToExamRunDto(newRun);
-            newRunModelAndView.addObject("form_new_exam_run_dto", newRun);
-            return newRunModelAndView;
-        }
+        ModelAndView newRunModelAndView = checkIfMoreRunsNeeded(exam);
+        if (newRunModelAndView != null) return newRunModelAndView;
         examFromDb.setAllStudentsHaveSeat(true);
         examServiceDao.saveExamToDatabase(examFromDb);
 
@@ -307,10 +303,12 @@ public class ExamController {
         run.setExamReference(exam);
         examRunServiceDao.saveExamRunToDatabase(run);
 
-        this.students = blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
+        return saveBlocksOnRunAndReturnCorrectViewWithModel(modelAndView, exam, run, exam);
+    }
 
+    private ModelAndView checkIfMoreRunsNeeded(Exam exam) {
         // Too many students, user should add another exam run
-        if(this.students.size() != 0) {
+        if (this.students.size() != 0) {
             ModelAndView newRunModelAndView = new ModelAndView();
             newRunModelAndView.setViewName("pages/logged/new_run");
 
@@ -320,12 +318,7 @@ public class ExamController {
             newRunModelAndView.addObject("form_new_exam_run_dto", newRun);
             return newRunModelAndView;
         }
-
-        exam.setAllStudentsHaveSeat(true);
-        examServiceDao.saveExamToDatabase(exam);
-        modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
-        modelAndView.setViewName("pages/logged/exams");
-        return modelAndView;
+        return null;
     }
 
     /**
