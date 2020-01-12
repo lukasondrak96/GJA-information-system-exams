@@ -194,6 +194,10 @@ public class ExamController {
             return setModelAndView(modelAndView, "Pozice jména v souboru nesmí být stejná jako pozice loginu.", formValues);
         }
 
+        if (rows.size() == 0) {
+            return setModelAndView(modelAndView, "Prosím vyberte soubor ve formátu csv, ve kterém je alespoň jeden student!", formValues);
+        }
+
         try {
             modelAndView.addObject("new_exam_second_part_dto", createNewExamSecondPartDto());
             this.spacing = examServiceDao.setSpacingOfExam(formValues.getSpacing());
