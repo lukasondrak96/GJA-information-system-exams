@@ -30,14 +30,6 @@ public interface ExamRunServiceDao {
     void saveExamRunToDatabase(ExamRun examRun);
 
     /**
-     * Deletes exam run identified by given ID
-     * @param examRunId Exam run ID
-     * @return Number of deleted exam runs
-     * @throws IllegalAccessError Error while deleting exam run
-     */
-    long deleteExamRun(int examRunId) throws IllegalAccessError;
-
-    /**
      * Gets all exam runs which are related to given exam
      * @param exam Exam
      * @return All exam runs which are related to given exam

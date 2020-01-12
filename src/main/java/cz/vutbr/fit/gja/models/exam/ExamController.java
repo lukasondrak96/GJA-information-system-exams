@@ -13,7 +13,6 @@ import cz.vutbr.fit.gja.models.student.Student;
 import cz.vutbr.fit.gja.models.student.StudentServiceDao;
 import cz.vutbr.fit.gja.models.teacher.Teacher;
 import cz.vutbr.fit.gja.models.teacher.TeacherServiceDaoImpl;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -62,7 +61,6 @@ public class ExamController {
     private int namePos;
     private List<String> rows;
     private LinkedList<Student> students = new LinkedList<>();
-    private int studentsWithoutSeat;
 
     /**
      * Shows all students exams for normal user
@@ -208,7 +206,7 @@ public class ExamController {
 
         // exam cannot take place in past
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = null;
+        Date date;
         try {
             date = formatter.parse(run.getExamDate());
         } catch (ParseException e) {
@@ -235,29 +233,8 @@ public class ExamController {
         Teacher roomCreator = teacherServiceDao.getTeacher(userEmail);
         exam.setExamCreator(roomCreator);
         Exam examFromDb = examServiceDao.saveExamToDatabase(exam);
-        run.setExamReference(examFromDb);
-        examRunServiceDao.saveExamRunToDatabase(run);
 
-        this.students = blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
-
-        // Too many students, user should add another exam run
-        if(this.students.size() != 0) {
-            ModelAndView newRunModelAndView = new ModelAndView();
-            newRunModelAndView.setViewName("pages/logged/new_run");
-
-            ExamRunDto newRun = new ExamRunDto(new ExamRun(), exam, this.students.size());
-            newRun.getExamRun().setExamReference(exam);
-            newRun = addRoomsInfoToExamRunDto(newRun);
-            newRunModelAndView.addObject("form_new_exam_run_dto", newRun);
-            return newRunModelAndView;
-        }
-        examFromDb.setAllStudentsHaveSeat(true);
-        examServiceDao.saveExamToDatabase(examFromDb);
-
-
-        modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
-        modelAndView.setViewName("pages/logged/exams");
-        return modelAndView;
+        return saveExamRunToDatabase(modelAndView, examFromDb, run);
     }
 
     /**
@@ -304,28 +281,7 @@ public class ExamController {
             return showNewRunFormAgainWithErrorMessage(modelAndView, examRunDto, "V tento čas už v této místnosti probíhá jiná zkouška");
         }
 
-        run.setExamReference(exam);
-        examRunServiceDao.saveExamRunToDatabase(run);
-
-        this.students = blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
-
-        // Too many students, user should add another exam run
-        if(this.students.size() != 0) {
-            ModelAndView newRunModelAndView = new ModelAndView();
-            newRunModelAndView.setViewName("pages/logged/new_run");
-
-            ExamRunDto newRun = new ExamRunDto(new ExamRun(), exam, this.students.size());
-            newRun.getExamRun().setExamReference(exam);
-            newRun = addRoomsInfoToExamRunDto(newRun);
-            newRunModelAndView.addObject("form_new_exam_run_dto", newRun);
-            return newRunModelAndView;
-        }
-
-        exam.setAllStudentsHaveSeat(true);
-        examServiceDao.saveExamToDatabase(exam);
-        modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
-        modelAndView.setViewName("pages/logged/exams");
-        return modelAndView;
+        return saveExamRunToDatabase(modelAndView, exam, run);
     }
 
     /**
@@ -355,6 +311,8 @@ public class ExamController {
                 return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Student s loginem '" + login + "' neexistuje");
             }
             setExamDatesToExamRunsInSeatingDto(examDto);
+        } else {
+            return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Pro zobrazení zkoušky zadejte login hledaného studenta");
         }
 
         modelAndView.addObject("student_login", login);
@@ -420,6 +378,31 @@ public class ExamController {
             modelAndView.addObject("successMessage", "Zkouška s číslem\"" + examId + "\" byla úspěšně odstraněna.");
             modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
         }
+        return modelAndView;
+    }
+
+    private ModelAndView saveExamRunToDatabase(ModelAndView modelAndView, Exam exam, ExamRun run) {
+        run.setExamReference(exam);
+        examRunServiceDao.saveExamRunToDatabase(run);
+
+        this.students = blockOnExamRunServiceDao.createAndSaveBlocksOnExamRun(run, this.students, this.spacing);
+
+        // Too many students, user should add another exam run
+        if(this.students.size() != 0) {
+            ModelAndView newRunModelAndView = new ModelAndView();
+            newRunModelAndView.setViewName("pages/logged/new_run");
+
+            ExamRunDto newRun = new ExamRunDto(new ExamRun(), exam, this.students.size());
+            newRun.getExamRun().setExamReference(exam);
+            newRun = addRoomsInfoToExamRunDto(newRun);
+            newRunModelAndView.addObject("form_new_exam_run_dto", newRun);
+            return newRunModelAndView;
+        }
+
+        exam.setAllStudentsHaveSeat(true);
+        examServiceDao.saveExamToDatabase(exam);
+        modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
+        modelAndView.setViewName("pages/logged/exams");
         return modelAndView;
     }
 

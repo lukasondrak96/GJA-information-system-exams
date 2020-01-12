@@ -2,7 +2,6 @@ package cz.vutbr.fit.gja.models.examRun;
 
 import cz.vutbr.fit.gja.models.exam.Exam;
 import cz.vutbr.fit.gja.models.room.Room;
-import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -31,12 +30,6 @@ public class ExamRunServiceDaoImpl implements ExamRunServiceDao {
     @Override
     public void saveExamRunToDatabase(ExamRun examRun) {
         examRunRepository.save(examRun);
-    }
-
-    @Override
-    public long deleteExamRun(int examRunId) throws IllegalAccessError {
-        //todo
-        throw new NotYetImplementedException();
     }
 
     @Override
