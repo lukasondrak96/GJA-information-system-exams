@@ -72,6 +72,15 @@ public class ExamController {
     @GetMapping("/exams")
     public ModelAndView getExams(@RequestParam(required = false, name = "login") String login) {
         ModelAndView modelAndView = new ModelAndView();
+        List<Exam> allExamsFromDatabase = examServiceDao.getAllExamsFromDatabase();
+        for (Exam exam : allExamsFromDatabase) {
+            if (!exam.isAllStudentsHaveSeat()) {
+                try {
+                    examServiceDao.deleteExam(exam.getIdExam());
+                } catch (Exception e) {
+                }
+            }
+        }
         if(login != null) {
             Student student = studentServiceDao.getStudentByLogin(login);
             if (student == null) {
@@ -86,8 +95,10 @@ public class ExamController {
                 modelAndView.addObject("listOfExams", studentExams);
                 for (ExamRun run : studentExams) {
                     String date = run.getExamDate();
-                    String[] split = date.split("-");
-                    date = split[2] + "." + split[1] + "." + split[0];
+                    if(date.contains("-")) {
+                        String[] split = date.split("-");
+                        date = split[2] + "." + split[1] + "." + split[0];
+                    }
                     run.setExamDate(date);
                 }
             }
@@ -242,6 +253,9 @@ public class ExamController {
             newRunModelAndView.addObject("form_new_exam_run_dto", newRun);
             return newRunModelAndView;
         }
+        examFromDb.setAllStudentsHaveSeat(true);
+        examServiceDao.saveExamToDatabase(examFromDb);
+
 
         modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
         modelAndView.setViewName("pages/logged/exams");
@@ -309,7 +323,8 @@ public class ExamController {
             return newRunModelAndView;
         }
 
-
+        exam.setAllStudentsHaveSeat(true);
+        examServiceDao.saveExamToDatabase(exam);
         modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
         modelAndView.setViewName("pages/logged/exams");
         return modelAndView;
@@ -343,8 +358,10 @@ public class ExamController {
             }
             for (ExamRunForSeatingDto run : examDto.getExamRuns()) {
                 String date = run.getDate();
-                String[] split = date.split("-");
-                date = split[2] + "." + split[1] + "." + split[0];
+                if(date.contains("-")) {
+                    String[] split = date.split("-");
+                    date = split[2] + "." + split[1] + "." + split[0];
+                }
                 run.setDate(date);
             }
         }
@@ -373,8 +390,10 @@ public class ExamController {
         ExamDto examDto = examServiceDao.getExamDto(exam);
         for (ExamRunForSeatingDto run : examDto.getExamRuns()) {
             String date = run.getDate();
-            String[] split = date.split("-");
-            date = split[2] + "." + split[1] + "." + split[0];
+            if(date.contains("-")) {
+                String[] split = date.split("-");
+                date = split[2] + "." + split[1] + "." + split[0];
+            }
             run.setDate(date);
         }
 
@@ -434,24 +453,6 @@ public class ExamController {
         return modelAndView;
     }
 
-    private ModelAndView returnExamsPage(String examId, boolean logged) {
-        ModelAndView modelAndView = new ModelAndView();
-        Exam exam;
-        try {
-            exam = examServiceDao.getExam(Integer.parseInt(examId));
-        } catch (NumberFormatException e) {
-            return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
-        }
-        ExamDto examDto = examServiceDao.getExamDto(exam);
-        modelAndView.addObject("exam_dto", examDto);
-        if(logged) {
-            modelAndView.setViewName("pages/logged/seating");
-        } else {
-            modelAndView.setViewName("pages/seating");
-        }
-        return modelAndView;
-    }
-
     private ModelAndView setModelAndView(ModelAndView modelAndView, String message, NewExamFirstPartDto formValues) {
         formValues.setFile(null);
         modelAndView.addObject("message", message);
@@ -463,11 +464,22 @@ public class ExamController {
         List<ExamsDto> listDto = new ArrayList<>();
         List<Exam> allExamsFromDatabase = examServiceDao.getAllExamsFromDatabase();
         for (Exam exam : allExamsFromDatabase) {
+            if (!exam.isAllStudentsHaveSeat()) {
+                try {
+                    examServiceDao.deleteExam(exam.getIdExam());
+                } catch (Exception e) {
+                }
+            }
+        }
+
+        for (Exam exam : examServiceDao.getAllExamsFromDatabase()) {
             List<ExamRun> examRuns = examRunServiceDao.getAllExamRunsByExam(exam);
             for (ExamRun run : examRuns) {
                 String date = run.getExamDate();
-                String[] split = date.split("-");
-                date = split[2] + "." + split[1] + "." + split[0];
+                if(date.contains("-")) {
+                    String[] split = date.split("-");
+                    date = split[2] + "." + split[1] + "." + split[0];
+                }
                 run.setExamDate(date);
             }
             listDto.add(new ExamsDto(exam, examRuns));

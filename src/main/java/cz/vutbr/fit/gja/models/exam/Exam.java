@@ -62,9 +62,17 @@ public class Exam {
     private Teacher examCreator;
 
     /**
+     * A value that indicates whether all students have seat on exam
+     * true = all have seat, false = someone has not yet
+     */
+    @Column(name = "all_students_have_seat")
+    private boolean allStudentsHaveSeat;
+
+    /**
      * Creates a new exam
      */
     public Exam() {
+        allStudentsHaveSeat = false;
     }
 
     /**
@@ -81,6 +89,7 @@ public class Exam {
         this.subject = subject;
         this.spacingBetweenStudents = spacingBetweenStudents;
         this.examCreator = examCreator;
+        allStudentsHaveSeat = false;
     }
 
     public int getIdExam() {
@@ -131,4 +140,11 @@ public class Exam {
         this.examCreator = examCreator;
     }
 
+    public boolean isAllStudentsHaveSeat() {
+        return allStudentsHaveSeat;
+    }
+
+    public void setAllStudentsHaveSeat(boolean allStudentsHaveSeat) {
+        this.allStudentsHaveSeat = allStudentsHaveSeat;
+    }
 }
