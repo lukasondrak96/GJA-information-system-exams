@@ -13,8 +13,8 @@ import cz.vutbr.fit.gja.models.student.Student;
 import cz.vutbr.fit.gja.models.student.StudentServiceDao;
 import cz.vutbr.fit.gja.models.teacher.Teacher;
 import cz.vutbr.fit.gja.models.teacher.TeacherServiceDaoImpl;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -62,7 +62,25 @@ public class ExamController {
     private int namePos;
     private List<String> rows;
     private LinkedList<Student> students = new LinkedList<>();
-    private int studentsWithoutSeat;
+
+    /**
+     * Get for root returns model and view of exams
+     * @return view pages/logged/exams with model if user is logged
+     *         view pages/exams with model if user is not logged
+     */
+    @GetMapping("/")
+    public ModelAndView root() {
+        ModelAndView modelAndView = new ModelAndView();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication.isAuthenticated()) {
+            modelAndView.addObject("listOfExamsDto", fillExamsDtoList());
+            modelAndView.setViewName("pages/logged/exams");
+        } else {
+            modelAndView.setViewName("pages/exams");
+            return modelAndView;
+        }
+        return modelAndView;
+    }
 
     /**
      * Shows all students exams for normal user
