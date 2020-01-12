@@ -204,7 +204,7 @@ public class RoomController {
         Room room = roomServiceDao.getRoomByRoomNumber(name);
 
         if (examServiceDao.checkIfExamRunIsInRoom(room)) {
-            return ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Místnost " + room.getRoomNumber() + " nelze smazat z důvodu konání zkoušky.");
+            return ModelAndViewSetter.errorPageWithMessageLogged(modelAndView, "Místnost " + room.getRoomNumber() + " nelze editovat z důvodu konání zkoušky.");
         }
 
         if (room == null) {
