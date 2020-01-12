@@ -4,6 +4,7 @@ import cz.vutbr.fit.gja.common.CsvParser;
 import cz.vutbr.fit.gja.common.ModelAndViewSetter;
 import cz.vutbr.fit.gja.dto.*;
 import cz.vutbr.fit.gja.models.block.BlockServiceDao;
+import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRun;
 import cz.vutbr.fit.gja.models.blockOnExamRun.BlockOnExamRunServiceDaoImpl;
 import cz.vutbr.fit.gja.models.examRun.ExamRun;
 import cz.vutbr.fit.gja.models.examRun.ExamRunServiceDao;
@@ -345,6 +346,27 @@ public class ExamController {
             Student student = studentServiceDao.getStudentByLogin(login);
             if (student == null) {
                 return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Student s loginem '" + login + "' neexistuje");
+            }
+            List<ExamRunForSeatingDto> examRuns = examDto.getExamRuns();
+            for(ExamRunForSeatingDto examRunForSeatingDto: examRuns) {
+                List<List<BlockOnExamRun>> seating = examRunForSeatingDto.getSeating();
+                boolean found = false;
+                for (List<BlockOnExamRun> seating_row : seating) {
+                    // check if student is in row
+                    if (seating_row.stream().anyMatch(o -> {
+                                if (o.getStudentReference() != null) {
+                                   return o.getStudentReference().getLogin().equals(login);
+                                }
+                                return false;
+                            }
+                    )) {
+                        found = true;
+                        break;
+                    }
+                }
+                if(!found) {
+                    examDto.getExamRuns().remove(examRunForSeatingDto);
+                }
             }
             setExamDatesToExamRunsInSeatingDto(examDto);
         } else {
