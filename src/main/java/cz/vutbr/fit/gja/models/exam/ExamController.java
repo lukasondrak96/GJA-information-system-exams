@@ -73,14 +73,7 @@ public class ExamController {
     public ModelAndView getExams(@RequestParam(required = false, name = "login") String login) {
         ModelAndView modelAndView = new ModelAndView();
         List<Exam> allExamsFromDatabase = examServiceDao.getAllExamsFromDatabase();
-        for (Exam exam : allExamsFromDatabase) {
-            if (!exam.isAllStudentsHaveSeat()) {
-                try {
-                    examServiceDao.deleteExam(exam.getIdExam());
-                } catch (Exception e) {
-                }
-            }
-        }
+        tryDeleteUnfinishedExams(allExamsFromDatabase);
         if(login != null) {
             Student student = studentServiceDao.getStudentByLogin(login);
             if (student == null) {
@@ -93,19 +86,23 @@ public class ExamController {
                 modelAndView.addObject("message", "Student s tímto loginem se nevyskytuje na žádné zkoušce");
             } else {
                 modelAndView.addObject("listOfExams", studentExams);
-                for (ExamRun run : studentExams) {
-                    String date = run.getExamDate();
-                    if(date.contains("-")) {
-                        String[] split = date.split("-");
-                        date = split[2] + "." + split[1] + "." + split[0];
-                    }
-                    run.setExamDate(date);
-                }
+                setExamDatesToListOfExamRuns(studentExams);
             }
             modelAndView.addObject("student_login", login);
         }
         modelAndView.setViewName("pages/exams");
         return modelAndView;
+    }
+
+    private void tryDeleteUnfinishedExams(List<Exam> allExamsFromDatabase) {
+        for (Exam exam : allExamsFromDatabase) {
+            if (!exam.isAllStudentsHaveSeat()) {
+                try {
+                    examServiceDao.deleteExam(exam.getIdExam());
+                } catch (Exception e) {
+                }
+            }
+        }
     }
 
     /**
@@ -356,14 +353,7 @@ public class ExamController {
             if (student == null) {
                 return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Student s loginem '" + login + "' neexistuje");
             }
-            for (ExamRunForSeatingDto run : examDto.getExamRuns()) {
-                String date = run.getDate();
-                if(date.contains("-")) {
-                    String[] split = date.split("-");
-                    date = split[2] + "." + split[1] + "." + split[0];
-                }
-                run.setDate(date);
-            }
+            setExamDatesToExamRunsInSeatingDto(examDto);
         }
 
         modelAndView.addObject("student_login", login);
@@ -388,6 +378,15 @@ public class ExamController {
             return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Tato zkouška neexistuje.");
         }
         ExamDto examDto = examServiceDao.getExamDto(exam);
+        setExamDatesToExamRunsInSeatingDto(examDto);
+
+        modelAndView.addObject("exam_dto", examDto);
+        modelAndView.setViewName("pages/logged/seating");
+
+        return modelAndView;
+    }
+
+    private void setExamDatesToExamRunsInSeatingDto(ExamDto examDto) {
         for (ExamRunForSeatingDto run : examDto.getExamRuns()) {
             String date = run.getDate();
             if(date.contains("-")) {
@@ -396,11 +395,6 @@ public class ExamController {
             }
             run.setDate(date);
         }
-
-        modelAndView.addObject("exam_dto", examDto);
-        modelAndView.setViewName("pages/logged/seating");
-
-        return modelAndView;
     }
 
     /**
@@ -463,28 +457,25 @@ public class ExamController {
     private List<ExamsDto> fillExamsDtoList() {
         List<ExamsDto> listDto = new ArrayList<>();
         List<Exam> allExamsFromDatabase = examServiceDao.getAllExamsFromDatabase();
-        for (Exam exam : allExamsFromDatabase) {
-            if (!exam.isAllStudentsHaveSeat()) {
-                try {
-                    examServiceDao.deleteExam(exam.getIdExam());
-                } catch (Exception e) {
-                }
-            }
-        }
+        tryDeleteUnfinishedExams(allExamsFromDatabase);
 
         for (Exam exam : examServiceDao.getAllExamsFromDatabase()) {
             List<ExamRun> examRuns = examRunServiceDao.getAllExamRunsByExam(exam);
-            for (ExamRun run : examRuns) {
-                String date = run.getExamDate();
-                if(date.contains("-")) {
-                    String[] split = date.split("-");
-                    date = split[2] + "." + split[1] + "." + split[0];
-                }
-                run.setExamDate(date);
-            }
+            setExamDatesToListOfExamRuns(examRuns);
             listDto.add(new ExamsDto(exam, examRuns));
         }
         return listDto;
+    }
+
+    private void setExamDatesToListOfExamRuns(List<ExamRun> examRuns) {
+        for (ExamRun run : examRuns) {
+            String date = run.getExamDate();
+            if(date.contains("-")) {
+                String[] split = date.split("-");
+                date = split[2] + "." + split[1] + "." + split[0];
+            }
+            run.setExamDate(date);
+        }
     }
 
 
