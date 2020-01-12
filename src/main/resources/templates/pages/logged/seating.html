@@ -11,7 +11,7 @@
     <div class="row form-style" th:object="${exam_dto}">
         <h2 class="mb-4" th:text="${exam_dto.exam.getAcademicYear()} + ': ' + ${exam_dto.exam.getSubject()} + ' - ' + ${exam_dto.exam.getExamName()}"></h2>
         <div th:each="exam_run : *{examRuns}">
-            <p th:text="${exam_run.date} + ' ' + ${exam_run.startTime} + ' - ' + ${exam_run.endTime}"></p>
+            <h5 th:text="${exam_run.date} + ' ' + ${exam_run.startTime} + ' - ' + ${exam_run.endTime}"></h5>
             <form autocomplete="off" class="form-rooms mt-4">
                 <div class="form-group room-diagram">
                     <div th:with="room=${exam_run.blocks.getRoomReference()}, isSeatList=${exam_run.blocks.getIsSeatList()}">
