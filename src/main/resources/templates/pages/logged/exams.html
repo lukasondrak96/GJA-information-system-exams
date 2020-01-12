@@ -11,7 +11,7 @@
     <div class="btn-new-exam">
         <a class="btn btn-success col-lg-4" th:href="@{/logged/exams/new_exam}">Vytvořit novou zkoušku</a>
     </div>
-    <div class="col-sm-12 alert alert-danger" th:if="${message != null}">
+    <div class="alert alert-danger new-room-form-success-message" th:if="${message != null}">
         <span th:utext="${message}"></span>
     </div>
     <div th:each="dto : ${listOfExamsDto}">
