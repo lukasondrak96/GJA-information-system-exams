@@ -21,13 +21,6 @@ public class AuthenticationController {
     @Autowired
     TeacherServiceDao teacherServiceDao;
 
-//    @GetMapping("/")
-//    public ModelAndView root() {
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.setViewName("pages/logged/exams");
-//        return modelAndView;
-//    }
-
     /**
      * Prepares ModelAndView object of login page for nor logged user
      * @return ModelAndView object
