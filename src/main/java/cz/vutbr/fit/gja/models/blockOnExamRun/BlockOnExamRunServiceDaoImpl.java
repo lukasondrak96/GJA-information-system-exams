@@ -21,6 +21,8 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
     @Autowired
     BlockOnExamRunRepository blockOnExamRunRepository;
 
+    public static int seatCounter = 0;
+
     @Override
     public LinkedList<Student> createAndSaveBlocksOnExamRun(ExamRun examRun, LinkedList<Student> students, int spacing) {
         Room room = examRun.getRoomReference();
@@ -39,13 +41,12 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
             blocksInRoom.get(room.getNumberOfRows() - block.getRowNumber()).set(block.getColumnNumber() - 1, block);
         }
 
-        int seatCounter = 0;
         boolean goRight = true;
         boolean firstFlag = true;
         OccupiedSeats occupiedSeats = new OccupiedSeats(false, false, seatCounter, false, new ArrayList<>());
         for (int i = blocksInRoom.size() - 1; i >= 0; i--) {
             ArrayList<Block> blocksInRow = (ArrayList<Block>) blocksInRoom.get(i);
-            occupiedSeats = saveBlocksInRowOnExamRun(examRun, students, spacing, blocksInRow, seatCounter, i, goRight, firstFlag, occupiedSeats.patternForSeat, occupiedSeats);
+            occupiedSeats = saveBlocksInRowOnExamRun(examRun, students, spacing, blocksInRow, seatCounter, i, goRight, firstFlag, occupiedSeats);
             seatCounter = occupiedSeats.seatCounter;
             if(firstFlag){
                 firstFlag = false;
@@ -80,7 +81,7 @@ public class BlockOnExamRunServiceDaoImpl implements BlockOnExamRunServiceDao {
         return blockOnExamRunRepository.getAllStudentExams(login);
     }
 
-    private OccupiedSeats saveBlocksInRowOnExamRun(ExamRun examRun, LinkedList<Student> students, int spacing, List<Block> blocksInRow, int seatCounter, int i, boolean goRight, boolean firstFlag, ArrayList<Integer> patternForSeat, OccupiedSeats oldOccupiedSeats) {
+    private OccupiedSeats saveBlocksInRowOnExamRun(ExamRun examRun, LinkedList<Student> students, int spacing, List<Block> blocksInRow, int seatCounter, int i, boolean goRight, boolean firstFlag, OccupiedSeats oldOccupiedSeats) {
         OccupiedSeats occupiedSeats = new OccupiedSeats(false, false, seatCounter, false, new ArrayList<>());
         occupiedSeats.patternForSeat = oldOccupiedSeats.patternForSeat;
         if(firstFlag){
