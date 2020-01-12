@@ -176,7 +176,8 @@ public class ExamController {
         }
 
         try {
-            modelAndView.addObject("new_exam_second_part_dto", createNewExamSecondPartDto(formValues.getSpacing()));
+            modelAndView.addObject("new_exam_second_part_dto", createNewExamSecondPartDto());
+            this.spacing = examServiceDao.setSpacingOfExam(formValues.getSpacing());
         } catch (ArrayIndexOutOfBoundsException ex) {
             return setModelAndView(modelAndView, "Zadejte správné pozice loginu a jména.", formValues);
         }
@@ -424,7 +425,7 @@ public class ExamController {
 
     private ModelAndView showFormAgainWithErrorMessage(ModelAndView modelAndView, ExamRunDto examRunDto, String message) {
         try {
-            modelAndView.addObject("new_exam_second_part_dto", createNewExamSecondPartDto(String.valueOf(spacing)));
+            modelAndView.addObject("new_exam_second_part_dto", createNewExamSecondPartDto());
         } catch (ArrayIndexOutOfBoundsException ex) {
             modelAndView.addObject("message", "Zadejte správné pozice loginu a jména.");
             return modelAndView;
@@ -483,7 +484,7 @@ public class ExamController {
         return new ExamRunDto(new ExamRun(), new Exam(), this.students.size());
     }
 
-    private NewExamSecondPartDto createNewExamSecondPartDto(String spacing) {
+    private NewExamSecondPartDto createNewExamSecondPartDto() {
         List<Student> newStudents = new ArrayList<>();
 
         for (String row : rows) {
@@ -513,7 +514,6 @@ public class ExamController {
             }
         }
         Collections.sort(this.students);
-        this.spacing = examServiceDao.setSpacingOfExam(spacing);
 
         List<Room> rooms = roomServiceDao.getAllRoomsFromDatabase();
         List<Long> numberOfSeatsInRooms = new ArrayList<>();
