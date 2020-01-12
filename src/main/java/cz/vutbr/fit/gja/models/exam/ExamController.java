@@ -13,7 +13,6 @@ import cz.vutbr.fit.gja.models.student.Student;
 import cz.vutbr.fit.gja.models.student.StudentServiceDao;
 import cz.vutbr.fit.gja.models.teacher.Teacher;
 import cz.vutbr.fit.gja.models.teacher.TeacherServiceDaoImpl;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -348,6 +347,8 @@ public class ExamController {
                 return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Student s loginem '" + login + "' neexistuje");
             }
             setExamDatesToExamRunsInSeatingDto(examDto);
+        } else {
+            return ModelAndViewSetter.errorPageWithMessage(modelAndView, "Pro zobrazení zkoušky zadejte login hledaného studenta");
         }
 
         modelAndView.addObject("student_login", login);
