@@ -1,22 +1,51 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>UserHomepage</title>
-    <meta charset="utf-8"/>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../static/css/index.css" th:href="@{css/index.css}" type="text/css">
+<html lang="cs" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head (${'Místnosti'})">
+    Head from fragment
 </head>
 <body>
-<div th:include="fragments/topnav :: navbar" >
+<div th:replace="fragments/topnav :: navbar">
+    Menu
 </div>
 
-Rooms for logged teacher
-<table>
-    <tr th:each="room : ${rooms}">
-        <td th:text="${room.roomNumber}">1</td>
-        <td th:text="${room.numberOfRows}">1</td>
-        <td th:text="${room.numberOfColumns}">1</td>
-    </tr>
-</table>
+<div class="container list-style">
+    <div class="alert alert-danger" th:if="${message != null}">
+        <span th:utext="${message}"></span>
+    </div>
+    <div class="alert alert-success new-room-form-success-message" th:if="${successMessage != null}">
+        <span th:utext="${successMessage}"></span>
+    </div>
+    <div class="btn-new-room">
+        <a class="btn btn-success col-lg-4" th:href="@{/logged/rooms/new_room}">Vytvořit novou místnost</a>
+    </div>
+    <div class="card rooms-card" th:each="roomHolder : ${roomHolders}">
+        <a class="stretched-link a-style" th:href="@{/logged/rooms/{id}(id=${roomHolder.room.roomNumber})}">
+            <div class="card-header rooms-card-header" th:text="${roomHolder.room.roomNumber}"></div>
+            <div class="card-body">
+                <div>
+                    <span>Počet míst: </span>
+                    <span th:text="${roomHolder.getNumberOfSeats()}"></span>
+                </div>
+                <div class="right-float" th:if="${roomHolder.room.teacherReference.email == #authentication.name}">
+                    <a class="btn btn-primary col-lg-1 btn-rooms-z-index"
+                       th:href="@{/logged/rooms/{id}/edit(id=*{roomHolder.room.roomNumber})}">Editovat</a>
+                    <a class="btn btn-danger col-lg-1 btn-rooms-z-index"
+                       th:href="@{/logged/rooms/{id}/delete(id=${roomHolder.room.roomNumber})}">Smazat</a>
+                </div>
+                <div>
+                    <span>Vytvořil: </span>
+                    <span th:text="${roomHolder.room.teacherReference.degreesBeforeName != null} ? ${roomHolder.room.teacherReference.degreesBeforeName}"></span>
+                    <span th:text="${roomHolder.room.teacherReference.firstName} + ' ' + ${roomHolder.room.teacherReference.lastName}"></span>
+                    <span th:text="${roomHolder.room.teacherReference.degreesBehindName != null} ? ${roomHolder.room.teacherReference.degreesBehindName}"></span>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div th:if="${roomHolders.isEmpty()}">
+        <div class="alert alert-info new-room-form-success-message">
+            <span>Nebyla nalezena žádná místnost</span>
+        </div>
+    </div>
+</div>
 </body>
 </html>

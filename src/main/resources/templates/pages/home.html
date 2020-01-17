@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>UserHomepage</title>
-    <meta charset="utf-8"/>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../static/css/index.css" th:href="@{css/index.css}" type="text/css">
+<html lang="cs" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head (${'Homepage'})">
+    Head from fragment
 </head>
 <body>
-<div th:include="fragments/topnav :: navbar" >
+<div th:replace="fragments/topnav :: navbar">
+    Menu
 </div>
 
 Hello user

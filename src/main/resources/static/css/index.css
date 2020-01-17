@@ -8,7 +8,8 @@ body {
 
 .form-style {
     display: inline-block;
-    margin-top: 150px;
+    margin-top: 100px;
+    margin-bottom: 25px;
     background-color: #fff;
     border: solid 1px #ddd;
     padding: 20px 50px 30px 50px;
@@ -42,12 +43,14 @@ body {
 
 .block-btn-wrapper {
     display: inline-block;
+    font-size: 14px;
 }
 
 .row-number {
     width: 25px;
     height: 25px;
     margin-bottom: 12px;
+    border-radius: 0.25rem;
 }
 
 .block-btn-wrapper input[type="checkbox"] {
@@ -57,6 +60,7 @@ body {
 .block-btn-wrapper input[type="checkbox"] + label {
     margin: 0;
     user-select: none;
+    vertical-align: top;
 }
 
 .block-btn-wrapper input[type="checkbox"] + label span {
@@ -67,6 +71,7 @@ body {
     margin-right: -1px;
     background: #F2F2F2;
     border-radius: 0.25rem;
+    cursor: pointer;
 }
 
 .block-btn-wrapper input[type="checkbox"] + label span:hover {
@@ -94,13 +99,18 @@ body {
     text-align: center;
 }
 
-.new-room-form-cell {
+.room-form-cell {
     max-width: 650px;
     margin: auto auto 20px;
     text-align: left;
 }
 
-.new-room-form-succes-message {
+.edit-room-form-cell {
+    max-width: 650px;
+    margin: auto auto 20px;
+}
+
+.new-room-form-success-message {
     max-width: 650px;
     margin: auto auto 20px;
     text-align: center;
@@ -113,5 +123,106 @@ body {
 .fixed-nav {
     width: 100%;
     position: fixed;
+    z-index: 10;
 }
 
+.rooms-card, .exams-card {
+    margin-bottom: 20px;
+    border-color: #a5a5a5;
+}
+
+.rooms-card-header, .exams-card-header {
+    background: #d5d5d5;
+    font-weight: bold;
+}
+
+.btn-new-room, .btn-new-exam {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.btn-new-room > a, .btn-new-exam > a  {
+    font-weight: bold;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.right-float {
+    float: right;
+    color: white;
+}
+
+.right-float > a {
+    display: inline;
+}
+
+.error-msg {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.btn-rooms-z-index {
+    z-index: 1;
+}
+
+.a-style, .a-style:hover {
+    text-decoration: none; !important;
+    color: black; !important;
+}
+
+.institute-color {
+    background-color: orange;
+}
+
+.corridor-color {
+    background-color: #F2F2F2;
+}
+
+.seat-color {
+    background-color: #A9A9A9;
+}
+
+.student-seat-color, #student-seat-color {
+    background-color: #00FF2B;
+}
+
+.my-table-room {
+    border-collapse: separate;
+    border-spacing: 10px;
+}
+
+.desk {
+    display: inline-block;
+    width: 80px;
+    height: 25px;
+    background: #FFA500;
+    border-radius: 0.25rem;
+    margin-left: 28px;
+}
+
+.list-style {
+    padding-top: 100px;
+}
+
+.btn-search-login {
+    margin-top: -5px;
+}
+
+.block-btn-wrapper .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+}
+
+.block-btn-wrapper:hover .tooltiptext {
+    visibility: visible;
+}

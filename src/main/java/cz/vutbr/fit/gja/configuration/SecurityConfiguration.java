@@ -1,7 +1,6 @@
 package cz.vutbr.fit.gja.configuration;
-import javax.sql.DataSource;
 
-import cz.vutbr.fit.gja.controllers.authentication.CustomLoginSuccessHandler;
+import cz.vutbr.fit.gja.authentication.CustomLoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +11,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import javax.sql.DataSource;
+
+/**
+ * Class for authorization configure
+ */
 
 @Configuration
 @EnableWebSecurity
@@ -38,17 +43,23 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .dataSource(dataSource).passwordEncoder(bCryptPasswordEncoder);
     }
 
+    /**
+     * Sets permit to routes for user roles
+     * @param http http route
+     * @throws Exception error
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
         http.authorizeRequests()
                 // URLs matching for access rights
-                .antMatchers("/").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/rooms").permitAll()
                 .antMatchers("/rooms/**").permitAll()
+                .antMatchers("/exams").permitAll()
+                .antMatchers("/exams/**").permitAll()
                 .antMatchers("/register").permitAll()
-                .antMatchers("/admin/**").hasAnyAuthority("LOGGED_IN_USER")
+                .antMatchers("/logged/**").hasAnyAuthority("LOGGED_IN_USER")
                 .anyRequest().authenticated()
                 .and()
                 // form login
@@ -67,6 +78,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .accessDeniedPage("/access-denied");
     }
 
+    /**
+     * Sets ignore prefix
+     * @param web spring class of WebSecurity
+     */
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");

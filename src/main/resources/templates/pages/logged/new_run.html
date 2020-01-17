@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="cs" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head (${'Vytvořit nový běh zkoušky'})">
+    Head from fragment
+</head>
+<body>
+<div th:replace="fragments/topnav :: navbar">
+    Menu
+</div>
+<div class="my-container center-class">
+    <div class="row form-style">
+        <form class="form-rooms" id="new_run" autocomplete="off" th:action="@{/logged/exams/new_run}"
+              th:object="${form_new_exam_run_dto}" method="post" role="form">
+            <h3 class="form-signin-heading">Vytvořit nový běh zkoušky</h3>
+
+            <div class="form-group room-form-cell">
+                <span th:text="'Počet studentů bez místa: ' + *{studentsWithoutPlace}"></span>
+            </div>
+
+            <div class="form-group room-form-cell">
+                <label>Místnost:</label>
+                <div class="update-placeholder">
+                    <select form="new_run" th:field="*{examRun.roomReference}">
+                        <option th:each="room, iterStat: ${form_new_exam_run_dto.rooms}"
+                                th:value="${room.idRoom}"
+                                th:text="${room.roomNumber} + ' (' + ${form_new_exam_run_dto.numberOfSeatsInRooms[iterStat.index]} + ')'">
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group room-form-cell">
+                <label>Datum zkoušky:</label>
+                <div class="update-placeholder">
+                    <input type="date" required th:field="*{examRun.examDate}" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group room-form-cell">
+                <label>Začátek zkoušky:</label>
+                <div class="update-placeholder">
+                    <input type="time" required th:field="*{examRun.startTime}" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group room-form-cell">
+                <label>Konec zkoušky:</label>
+                <div class="update-placeholder">
+                    <input type="time" required th:field="*{examRun.endTime}" class="form-control"/>
+                </div>
+            </div>
+
+            <div class="form-group room-form-cell">
+                <div class="">
+                    <button class="btn btn-success btn-block" type="submit">Vytvořit</button>
+                </div>
+            </div>
+            <div class="form-group room-form-cell">
+                <a class="btn btn-danger btn-block" th:href="@{/logged/exams}">Zrušit</a>
+            </div>
+            <div class="col-sm-12 alert alert-danger" th:if="${message != null}">
+                <span th:utext="${message}"></span>
+            </div>
+            <input type="hidden" th:field="*{studentsWithoutPlace}">
+            <input type="hidden" th:field="*{exam}">
+        </form>
+    </div>
+</div>
+</body>
+</html>

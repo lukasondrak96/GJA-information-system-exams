@@ -1,44 +1,41 @@
 <!DOCTYPE html>
-<html lang="es" xmlns="http://www.w3.org/1999/xhtml"
+<html lang="cs" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head>
-    <meta charset="UTF-8"/>
-    <link rel="stylesheet" type="text/css" media="all"/>
-
+<head th:replace="fragments/head :: head (${''})">
+    Head from fragment
 </head>
 <body>
 <div>
-    <div th:fragment="navbar">
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-nav">
+    <div class="fixed-nav" th:fragment="navbar">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
             <ul class="navbar-nav">
                 <li class="nav-item">
 <!--                <li class="nav-item active">-->
                     <div sec:authorize="isAuthenticated()">
 <!--                        This is path for logged user-->
-                        <a class="nav-link" href="#">Rozsazení</a>
+                        <a class="nav-link" th:href="@{/logged/exams}">Zkoušky</a>
                     </div>
                     <div sec:authorize="isAnonymous()">
 <!--                        This is path for normal user-->
-                        <a class="nav-link" href="#">Rozsazení</a>
+                        <a class="nav-link" th:href="@{/exams}">Zkoušky</a>
                     </div>
                 </li>
                 <li class="nav-item">
                     <div sec:authorize="isAuthenticated()">
 <!--                        This is path for logged user-->
-                        <a class="nav-link" href="/logged/rooms">Schémata místností</a>
+                        <a class="nav-link" th:href="@{/logged/rooms}">Schémata místností</a>
                     </div>
                     <div sec:authorize="isAnonymous()">
 <!--                        This is path for logged user-->
-                        <a class="nav-link" href="/rooms">Schémata místností</a>
+                        <a class="nav-link" th:href="@{/rooms}">Schémata místností</a>
                     </div>
                 </li>
             </ul>
             <ul class="nav navbar-nav ml-auto">
-
                 <div sec:authorize="isAuthenticated()">
                     <span style="color: white" sec:authentication="name"></span>
-                    <a class="btn btn-success"th:href="@{/logout}">Odhlásit se</a>
+                    <a class="btn btn-success" th:href="@{/logout}">Odhlásit se</a>
                 </div>
 
                 <div sec:authorize="isAnonymous()">
