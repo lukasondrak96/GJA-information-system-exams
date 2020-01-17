@@ -1,0 +1,13 @@
+cz.vutbr.fit.gja
+cz.vutbr.fit.gja.authentication
+cz.vutbr.fit.gja.common
+cz.vutbr.fit.gja.configuration
+cz.vutbr.fit.gja.dto
+cz.vutbr.fit.gja.models.block
+cz.vutbr.fit.gja.models.blockOnExamRun
+cz.vutbr.fit.gja.models.exam
+cz.vutbr.fit.gja.models.examRun
+cz.vutbr.fit.gja.models.role
+cz.vutbr.fit.gja.models.room
+cz.vutbr.fit.gja.models.student
+cz.vutbr.fit.gja.models.teacher
