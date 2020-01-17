@@ -195,7 +195,7 @@ public class ExamController {
         }
 
         if (rows.size() == 0) {
-            return setModelAndView(modelAndView, "Prosím vyberte soubor ve formátu csv, ve kterém je alespoň jeden student!", formValues);
+            return setModelAndView(modelAndView, "Prosím vyberte soubor ve formátu csv, ve kterém je alespo\u0148 jeden student!", formValues);
         }
 
         try {
