@@ -18,14 +18,14 @@ public class Teacher {
     /**
      * Teacher first name
      */
-    @NotNull(message="Prosím vyplňte jméno")
+    @Length(min=1, message="Prosím vypl\u0148te jméno")
     @Column(name = "first_name")
     private String firstName;
 
     /**
      * Teacher last name
      */
-    @NotNull(message="Prosím vyplňte příjmení")
+    @Length(min=1, message="Prosím vypl\u0148te příjmení")
     @Column(name = "last_name")
     private String lastName;
 
@@ -45,7 +45,7 @@ public class Teacher {
      * Teacher email
      */
     @Id
-    @Length(min=1, message="Prosím vyplňte emailovou adresu")
+    @Length(min=1, message="Prosím vypl\u0148te emailovou adresu")
     @Email(message = "Zadán chybný email")
     @Column(name = "email", unique=true)
     private String email;
@@ -92,10 +92,10 @@ public class Teacher {
      * @param status Teacher status
      * @param roles Teacher role
      */
-    public Teacher(@NotNull(message = "Prosím vyplňte jméno") String firstName,
-                   @NotNull(message = "Prosím vyplňte příjmení") String lastName,
+    public Teacher(@NotNull(message = "Prosím vypl\u0148te jméno") String firstName,
+                   @NotNull(message = "Prosím vypl\u0148te příjmení") String lastName,
                    String degreesBeforeName, String degreesBehindName,
-                   @Length(min = 1, message = "Prosím vyplňte emailovou adresu") @Email(message = "Zadán chybný email") String email,
+                   @Length(min = 1, message = "Prosím vypl\u0148te emailovou adresu") @Email(message = "Zadán chybný email") String email,
                    @Length(min = 5, message = "Heslo musí mít minimálně 5 znaků") String password,
                    String repeatPassword,
                    String status,
