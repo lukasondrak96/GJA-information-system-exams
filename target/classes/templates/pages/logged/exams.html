@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="cs" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head (${'Zkoušky'})">
+    Head from fragment
+</head>
+<body>
+<div th:replace="fragments/topnav :: navbar">
+    Menu
+</div>
+<div class="container list-style">
+    <div class="btn-new-exam">
+        <a class="btn btn-success col-lg-4" th:href="@{/logged/exams/new_exam}">Vytvořit novou zkoušku</a>
+    </div>
+    <div class="alert alert-danger new-room-form-success-message" th:if="${message != null}">
+        <span th:utext="${message}"></span>
+    </div>
+    <div th:each="dto : ${listOfExamsDto}">
+        <div class="card exams-card" th:if="${dto.exam.examCreator.email == #authentication.name}">
+            <a class="stretched-link a-style" th:href="@{/logged/exams/{id}(id=${dto.exam.idExam})}">
+                <div class="card-header exams-card-header"
+                     th:text=" ${dto.exam.subject} + ' - ' + ${dto.exam.examName} + ' (' + ${dto.exam.academicYear} + ')' "></div>
+                <div class="card-body">
+                    <div class="mb-2" th:each="examRun : ${dto.list}">
+                        <div class="font-weight-bold" th:text="${examRun.getRoomReference().getRoomNumber()}"></div>
+                        <div class="font-weight-bold" th:text="${examRun.examDate}"></div>
+                        <div class="font-weight-bold" th:text="${examRun.startTime} + '-' + ${examRun.endTime}"></div>
+                    </div>
+                    <div class="right-float">
+                        <a class="btn btn-danger col-lg-1 btn-rooms-z-index" th:href="@{/logged/exams/{id}/delete(id=${dto.exam.idExam})}">Smazat</a>
+                    </div>
+                    <div>
+                        <span>Vytvořil: </span>
+                        <span th:text="${dto.exam.examCreator.degreesBeforeName}"></span>
+                        <span th:text="${dto.exam.examCreator.firstName} + ' ' + ${dto.exam.examCreator.lastName}"></span>
+                        <span th:text="${dto.exam.examCreator.degreesBehindName}"></span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div th:if="${listOfExamsDto.isEmpty()}">
+        <div class="alert alert-info new-room-form-success-message">
+            <span>Nebyla nalezena žádná Vaše zkouška</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

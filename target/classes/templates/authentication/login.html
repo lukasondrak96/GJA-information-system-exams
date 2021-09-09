@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Login</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../static/css/index.css" th:href="@{css/index.css}" type="text/css">
+</head>
+
+<body>
+<div th:include="fragments/topnav :: navbar"></div>
+<div class="container center-class">
+    <div class="row col-lg-7 col-lg-offset-7 form-style">
+        <form th:action="@{/login}" method="POST" class="form-signin">
+            <h3 class="form-signin-heading" th:text="Přihlášení"></h3>
+            <br/>
+
+            <div class="update-placeholder">
+            <input type="text" id="email" name="email" placeholder="Email" class="form-control"/>
+            <br/>
+            <input type="password" placeholder="Heslo" id="password" name="password" class="form-control"/> <br/>
+            </div>
+            <div align="center" th:if="${param.error}">
+                <p style="color: #FF1C19;">Email nebo heslo byly zadány chybně.</p>
+            </div>
+            <button class="btn btn-lg btn-primary" name="Submit" value="Přihlásit se" type="Submit"
+                    style="margin-right:10px;">Přihlásit se</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

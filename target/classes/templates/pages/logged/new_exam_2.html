@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="cs" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head (${'Vytvořit novou zkoušku'})">
+    Head from fragment
+</head>
+<body>
+<div th:replace="fragments/topnav :: navbar">
+    Menu
+</div>
+<div class="my-container center-class">
+    <div class="row form-style">
+        <form class="form-rooms" id="new_exam_2" autocomplete="off" th:action="@{/logged/exams/new_exam_2}"
+              th:object="${exam_run_dto}" method="post" role="form">
+            <h3 class="form-signin-heading">Vytvoření zkoušky - popis a vybrání termínů</h3>
+
+            <div class="form-group room-form-cell">
+                <label>Název zkoušky:</label>
+                <div class="update-placeholder">
+                    <input type="text" required th:field="*{exam.examName}" class="form-control"/>
+                </div>
+            </div>
+
+            <div class="form-group room-form-cell">
+                <label>Předmět:</label>
+                <div class="update-placeholder">
+                    <input type="text" required th:field="*{exam.subject}" class="form-control"/>
+                </div>
+            </div>
+
+            <div class="form-group room-form-cell">
+                <label>Akademický rok:</label>
+                <div class="update-placeholder">
+                    <select form="new_exam_2" th:field="*{exam.academicYear}">
+                        <option th:each="acadYear: ${new_exam_second_part_dto.academicYearDto}"
+                                th:value="${acadYear.toString()}"
+                                th:text="${acadYear.toString()}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group room-form-cell">
+                <span th:text="'Počet studentů na zkoušce: ' + *{studentsWithoutPlace}"></span>
+            </div>
+            <div th:id="exam_run">
+                <div class="form-group room-form-cell">
+                    <label>Místnost:</label>
+                    <div class="update-placeholder">
+                        <select form="new_exam_2" th:field="*{examRun.roomReference}">
+                            <option th:each="room, iterStat: ${new_exam_second_part_dto.roomsInDb}"
+                                    th:value="${room.idRoom}"
+                                    th:text="${room.roomNumber} + ' (' + ${new_exam_second_part_dto.roomCapacitiesSeatsOnly[iterStat.index]} + ')'">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group room-form-cell">
+                    <label>Datum zkoušky:</label>
+                    <div class="update-placeholder">
+                        <input type="date" required th:field="*{examRun.examDate}" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group room-form-cell">
+                    <label>Začátek zkoušky:</label>
+                    <div class="update-placeholder">
+                        <input type="time" required th:field="*{examRun.startTime}" class="form-control"/>
+                    </div>
+                </div>
+                <div class="form-group room-form-cell">
+                    <label>Konec zkoušky:</label>
+                    <div class="update-placeholder">
+                        <input type="time" required th:field="*{examRun.endTime}" class="form-control"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group room-form-cell">
+                <div class="">
+                    <button class="btn btn-success btn-block" type="submit">Vytvořit</button>
+                </div>
+            </div>
+            <div class="form-group room-form-cell">
+                <a class="btn btn-danger btn-block" th:href="@{/logged/exams}">Zrušit</a>
+            </div>
+            <div class="col-sm-12 alert alert-danger" th:if="${message != null}">
+                <span th:utext="${message}"></span>
+            </div>
+            <input type="hidden" th:field="*{exam}">
+        </form>
+    </div>
+</div>
+</body>
+</html>

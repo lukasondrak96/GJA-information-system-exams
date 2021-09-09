@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="cs" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head (${'Vytvořit novou místnost'})">
+    Head from fragment
+</head>
+<body>
+<div th:replace="fragments/topnav :: navbar">
+    Menu
+</div>
+<div class="my-container center-class">
+    <div class="row form-style">
+        <form autocomplete="off" th:action="@{/logged/rooms/__${room.getRoomNumber()}__/edit}" th:object="${room}" method="post"
+              class="form-rooms" role="form">
+            <h3 class="form-signin-heading">Editace místnosti</h3>
+            <div class="form-group room-form-cell">
+                <label>Počet řad:</label>
+                <div class="update-placeholder">
+                    <input type="number" min="1" max="255" th:field="*{numberOfRows}" placeholder="0" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group room-form-cell">
+                <label>Počet míst v každé řadě:</label>
+                <div class="update-placeholder">
+                    <input type="number" min="1" max="255" th:field="*{numberOfColumns}" placeholder="0" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group room-form-cell">
+                <div>
+                    <button type="submit" class="btn btn-primary btn-block">Vygenerovat místnost</button>
+                </div>
+            </div>
+        </form>
+        <form autocomplete="off" class="form-rooms" method="post" role="form"
+              th:action="@{/logged/rooms/__${room.getRoomNumber()}__/edit/update}"
+              th:if="${(room.getNumberOfColumns() > 0 && room.getNumberOfRows() > 0)}"
+              th:object="${all_blocks}">
+            <div class="form-group room-diagram">
+                <div class="form-group room-form-cell">
+                    <label>Číslo místnosti:</label>
+                    <div class="update-placeholder">
+                        <input type="text" th:field="*{roomReference.roomNumber}" class="form-control"/>
+                    </div>
+                </div>
+                <input th:field="*{roomReference.numberOfRows}" th:type="hidden" th:value="${room.numberOfRows}">
+                <input th:field="*{roomReference.numberOfColumns}" th:type="hidden" th:value="${room.numberOfColumns}">
+                <input th:field="*{roomReference.idRoom}" th:type="hidden" th:value="${room.idRoom}">
+                <div th:replace="fragments/room_schema :: roomSchema(${room}, ${all_blocks.getIsSeatList()}, true)">
+                    <!-- Room schema -->
+                </div>
+            </div>
+            <div class="form-group room-form-cell">
+                <div class="">
+                    <button class="btn btn-success btn-block" type="submit">Uložit místnost</button>
+                </div>
+            </div>
+        </form>
+        <div class="form-group room-form-cell">
+            <a class="btn btn-danger btn-block" th:href="@{/logged/rooms}">Zrušit</a>
+        </div>
+        <div class="col-sm-12 alert alert-danger" th:if="${message != null}">
+            <span th:utext="${message}"></span>
+        </div>
+        <div class="alert alert-success new-room-form-success-message" th:if="${successMessage != null}">
+            <span th:utext="${successMessage}"></span>
+        </div>
+        <div class="col-sm-12" th:if="${(bindingResult != null && bindingResult.getAllErrors() != null)}">
+            <div th:each="data : ${bindingResult.getAllErrors()}">
+                <div class="alert alert-danger">
+                    <span th:text="${data.getDefaultMessage()}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
